@@ -1,9 +1,6 @@
 import React from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 
-import Fab from "@mui/material/Fab";
-import { CircularProgress } from "@mui/material";
-
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -17,31 +14,42 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 
-import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import Fab from "@mui/material/Fab";
+import { CircularProgress } from "@mui/material";
+
 import DeleteIcon from "@mui/icons-material/Delete";
-import ShareIcon from "@mui/icons-material/Share";
+import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
+import StarIcon from "@mui/icons-material/Star";
+import UploadIcon from "@mui/icons-material/Upload";
 
 import ControlApi from "../api";
 
-export default function Screenshots() {
+export default function Wallpaper() {
     const api = new ControlApi();
 
-    const allScreenshots = useQuery({
-        queryKey: ["screenshots"],
-        queryFn: api.getScreenshots,
+    const allWallpapers = useQuery({
+        queryKey: ["wallpaper"],
+        queryFn: api.getWallpapers,
     });
 
-    const takeScreenshot = useMutation({
-        mutationFn: api.takeScreenshot,
+    const deleteWallpaper = useMutation({
+        mutationFn: api.deleteWallpaper,
         onSuccess: () => {
-            allScreenshots.refetch();
+            allWallpapers.refetch();
         },
     });
 
-    const deleteScreenshot = useMutation({
-        mutationFn: api.deleteScreenshot,
+    const uploadWallpaper = useMutation({
+        mutationFn: api.getWallpapers,
         onSuccess: () => {
-            allScreenshots.refetch();
+            allWallpapers.refetch();
+        },
+    });
+
+    const activateWallpaper = useMutation({
+        mutationFn: api.setWallpaper,
+        onSuccess: () => {
+            allWallpapers.refetch();
         },
     });
 
@@ -53,32 +61,28 @@ export default function Screenshots() {
             <Fab
                 color="primary"
                 style={{ position: "fixed", bottom: 16, right: 16 }}
-                onClick={() => takeScreenshot.mutate()}
+                onClick={() => uploadWallpaper.mutate()}
             >
-                {takeScreenshot.isLoading ? (
+                {uploadWallpaper.isLoading ? (
                     <CircularProgress color="inherit" />
                 ) : (
-                    <AddAPhotoIcon />
+                    <UploadIcon />
                 )}
             </Fab>
 
-            {allScreenshots.data
+            {allWallpapers.data
                 ?.slice()
-                .sort(
-                    (a, b) =>
-                        new Date(b.modified).getTime() -
-                        new Date(a.modified).getTime()
-                )
+                .sort()
                 .map((screenshot) => (
-                    <div key={screenshot.path}>
+                    <div key={screenshot.filename}>
                         <Card sx={{ maxWidth: 326, marginBottom: 2 }}>
                             <CardMedia
                                 component="img"
                                 image={
-                                    "http://10.0.0.210:8000/screenshots/" +
-                                    screenshot.path
+                                    "http://10.0.0.210:8000/wallpaper/" +
+                                    screenshot.filename
                                 }
-                                alt={screenshot.path}
+                                alt={screenshot.name}
                             />
                             <CardContent sx={{ paddingBottom: 0 }}>
                                 <Typography
@@ -90,26 +94,33 @@ export default function Screenshots() {
                                         whiteSpace: "nowrap",
                                     }}
                                 >
-                                    {screenshot.game}
+                                    {screenshot.name}
                                 </Typography>
                                 <Typography
                                     variant="body2"
                                     color="text.secondary"
-                                >
-                                    Added: {screenshot.modified}
-                                    <br />
-                                    Core: {screenshot.core}
-                                </Typography>
+                                ></Typography>
                             </CardContent>
                             <CardActions>
+                                <Button
+                                    size="small"
+                                    onClick={() => {
+                                        activateWallpaper.mutate(
+                                            screenshot.filename
+                                        );
+                                    }}
+                                >
+                                    <StarIcon fontSize="small" /> Activate
+                                </Button>
                                 <Button size="small">
-                                    <ShareIcon fontSize="small" /> Share
+                                    <DriveFileRenameOutlineIcon fontSize="small" />{" "}
+                                    Rename
                                 </Button>
                                 <Button
                                     color="error"
                                     size="small"
                                     onClick={() => {
-                                        setDeleteId(screenshot.path);
+                                        setDeleteId(screenshot.filename);
                                         setOpenDelete(true);
                                     }}
                                 >
@@ -131,7 +142,7 @@ export default function Screenshots() {
             >
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Delete this screenshot?
+                        Delete this wallpaper?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -142,7 +153,7 @@ export default function Screenshots() {
                         color="error"
                         onClick={() => {
                             setOpenDelete(false);
-                            deleteScreenshot.mutate(deleteId);
+                            deleteWallpaper.mutate(deleteId);
                         }}
                     >
                         Delete

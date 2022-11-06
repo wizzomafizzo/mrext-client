@@ -21,6 +21,7 @@ import GamepadIcon from "@mui/icons-material/Gamepad";
 import SettingsIcon from "@mui/icons-material/Settings";
 import PhotoCameraBackIcon from "@mui/icons-material/PhotoCameraBack";
 import FormatPaintIcon from "@mui/icons-material/FormatPaint";
+import MusicNoteIcon from '@mui/icons-material/MusicNote';
 
 import {
     Routes,
@@ -31,7 +32,10 @@ import {
 } from "react-router-dom";
 
 import Screenshots from "./Screenshots";
-import Systems from "./Systems"
+import Systems from "./Systems";
+import Wallpaper from "./Wallpaper";
+import Music from "./Music";
+import Search from "./Search";
 
 const drawerWidth = 240;
 
@@ -43,6 +47,7 @@ const titles: { [key: string]: string } = {
     "/control": "Control",
     "/settings": "Settings",
     "/wallpaper": "Wallpaper",
+    "/music": "Music",
 };
 
 function getTitle(path: string) {
@@ -115,6 +120,11 @@ export default function ResponsiveDrawer() {
                     to="/control"
                     text="Control"
                     icon={<GamepadIcon />}
+                />
+                <RouterLink
+                    to="/music"
+                    text="Music"
+                    icon={<MusicNoteIcon />}
                 />
             </List>
             <Divider />
@@ -220,11 +230,12 @@ export default function ResponsiveDrawer() {
                 <Toolbar />
                 <Routes>
                     <Route path="/" element={<div></div>} />
-                    <Route path="/search" element={<div></div>} />
+                    <Route path="/search" element={<Search />} />
                     <Route path="/systems" element={<Systems />} />
                     <Route path="/screenshots" element={<Screenshots />} />
                     <Route path="/control" element={<div></div>} />
-                    <Route path="/wallpaper" element={<div></div>} />
+                    <Route path="/music" element={<Music />} />
+                    <Route path="/wallpaper" element={<Wallpaper />} />
                     <Route path="/settings" element={<div></div>} />
                 </Routes>
             </Box>

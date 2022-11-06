@@ -2,7 +2,6 @@ import React from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -25,6 +24,19 @@ export default function Systems() {
     return (
         <div>
             <List>
+                {/* <ListItem
+                    key="menu"
+                    secondaryAction={
+                        <Button
+                            variant="text"
+                            onClick={() => launchCore.mutate("menu")}
+                        >
+                            Launch
+                        </Button>
+                    }
+                >
+                    <ListItemText primary="Menu" />
+                </ListItem> */}
                 {allSystems.data
                     ?.slice()
                     .sort((a, b) => a.name.localeCompare(b.name))
@@ -35,7 +47,9 @@ export default function Systems() {
                                 <Button
                                     variant="text"
                                     onClick={() => launchCore.mutate(system.id)}
-                                >Launch</Button>
+                                >
+                                    Launch
+                                </Button>
                             }
                         >
                             <ListItemText primary={system.name} />

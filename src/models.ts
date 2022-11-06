@@ -5,7 +5,7 @@ export interface System {
 
 export interface Game {
     name: string;
-    system: string;
+    system: System;
     path: string;
 }
 
@@ -15,4 +15,19 @@ export interface Screenshot {
     core: string;
     modified: string;
     game: string;
+}
+
+export interface Wallpaper {
+    filename: string;
+    name: string;
+    width: number;
+    height: number;
+    active: boolean;
+}
+
+export interface MusicState {
+    playing: boolean;
+    playback: string;
+    playlist: string;
+    track: string;
 }
