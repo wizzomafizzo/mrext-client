@@ -36,6 +36,7 @@ import Systems from "./Systems";
 import Wallpaper from "./Wallpaper";
 import Music from "./Music";
 import Search from "./Search";
+import Settings from "./Settings";
 
 const drawerWidth = 240;
 
@@ -236,7 +237,7 @@ export default function ResponsiveDrawer() {
                     <Route path="/control" element={<div></div>} />
                     <Route path="/music" element={<Music />} />
                     <Route path="/wallpaper" element={<Wallpaper />} />
-                    <Route path="/settings" element={<div></div>} />
+                    <Route path="/settings" element={<Settings />} />
                 </Routes>
             </Box>
         </Box>
