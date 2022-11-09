@@ -62,6 +62,7 @@ enum SettingsPage {
     Cores,
     Video,
     OSDMenu,
+    InputDevices,
 }
 
 function PageHeader(props: { title: string; backFn: () => void }) {
@@ -249,9 +250,7 @@ function VideoSettings(props: {
                     alignItems="center"
                 >
                     <Typography>LCD Effects/LCD_Effect_07.txt</Typography>
-                    <Button size="small">
-                        Browse...
-                    </Button>
+                    <Button size="small">Browse...</Button>
                 </Stack>
             </FormControl>
 
@@ -267,9 +266,7 @@ function VideoSettings(props: {
                     alignItems="center"
                 >
                     <Typography>{"<not set>"}</Typography>
-                    <Button size="small">
-                        Browse...
-                    </Button>
+                    <Button size="small">Browse...</Button>
                 </Stack>
             </FormControl>
 
@@ -285,9 +282,7 @@ function VideoSettings(props: {
                     alignItems="center"
                 >
                     <Typography>{"<not set>"}</Typography>
-                    <Button size="small">
-                        Browse...
-                    </Button>
+                    <Button size="small">Browse...</Button>
                 </Stack>
             </FormControl>
 
@@ -303,9 +298,7 @@ function VideoSettings(props: {
                     alignItems="center"
                 >
                     <Typography>{"<not set>"}</Typography>
-                    <Button size="small">
-                        Browse...
-                    </Button>
+                    <Button size="small">Browse...</Button>
                 </Stack>
             </FormControl>
 
@@ -332,20 +325,16 @@ function VideoSettings(props: {
                     control={<Checkbox />}
                     label="Limit HDMI color range"
                 />
-                <FormHelperText>
-                    Limits to range of 16-235.
-                </FormHelperText>
+                <FormHelperText>Limits to range of 16-235.</FormHelperText>
             </FormControl>
 
             <Typography variant="h6">Analog Video</Typography>
 
             <FormControl>
-                <FormControlLabel
-                    control={<Checkbox />}
-                    label="Direct video"
-                />
+                <FormControlLabel control={<Checkbox />} label="Direct video" />
                 <FormHelperText>
-                    Use only with VGA converters. Enables core video timing over HDMI.
+                    Use only with VGA converters. Enables core video timing over
+                    HDMI.
                 </FormHelperText>
             </FormControl>
 
@@ -354,9 +343,7 @@ function VideoSettings(props: {
                     control={<Checkbox />}
                     label="Force scandoubler on VGA output"
                 />
-                <FormHelperText>
-                    Depends on core.
-                </FormHelperText>
+                <FormHelperText>Depends on core.</FormHelperText>
             </FormControl>
 
             <FormControl>
@@ -371,9 +358,7 @@ function VideoSettings(props: {
                     control={<Checkbox />}
                     label="Composite sync on VGA output"
                 />
-                <FormHelperText>
-                    On HSync signal.
-                </FormHelperText>
+                <FormHelperText>On HSync signal.</FormHelperText>
             </FormControl>
 
             <FormControl>
@@ -390,6 +375,52 @@ function VideoSettings(props: {
                 />
                 <FormHelperText>
                     Requires analog I/O board v6.0 or newer.
+                </FormHelperText>
+            </FormControl>
+        </Stack>
+    );
+}
+
+function InputDevices(props: {
+    setCurrentPage: React.Dispatch<React.SetStateAction<SettingsPage>>;
+}) {
+    return (
+        <Stack sx={{ minWidth: 120 }} spacing={3}>
+            <PageHeader
+                title="Input Devices"
+                backFn={() => props.setCurrentPage(SettingsPage.Main)}
+            />
+
+            <FormControl>
+                <FormControlLabel
+                    control={<Checkbox defaultChecked />}
+                    label="Automatically disconnect bluetooth"
+                />
+                <Stack spacing={2} direction="row" alignItems="center">
+                <Input
+                        size="small"
+                        inputProps={{
+                            step: 10,
+                            min: 0,
+                            max: 100,
+                            type: "number",
+                        }}
+                        defaultValue={0}
+                    />
+                    <Typography>minutes</Typography>
+                </Stack>
+                <FormHelperText>
+                    Automatically disconnect and shutdown bluetooth devices after inactivity for specified time.
+                </FormHelperText>
+            </FormControl>
+
+            <FormControl>
+                <FormControlLabel
+                    control={<Checkbox defaultChecked />}
+                    label="Reset bluetooth dongle before pairing"
+                />
+                <FormHelperText>
+                    May fix issues where bluetooths device will not pair with dongle.
                 </FormHelperText>
             </FormControl>
         </Stack>
@@ -496,7 +527,9 @@ function MainPage(props: {
         <Stack sx={{ minWidth: 120 }} spacing={2}>
             <List>
                 <ListItem disableGutters>
-                    <ListItemButton onClick={() => props.setCurrentPage(SettingsPage.Video)}>
+                    <ListItemButton
+                        onClick={() => props.setCurrentPage(SettingsPage.Video)}
+                    >
                         <ListItemIcon>
                             <TvIcon />
                         </ListItemIcon>
@@ -504,8 +537,11 @@ function MainPage(props: {
                         <ArrowForwardIcon />
                     </ListItemButton>
                 </ListItem>
+
                 <ListItem disableGutters>
-                    <ListItemButton onClick={() => props.setCurrentPage(SettingsPage.Video)}>
+                    <ListItemButton
+                        onClick={() => props.setCurrentPage(SettingsPage.Video)}
+                    >
                         <ListItemIcon>
                             <SpeakerIcon />
                         </ListItemIcon>
@@ -513,8 +549,13 @@ function MainPage(props: {
                         <ArrowForwardIcon />
                     </ListItemButton>
                 </ListItem>
+
                 <ListItem disableGutters>
-                    <ListItemButton onClick={() => props.setCurrentPage(SettingsPage.Video)}>
+                    <ListItemButton
+                        onClick={() =>
+                            props.setCurrentPage(SettingsPage.InputDevices)
+                        }
+                    >
                         <ListItemIcon>
                             <SportsEsportsIcon />
                         </ListItemIcon>
@@ -522,8 +563,13 @@ function MainPage(props: {
                         <ArrowForwardIcon />
                     </ListItemButton>
                 </ListItem>
+
                 <ListItem disableGutters>
-                    <ListItemButton onClick={() => props.setCurrentPage(SettingsPage.OSDMenu)}>
+                    <ListItemButton
+                        onClick={() =>
+                            props.setCurrentPage(SettingsPage.OSDMenu)
+                        }
+                    >
                         <ListItemIcon>
                             <WysiwygIcon />
                         </ListItemIcon>
@@ -531,8 +577,11 @@ function MainPage(props: {
                         <ArrowForwardIcon />
                     </ListItemButton>
                 </ListItem>
+
                 <ListItem disableGutters>
-                    <ListItemButton onClick={() => props.setCurrentPage(SettingsPage.Cores)}>
+                    <ListItemButton
+                        onClick={() => props.setCurrentPage(SettingsPage.Cores)}
+                    >
                         <ListItemIcon>
                             <DeveloperBoardIcon />
                         </ListItemIcon>
@@ -540,8 +589,11 @@ function MainPage(props: {
                         <ArrowForwardIcon />
                     </ListItemButton>
                 </ListItem>
+
                 <ListItem disableGutters>
-                    <ListItemButton onClick={() => props.setCurrentPage(SettingsPage.Video)}>
+                    <ListItemButton
+                        onClick={() => props.setCurrentPage(SettingsPage.Video)}
+                    >
                         <ListItemIcon>
                             <TerminalIcon />
                         </ListItemIcon>
@@ -573,6 +625,9 @@ export default function Settings() {
                 )}
                 {currentPage === SettingsPage.OSDMenu && (
                     <OSDMenuSettings setCurrentPage={setCurrentPage} />
+                )}
+                {currentPage === SettingsPage.InputDevices && (
+                    <InputDevices setCurrentPage={setCurrentPage} />
                 )}
             </div>
             <Stack
