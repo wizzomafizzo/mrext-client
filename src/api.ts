@@ -3,14 +3,28 @@ import axios from "axios";
 import { MusicState, Screenshot, System, Wallpaper, Game } from "./models";
 
 export default class ControlApi {
+    apiUrl: string;
+
     constructor() {
-        axios.defaults.baseURL = "http://10.0.0.210:8000"
+        let apiUrl = localStorage.getItem("api");
+
+        if (apiUrl) {
+            axios.defaults.baseURL = apiUrl;
+            this.apiUrl = apiUrl;
+        } else {
+            axios.defaults.baseURL = "/api";
+            this.apiUrl = "/api";
+        }
     }
 
     // screenshots
 
     async getScreenshots(): Promise<Screenshot[]> {
         return (await axios.get<Screenshot[]>(`/screenshots`)).data;
+    }
+
+    getScreenshotUrl(path: string): string {
+        return `${this.apiUrl}/screenshots/${path}`;
     }
 
     async takeScreenshot(): Promise<Screenshot> {
@@ -37,6 +51,10 @@ export default class ControlApi {
         return (await axios.get<Wallpaper[]>(`/wallpaper`)).data;
     }
 
+    getWallpaperUrl(filename: string): string {
+        return `${this.apiUrl}/wallpaper/${filename}`;
+    }
+
     async setWallpaper(filename: string): Promise<void> {
         await axios.post(`/wallpaper/${filename}`);
     }
@@ -52,7 +70,7 @@ export default class ControlApi {
     }
 
     async playMusic(): Promise<void> {
-        await axios.post(`/music/play`);
+        await axios.post(`$/music/play`);
     }
 
     async stopMusic(): Promise<void> {
@@ -81,7 +99,7 @@ export default class ControlApi {
         if (query.length < 3) {
             return [];
         }
-        
+
         return (await axios.post<Game[]>(`/games/search`, { query })).data;
     }
 

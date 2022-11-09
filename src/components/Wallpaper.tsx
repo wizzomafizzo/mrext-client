@@ -78,10 +78,7 @@ export default function Wallpaper() {
                         <Card sx={{ maxWidth: 326, marginBottom: 2 }}>
                             <CardMedia
                                 component="img"
-                                image={
-                                    "http://10.0.0.210:8000/wallpaper/" +
-                                    screenshot.filename
-                                }
+                                image={api.getWallpaperUrl(screenshot.filename)}
                                 alt={screenshot.name}
                             />
                             <CardContent sx={{ paddingBottom: 0 }}>

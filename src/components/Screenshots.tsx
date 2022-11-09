@@ -74,10 +74,7 @@ export default function Screenshots() {
                         <Card sx={{ maxWidth: 326, marginBottom: 2 }}>
                             <CardMedia
                                 component="img"
-                                image={
-                                    "http://10.0.0.210:8000/screenshots/" +
-                                    screenshot.path
-                                }
+                                image={api.getScreenshotUrl(screenshot.path)}
                                 alt={screenshot.path}
                             />
                             <CardContent sx={{ paddingBottom: 0 }}>
