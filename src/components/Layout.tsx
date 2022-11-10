@@ -57,7 +57,7 @@ const pages: { [key: string]: Page } = {
     },
     "/search": {
         path: "/search",
-        title: "Search Games",
+        title: "Search",
         icon: <SearchIcon />,
     },
     "/systems": {
