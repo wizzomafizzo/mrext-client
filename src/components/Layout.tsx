@@ -23,6 +23,8 @@ import PhotoCameraBackIcon from "@mui/icons-material/PhotoCameraBack";
 import FormatPaintIcon from "@mui/icons-material/FormatPaint";
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 
+import misterLogo from "../misterlogo.svg";
+
 import {
     Routes,
     Route,
@@ -113,15 +115,15 @@ export default function ResponsiveDrawer() {
 
     const drawer = (
         <div>
-            <Toolbar>MiSTer FPGA</Toolbar>
+            <Toolbar sx={{justifyContent: "center"}}><img alt="MiSTer FPGA" src={misterLogo} height={55} /></Toolbar>
             <Divider />
             <List>
-                <RouterLink to="/" text="Dashboard" icon={<DashboardIcon />} />
+                {/* <RouterLink to="/" text="Dashboard" icon={<DashboardIcon />} />
                 <RouterLink
                     to="/control"
                     text="Control"
                     icon={<GamepadIcon />}
-                />
+                /> */}
                 <RouterLink
                     to="/music"
                     text="Music"
@@ -149,11 +151,11 @@ export default function ResponsiveDrawer() {
                     text="Wallpaper"
                     icon={<FormatPaintIcon />}
                 />
-                <RouterLink
+                {/* <RouterLink
                     to="/settings"
                     text="Settings"
                     icon={<SettingsIcon />}
-                />
+                /> */}
             </List>
         </div>
     );
