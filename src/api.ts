@@ -70,7 +70,7 @@ export default class ControlApi {
     }
 
     async playMusic(): Promise<void> {
-        await axios.post(`$/music/play`);
+        await axios.post(`/music/play`);
     }
 
     async stopMusic(): Promise<void> {

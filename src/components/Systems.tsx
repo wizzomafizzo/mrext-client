@@ -7,6 +7,8 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+
 import ControlApi from "../api";
 
 export default function Systems() {
@@ -23,7 +25,7 @@ export default function Systems() {
 
     return (
         <div>
-            <List>
+            <List disablePadding>
                 {/* <ListItem
                     key="menu"
                     secondaryAction={
@@ -47,6 +49,7 @@ export default function Systems() {
                                 <Button
                                     variant="text"
                                     onClick={() => launchCore.mutate(system.id)}
+                                    startIcon={<PlayArrowIcon />}
                                 >
                                     Launch
                                 </Button>

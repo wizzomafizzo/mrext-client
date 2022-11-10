@@ -73,7 +73,6 @@ export default function Music() {
                     textOverflow: "ellipsis",
                     overflow: "hidden",
                     whiteSpace: "nowrap",
-                    maxWidth: "325px",
                     height: "25px",
                     marginBottom: "8px",
                     textAlign: "center",
@@ -81,7 +80,7 @@ export default function Music() {
             >
                 {musicState.data?.track !== ""
                     ? musicState.data?.track.replace(/\.[^/.]+$/, "")
-                    : "-"}
+                    : "—"}
             </div>
             <div style={{ marginBottom: "0.5em", textAlign: "center" }}>
                 {musicState.data?.playing ? (
@@ -139,21 +138,34 @@ export default function Music() {
                             <ListItem
                                 key={playlist}
                                 secondaryAction={
-                                    <Button
-                                        variant="text"
-                                        onClick={() =>
-                                            setPlaylist.mutate(playlist)
-                                        }
-                                    >
-                                        Change
-                                    </Button>
+                                    playlist !== musicState.data?.playlist ? (
+                                        <Button
+                                            variant="text"
+                                            onClick={() =>
+                                                setPlaylist.mutate(playlist)
+                                            }
+                                            startIcon={<PlayArrowIcon />}
+                                        >
+                                            Play
+                                        </Button>
+                                    ) : null
                                 }
+                                // style={
+                                //     playlist === musicState.data?.playlist
+                                //         ? {
+                                //               boxSizing: "border-box",
+                                //               borderWidth: "2px",
+                                //               borderStyle: "solid",
+                                //               borderColor: "#2a0000",
+                                //               borderRadius: "5px",
+                                //           }
+                                //         : {}
+                                // }
                                 style={
                                     playlist === musicState.data?.playlist
                                         ? {
-                                              borderWidth: "2px",
-                                              borderStyle: "solid",
-                                              borderColor: "#2a0000",
+                                              boxShadow:
+                                                  "inset 0px 0px 0px 2px #2a0000",
                                               borderRadius: "5px",
                                           }
                                         : {}

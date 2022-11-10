@@ -6,7 +6,12 @@ import Button from "@mui/material/Button";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
+import ListItemButton from "@mui/material/ListItemButton";
 import TextField from "@mui/material/TextField";
+import Stack from "@mui/material/Stack";
+
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import SearchIcon from "@mui/icons-material/Search";
 
 import { CircularProgress } from "@mui/material";
 
@@ -30,50 +35,57 @@ export default function Search() {
 
     return (
         <div>
-            <TextField
-                label="Game name"
-                variant="standard"
-                sx={{ width: "320px", marginBottom: "0.5em" }}
-                onChange={(e) => setSearchInput(e.target.value)}
-            />
-            <br />
-            <Button
-                variant="contained"
-                sx={{ width: "320px" }}
-                onClick={() => {
-                    let q = searchInput;
-                    setSearchQuery(q);
-                }}
-            >
-                Search
-            </Button>
-            {searchGames.isLoading ? (
-                <div style={{ textAlign: "center", marginTop: "2em" }}>
-                    <CircularProgress />
-                </div>
-            ) : (
-                <List>
-                    {searchGames.data?.map((game) => (
-                        <ListItem
-                            key={game.path}
-                            secondaryAction={
-                                <Button
-                                    variant="text"
+            <Stack sx={{ alignItems: "center" }}>
+                <TextField
+                    label="Name"
+                    variant="standard"
+                    sx={{
+                        width: "100%",
+                        maxWidth: "400px",
+                        marginBottom: "0.5em",
+                    }}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            let q = searchInput;
+                            setSearchQuery(q);
+                        }
+                    }}
+                />
+                <Button
+                    variant="contained"
+                    sx={{ width: "100%", maxWidth: "200px" }}
+                    onClick={() => {
+                        let q = searchInput;
+                        setSearchQuery(q);
+                    }}
+                    startIcon={<SearchIcon />}
+                >
+                    Search
+                </Button>
+                {searchGames.isLoading ? (
+                    <div style={{ textAlign: "center", marginTop: "2em" }}>
+                        <CircularProgress />
+                    </div>
+                ) : (
+                    <List sx={{ marginTop: "1em" }} disablePadding>
+                        {searchGames.data?.slice().sort(
+                            (a, b) => a.system.id.localeCompare(b.system.id)
+                        ).map((game) => (
+                            <ListItem key={game.path} disableGutters disablePadding>
+                                <ListItemButton
                                     onClick={() => launchGame.mutate(game.path)}
-                                    sx={{ marginTop: "20px" }}
                                 >
-                                    Launch
-                                </Button>
-                            }
-                        >
-                            <ListItemText
-                                primary={game.name}
-                                secondary={game.system.name}
-                            />
-                        </ListItem>
-                    ))}
-                </List>
-            )}
+                                    <ListItemText
+                                        primary={game.name}
+                                        secondary={game.system.name}
+                                    />
+                                </ListItemButton>
+                            </ListItem>
+                        ))}
+                    </List>
+                )}
+            </Stack>
         </div>
     );
 }

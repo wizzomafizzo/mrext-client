@@ -8,7 +8,10 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
+import Grid from "@mui/material/Grid";
+import Stack from "@mui/material/Stack";
 
+import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
@@ -20,6 +23,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ShareIcon from "@mui/icons-material/Share";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 import ControlApi from "../api";
 
@@ -62,60 +66,82 @@ export default function Screenshots() {
                 )}
             </Fab>
 
-            {allScreenshots.data
-                ?.slice()
-                .sort(
-                    (a, b) =>
-                        new Date(b.modified).getTime() -
-                        new Date(a.modified).getTime()
-                )
-                .map((screenshot) => (
-                    <div key={screenshot.path}>
-                        <Card sx={{ maxWidth: 326, marginBottom: 2 }}>
-                            <CardMedia
-                                component="img"
-                                image={api.getScreenshotUrl(screenshot.path)}
-                                alt={screenshot.path}
-                            />
-                            <CardContent sx={{ paddingBottom: 0 }}>
-                                <Typography
-                                    gutterBottom
-                                    component="div"
-                                    style={{
-                                        textOverflow: "ellipsis",
-                                        overflow: "hidden",
-                                        whiteSpace: "nowrap",
-                                    }}
-                                >
-                                    {screenshot.game}
-                                </Typography>
-                                <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                >
-                                    Added: {screenshot.modified}
-                                    <br />
-                                    Core: {screenshot.core}
-                                </Typography>
-                            </CardContent>
-                            <CardActions>
-                                <Button size="small">
-                                    <ShareIcon fontSize="small" /> Share
-                                </Button>
-                                <Button
-                                    color="error"
-                                    size="small"
-                                    onClick={() => {
-                                        setDeleteId(screenshot.path);
-                                        setOpenDelete(true);
-                                    }}
-                                >
-                                    <DeleteIcon fontSize="small" /> Delete
-                                </Button>
-                            </CardActions>
-                        </Card>
-                    </div>
-                ))}
+            <Grid
+                container
+                spacing={{ xs: 2, md: 3 }}
+                columns={{ xs: 4, sm: 8, md: 12 }}
+            >
+                {allScreenshots.data
+                    ?.slice()
+                    .sort(
+                        (a, b) =>
+                            new Date(b.modified).getTime() -
+                            new Date(a.modified).getTime()
+                    )
+                    .map((screenshot) => (
+                        <Grid item xs={4} sm={4} md={4} key={screenshot.path}>
+                            <Card>
+                                <CardMedia
+                                    component="img"
+                                    image={api.getScreenshotUrl(
+                                        screenshot.path
+                                    )}
+                                    alt={screenshot.path}
+                                />
+                                <CardContent sx={{ paddingBottom: 0 }}>
+                                    <Typography gutterBottom component="div">
+                                        {screenshot.game}
+                                    </Typography>
+                                    <Typography
+                                        variant="body2"
+                                        color="text.secondary"
+                                    >
+                                        Added:{" "}
+                                        {new Date(
+                                            screenshot.modified
+                                        ).toLocaleString()}
+                                        <br />
+                                        Core: {screenshot.core}
+                                    </Typography>
+                                </CardContent>
+                                <CardActions>
+                                    <Stack
+                                        sx={{ width: "100%" }}
+                                        direction="row"
+                                        spacing={1}
+                                        justifyContent="space-between"
+                                    >
+                                        {/* <Button size="small">
+                                        <ShareIcon fontSize="small" /> Share
+                                    </Button> */}
+                                        <Button
+                                            color="error"
+                                            size="small"
+                                            onClick={() => {
+                                                setDeleteId(screenshot.path);
+                                                setOpenDelete(true);
+                                            }}
+                                        >
+                                            <DeleteIcon fontSize="small" />{" "}
+                                            Delete
+                                        </Button>
+                                        <a
+                                            href={api.getScreenshotUrl(
+                                                screenshot.path
+                                            )}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            <IconButton>
+                                                <OpenInNewIcon fontSize="small" />
+                                            </IconButton>
+                                        </a>
+                                    </Stack>
+                                </CardActions>
+                            </Card>
+                        </Grid>
+                    ))}
+            </Grid>
 
             <Dialog
                 open={openDelete}

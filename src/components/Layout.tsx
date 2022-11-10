@@ -23,7 +23,7 @@ import PhotoCameraBackIcon from "@mui/icons-material/PhotoCameraBack";
 import FormatPaintIcon from "@mui/icons-material/FormatPaint";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 
-import misterLogo from "../misterlogo.svg";
+import misterLogo from "../images/misterlogo.svg";
 
 import {
     Routes,
@@ -43,19 +43,57 @@ import Settings from "./Settings";
 
 const drawerWidth = 240;
 
-const titles: { [key: string]: string } = {
-    "/": "Dashboard",
-    "/search": "Search",
-    "/systems": "Systems",
-    "/screenshots": "Screenshots",
-    "/control": "Control",
-    "/settings": "Settings",
-    "/wallpaper": "Wallpaper",
-    "/music": "Music",
+interface Page {
+    path: string;
+    title: string;
+    icon: ReactNode;
+}
+
+const pages: { [key: string]: Page } = {
+    "/": {
+        path: "/",
+        title: "Dashboard",
+        icon: <DashboardIcon />,
+    },
+    "/search": {
+        path: "/search",
+        title: "Search Games",
+        icon: <SearchIcon />,
+    },
+    "/systems": {
+        path: "/systems",
+        title: "Systems",
+        icon: <VideogameAssetIcon />,
+    },
+    "/screenshots": {
+        path: "/screenshots",
+        title: "Screenshots",
+        icon: <PhotoCameraBackIcon />,
+    },
+    "/control": {
+        path: "/control",
+        title: "Control",
+        icon: <GamepadIcon />,
+    },
+    "/settings": {
+        path: "/settings",
+        title: "Settings",
+        icon: <SettingsIcon />,
+    },
+    "/wallpaper": {
+        path: "/wallpaper",
+        title: "Wallpaper",
+        icon: <FormatPaintIcon />,
+    },
+    "/music": {
+        path: "/music",
+        title: "Music",
+        icon: <MusicNoteIcon />,
+    },
 };
 
-function getTitle(path: string) {
-    return titles[path] || "";
+function getPage(path: string) {
+    return pages[path] || "";
 }
 
 type RouterLinkProps = React.PropsWithChildren<{
@@ -119,7 +157,6 @@ export default function ResponsiveDrawer() {
             <Toolbar sx={{ justifyContent: "center" }}>
                 <img alt="MiSTer FPGA" src={misterLogo} height={55} />
             </Toolbar>
-            <Divider />
             <List>
                 {/* <RouterLink to="/" text="Dashboard" icon={<DashboardIcon />} />
                 <RouterLink
@@ -179,8 +216,9 @@ export default function ResponsiveDrawer() {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap component="div">
-                        {getTitle(location.pathname)}
+                    {getPage(location.pathname).icon}
+                    <Typography variant="h6" noWrap component="div" sx={{marginLeft: 1}}>
+                        {getPage(location.pathname).title}
                     </Typography>
                 </Toolbar>
             </AppBar>
