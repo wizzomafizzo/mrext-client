@@ -21,7 +21,7 @@ import GamepadIcon from "@mui/icons-material/Gamepad";
 import SettingsIcon from "@mui/icons-material/Settings";
 import PhotoCameraBackIcon from "@mui/icons-material/PhotoCameraBack";
 import FormatPaintIcon from "@mui/icons-material/FormatPaint";
-import MusicNoteIcon from '@mui/icons-material/MusicNote';
+import MusicNoteIcon from "@mui/icons-material/MusicNote";
 
 import misterLogo from "../misterlogo.svg";
 
@@ -31,6 +31,7 @@ import {
     useLocation,
     NavLink,
     NavLinkProps,
+    Navigate,
 } from "react-router-dom";
 
 import Screenshots from "./Screenshots";
@@ -114,8 +115,10 @@ export default function ResponsiveDrawer() {
     };
 
     const drawer = (
-        <div>
-            <Toolbar sx={{justifyContent: "center"}}><img alt="MiSTer FPGA" src={misterLogo} height={55} /></Toolbar>
+        <div onClick={() => setMobileOpen(false)}>
+            <Toolbar sx={{ justifyContent: "center" }}>
+                <img alt="MiSTer FPGA" src={misterLogo} height={55} />
+            </Toolbar>
             <Divider />
             <List>
                 {/* <RouterLink to="/" text="Dashboard" icon={<DashboardIcon />} />
@@ -124,11 +127,7 @@ export default function ResponsiveDrawer() {
                     text="Control"
                     icon={<GamepadIcon />}
                 /> */}
-                <RouterLink
-                    to="/music"
-                    text="Music"
-                    icon={<MusicNoteIcon />}
-                />
+                <RouterLink to="/music" text="Music" icon={<MusicNoteIcon />} />
             </List>
             <Divider />
             <List>
@@ -232,9 +231,9 @@ export default function ResponsiveDrawer() {
             >
                 <Toolbar />
                 <Routes>
-                    <Route path="/" element={<div></div>} />
-                    <Route path="/search" element={<Search />} />
                     <Route path="/systems" element={<Systems />} />
+                    <Route path="/" element={<Navigate to="/systems" />} />
+                    <Route path="/search" element={<Search />} />
                     <Route path="/screenshots" element={<Screenshots />} />
                     <Route path="/control" element={<div></div>} />
                     <Route path="/music" element={<Music />} />
