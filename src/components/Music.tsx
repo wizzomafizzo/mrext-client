@@ -16,15 +16,15 @@ import RepeatOneIcon from "@mui/icons-material/RepeatOne";
 import PlayDisabledIcon from "@mui/icons-material/PlayDisabled";
 
 import ControlApi from "../api";
+import { Typography } from "@mui/material";
 
-export default function Music() {
+import { UseQueryResult } from "@tanstack/react-query";
+import { ServerStatus } from "../models";
+
+export default function Music(props: {
+    serverStatus: UseQueryResult<ServerStatus, unknown>;
+}) {
     const api = new ControlApi();
-
-    const musicState = useQuery({
-        queryKey: ["music"],
-        queryFn: api.getMusicState,
-        refetchInterval: 1000,
-    });
 
     const playlists = useQuery({
         queryKey: ["music", "playlists"],
@@ -33,57 +33,66 @@ export default function Music() {
 
     const playMusic = useMutation({
         mutationFn: api.playMusic,
-        onSuccess: () => {
-            musicState.refetch();
-        },
     });
 
     const stopMusic = useMutation({
         mutationFn: api.stopMusic,
-        onSuccess: () => {
-            musicState.refetch();
-        },
     });
 
     const nextMusic = useMutation({
         mutationFn: api.nextMusic,
-        onSuccess: () => {
-            musicState.refetch();
-        },
     });
 
     const setPlayback = useMutation({
         mutationFn: api.setMusicPlayback,
-        onSuccess: () => {
-            musicState.refetch();
-        },
     });
 
     const setPlaylist = useMutation({
         mutationFn: api.setMusicPlaylist,
-        onSuccess: () => {
-            musicState.refetch();
-        },
     });
+
+    if (props.serverStatus.isLoading) {
+        return <div></div>;
+    }
+
+    if (props.serverStatus.data?.musicService.running === false) {
+        return (
+            <div>
+                <Typography sx={{ textAlign: "center" }}>
+                    Music requires{" "}
+                    <a
+                        href="https://github.com/wizzomafizzo/MiSTer_BGM"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        BGM
+                    </a>{" "}
+                    to be configured and running on your MiSTer.
+                    <br />
+                    <br />
+                    Please install it and reload this page.
+                </Typography>
+            </div>
+        );
+    }
 
     return (
         <div>
             <div
                 style={{
-                    textOverflow: "ellipsis",
-                    overflow: "hidden",
-                    whiteSpace: "nowrap",
-                    height: "25px",
                     marginBottom: "8px",
                     textAlign: "center",
                 }}
             >
-                {musicState.data?.track !== ""
-                    ? musicState.data?.track.replace(/\.[^/.]+$/, "")
+                {props.serverStatus.data?.musicService.track !== ""
+                    ? props.serverStatus.data?.musicService.track.replace(
+                          /\.[^/.]+$/,
+                          ""
+                      )
                     : "—"}
             </div>
             <div style={{ marginBottom: "0.5em", textAlign: "center" }}>
-                {musicState.data?.playing ? (
+                {props.serverStatus.data?.musicService.playing ? (
                     <Button
                         variant="contained"
                         onClick={() => stopMusic.mutate()}
@@ -109,21 +118,30 @@ export default function Music() {
                     <Button
                         variant="contained"
                         onClick={() => setPlayback.mutate("random")}
-                        disabled={musicState.data?.playback === "random"}
+                        disabled={
+                            props.serverStatus.data?.musicService.playback ===
+                            "random"
+                        }
                     >
                         <ShuffleIcon />
                     </Button>
                     <Button
                         variant="contained"
                         onClick={() => setPlayback.mutate("loop")}
-                        disabled={musicState.data?.playback === "loop"}
+                        disabled={
+                            props.serverStatus.data?.musicService.playback ===
+                            "loop"
+                        }
                     >
                         <RepeatOneIcon />
                     </Button>
                     <Button
                         variant="contained"
                         onClick={() => setPlayback.mutate("disabled")}
-                        disabled={musicState.data?.playback === "disabled"}
+                        disabled={
+                            props.serverStatus.data?.musicService.playback ===
+                            "disabled"
+                        }
                     >
                         <PlayDisabledIcon />
                     </Button>
@@ -138,7 +156,9 @@ export default function Music() {
                             <ListItem
                                 key={playlist}
                                 secondaryAction={
-                                    playlist !== musicState.data?.playlist ? (
+                                    playlist !==
+                                    props.serverStatus.data?.musicService
+                                        .playlist ? (
                                         <Button
                                             variant="text"
                                             onClick={() =>
@@ -162,7 +182,9 @@ export default function Music() {
                                 //         : {}
                                 // }
                                 style={
-                                    playlist === musicState.data?.playlist
+                                    playlist ===
+                                    props.serverStatus.data?.musicService
+                                        .playlist
                                         ? {
                                               boxShadow:
                                                   "inset 0px 0px 0px 2px #2a0000",

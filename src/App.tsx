@@ -1,9 +1,14 @@
 import React from "react";
 
+import { useQuery } from "@tanstack/react-query";
+
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { green } from "@mui/material/colors";
 
 import Layout from "./components/Layout";
+
+import ControlApi from "./api";
+import Search from "./components/Search";
 
 const theme = createTheme({
     palette: {
@@ -20,9 +25,18 @@ const theme = createTheme({
 });
 
 function App() {
+    const api = new ControlApi();
+
+    const serverStatus = useQuery({
+        queryKey: ["server"],
+        queryFn: api.serverStatus,
+        refetchInterval: 500,
+        // refetchIntervalInBackground: true,
+    });
+
     return (
         <ThemeProvider theme={theme}>
-            <Layout />
+            <Layout serverStatus={serverStatus} />
         </ThemeProvider>
     );
 }

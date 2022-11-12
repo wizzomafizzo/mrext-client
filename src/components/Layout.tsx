@@ -34,6 +34,9 @@ import {
     Navigate,
 } from "react-router-dom";
 
+import { UseQueryResult } from "@tanstack/react-query";
+import { ServerStatus } from "../models";
+
 import Screenshots from "./Screenshots";
 import Systems from "./Systems";
 import Wallpaper from "./Wallpaper";
@@ -45,55 +48,68 @@ const drawerWidth = 240;
 
 interface Page {
     path: string;
-    title: string;
+    titleText: string;
+    buttonText: string;
     icon: ReactNode;
 }
 
-const pages: { [key: string]: Page } = {
-    "/": {
+const pages: Page[] = [
+    {
         path: "/",
-        title: "Dashboard",
+        titleText: "Dashboard",
+        buttonText: "Dashboard",
         icon: <DashboardIcon />,
     },
-    "/search": {
+    {
         path: "/search",
-        title: "Search",
+        titleText: "Search",
+        buttonText: "Search",
         icon: <SearchIcon />,
     },
-    "/systems": {
+    {
         path: "/systems",
-        title: "Systems",
+        titleText: "Systems",
+        buttonText: "Systems",
         icon: <VideogameAssetIcon />,
     },
-    "/screenshots": {
+    {
         path: "/screenshots",
-        title: "Screenshots",
+        titleText: "Screenshots",
+        buttonText: "Screenshots",
         icon: <PhotoCameraBackIcon />,
     },
-    "/control": {
+    {
         path: "/control",
-        title: "Control",
+        titleText: "Control",
+        buttonText: "Control",
         icon: <GamepadIcon />,
     },
-    "/settings": {
+    {
         path: "/settings",
-        title: "Settings",
+        titleText: "Settings",
+        buttonText: "Settings",
         icon: <SettingsIcon />,
     },
-    "/wallpaper": {
+    {
         path: "/wallpaper",
-        title: "Wallpaper",
+        titleText: "Wallpaper",
+        buttonText: "Wallpaper",
         icon: <FormatPaintIcon />,
     },
-    "/music": {
+    {
         path: "/music",
-        title: "Music",
+        titleText: "Music",
+        buttonText: "Music",
         icon: <MusicNoteIcon />,
     },
-};
+];
 
-function getPage(path: string) {
-    return pages[path] || "";
+function getPage(path: string): Page | undefined {
+    for (const page of pages) {
+        if (page.path === path) {
+            return page;
+        }
+    }
 }
 
 type RouterLinkProps = React.PropsWithChildren<{
@@ -144,7 +160,9 @@ function RouterLink(props: RouterLinkProps) {
     );
 }
 
-export default function ResponsiveDrawer() {
+export default function ResponsiveDrawer(props: {
+    serverStatus: UseQueryResult<ServerStatus, unknown>;
+}) {
     const location = useLocation();
     const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -216,9 +234,14 @@ export default function ResponsiveDrawer() {
                     >
                         <MenuIcon />
                     </IconButton>
-                    {getPage(location.pathname).icon}
-                    <Typography variant="h6" noWrap component="div" sx={{marginLeft: 1}}>
-                        {getPage(location.pathname).title}
+                    {getPage(location.pathname)?.icon}
+                    <Typography
+                        variant="h6"
+                        noWrap
+                        component="div"
+                        sx={{ marginLeft: 1 }}
+                    >
+                        {getPage(location.pathname)?.titleText}
                     </Typography>
                 </Toolbar>
             </AppBar>
@@ -271,10 +294,10 @@ export default function ResponsiveDrawer() {
                 <Routes>
                     <Route path="/systems" element={<Systems />} />
                     <Route path="/" element={<Navigate to="/systems" />} />
-                    <Route path="/search" element={<Search />} />
+                    <Route path="/search" element={<Search serverStatus={props.serverStatus} />} />
                     <Route path="/screenshots" element={<Screenshots />} />
                     <Route path="/control" element={<div></div>} />
-                    <Route path="/music" element={<Music />} />
+                    <Route path="/music" element={<Music serverStatus={props.serverStatus} />} />
                     <Route path="/wallpaper" element={<Wallpaper />} />
                     <Route path="/settings" element={<Settings />} />
                 </Routes>

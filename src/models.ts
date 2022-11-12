@@ -9,6 +9,13 @@ export interface Game {
     path: string;
 }
 
+export interface SearchResults {
+    data: Game[];
+    total: number;
+    pageSize: number;
+    page: number;
+}
+
 export interface Screenshot {
     filename: string;
     path: string;
@@ -25,9 +32,24 @@ export interface Wallpaper {
     active: boolean;
 }
 
-export interface MusicState {
+export interface MusicServiceStatus {
+    running: boolean;
     playing: boolean;
     playback: string;
     playlist: string;
     track: string;
+}
+
+export interface SearchServiceStatus {
+    ready: boolean;
+    indexing: boolean;
+    totalSteps: number;
+    currentStep: number;
+    currentDesc: string;
+}
+
+export interface ServerStatus {
+    online: boolean;
+    searchService: SearchServiceStatus;
+    musicService: MusicServiceStatus;
 }

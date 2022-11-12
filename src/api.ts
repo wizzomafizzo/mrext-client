@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { MusicState, Screenshot, System, Wallpaper, Game } from "./models";
+import { Screenshot, System, Wallpaper, SearchResults, ServerStatus } from "./models";
 
 export default class ControlApi {
     apiUrl: string;
@@ -15,6 +15,10 @@ export default class ControlApi {
             axios.defaults.baseURL = "/api";
             this.apiUrl = "/api";
         }
+    }
+
+    async serverStatus(): Promise<ServerStatus> {
+        return (await axios.get<ServerStatus>(`/server`)).data;
     }
 
     // screenshots
@@ -65,10 +69,6 @@ export default class ControlApi {
 
     // music
 
-    async getMusicState(): Promise<MusicState> {
-        return (await axios.get<MusicState>(`/music`)).data;
-    }
-
     async playMusic(): Promise<void> {
         await axios.post(`/music/play`);
     }
@@ -95,15 +95,15 @@ export default class ControlApi {
 
     // games
 
-    async searchGames(query: string): Promise<Game[]> {
-        if (query.length < 3) {
-            return [];
-        }
-
-        return (await axios.post<Game[]>(`/games/search`, { query })).data;
+    async searchGames(query: string): Promise<SearchResults> {
+        return (await axios.post<SearchResults>(`/games/search`, { query })).data;
     }
 
     async launchGame(path: string): Promise<void> {
         await axios.post(`/games/launch`, { path });
+    }
+
+    async startSearchIndex(): Promise<void> {
+        await axios.post(`/games/index`);
     }
 }
