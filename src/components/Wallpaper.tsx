@@ -108,6 +108,7 @@ export default function Wallpaper() {
                                         wallpaper.filename
                                     )}
                                     alt={wallpaper.name}
+                                    loading="lazy"
                                 />
                                 <CardContent sx={{ paddingBottom: 0 }}>
                                     <Typography gutterBottom component="div">

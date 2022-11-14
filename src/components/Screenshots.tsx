@@ -87,6 +87,7 @@ export default function Screenshots() {
                                         screenshot.path
                                     )}
                                     alt={screenshot.path}
+                                    loading="lazy"
                                 />
                                 <CardContent sx={{ paddingBottom: 0 }}>
                                     <Typography gutterBottom component="div">

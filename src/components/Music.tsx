@@ -7,6 +7,7 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
+import ListItemButton from "@mui/material/ListItemButton";
 
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
@@ -14,6 +15,7 @@ import SkipNextIcon from "@mui/icons-material/SkipNext";
 import ShuffleIcon from "@mui/icons-material/Shuffle";
 import RepeatOneIcon from "@mui/icons-material/RepeatOne";
 import PlayDisabledIcon from "@mui/icons-material/PlayDisabled";
+import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 
 import ControlApi from "../api";
 import { Typography } from "@mui/material";
@@ -59,6 +61,9 @@ export default function Music(props: {
         return (
             <div>
                 <Typography sx={{ textAlign: "center" }}>
+                    There was a problem contacting the BGM service.
+                    <br />
+                    <br />
                     Music requires{" "}
                     <a
                         href="https://github.com/wizzomafizzo/MiSTer_BGM"
@@ -67,10 +72,8 @@ export default function Music(props: {
                     >
                         BGM
                     </a>{" "}
-                    to be configured and running on your MiSTer.
-                    <br />
-                    <br />
-                    Please install it and reload this page.
+                    to be configured and running on your MiSTer. If you don't
+                    have BGM already, please install it and reload this page.
                 </Typography>
             </div>
         );
@@ -147,55 +150,26 @@ export default function Music(props: {
                     </Button>
                 </ButtonGroup>
             </div>
-            <div>
+            <div style={{paddingTop: 10}}>
+                <Typography variant="h6">Playlists</Typography>
                 <List>
-                    {playlists.data
-                        ?.slice()
-                        .sort()
-                        .map((playlist) => (
-                            <ListItem
-                                key={playlist}
-                                secondaryAction={
-                                    playlist !==
-                                    props.serverStatus.data?.musicService
-                                        .playlist ? (
-                                        <Button
-                                            variant="text"
-                                            onClick={() =>
-                                                setPlaylist.mutate(playlist)
-                                            }
-                                            startIcon={<PlayArrowIcon />}
-                                        >
-                                            Play
-                                        </Button>
-                                    ) : null
-                                }
-                                // style={
-                                //     playlist === musicState.data?.playlist
-                                //         ? {
-                                //               boxSizing: "border-box",
-                                //               borderWidth: "2px",
-                                //               borderStyle: "solid",
-                                //               borderColor: "#2a0000",
-                                //               borderRadius: "5px",
-                                //           }
-                                //         : {}
-                                // }
-                                style={
+                    {playlists.data?.slice().map((playlist) => (
+                        <ListItem key={playlist} style={{padding: 0}}>
+                            <ListItemButton
+                                onClick={() => setPlaylist.mutate(playlist)}
+                                disabled={
                                     playlist ===
                                     props.serverStatus.data?.musicService
                                         .playlist
-                                        ? {
-                                              boxShadow:
-                                                  "inset 0px 0px 0px 2px #2a0000",
-                                              borderRadius: "5px",
-                                          }
-                                        : {}
                                 }
                             >
-                                <ListItemText primary={playlist} />
-                            </ListItem>
-                        ))}
+                                <ListItemText
+                                    primary={playlist === "none" ? "None" : playlist}
+                                />
+                                <SwapHorizIcon />
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
                 </List>
             </div>
         </div>

@@ -8,7 +8,6 @@ import { green } from "@mui/material/colors";
 import Layout from "./components/Layout";
 
 import ControlApi from "./api";
-import Search from "./components/Search";
 
 const theme = createTheme({
     palette: {
