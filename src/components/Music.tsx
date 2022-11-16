@@ -80,7 +80,7 @@ export default function Music(props: {
     }
 
     return (
-        <div>
+        <div style={{margin: "10px"}}>
             <div
                 style={{
                     marginBottom: "8px",
@@ -151,7 +151,7 @@ export default function Music(props: {
                 </ButtonGroup>
             </div>
             <div style={{paddingTop: 10}}>
-                <Typography variant="h6">Playlists</Typography>
+                <Typography variant="h6" sx={{textAlign: "center"}}>Playlists</Typography>
                 <List>
                     {playlists.data?.slice().map((playlist) => (
                         <ListItem key={playlist} style={{padding: 0}}>

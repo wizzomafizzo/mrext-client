@@ -94,7 +94,7 @@ export default function Search(props: {
     }
 
     return (
-        <div>
+        <div style={{margin: "10px"}}>
             <Grid
                 container
                 sx={{ alignItems: "center" }}
@@ -105,7 +105,7 @@ export default function Search(props: {
                     <TextField
                         label="Name"
                         variant="standard"
-                        sx={{ width: "100%" }}
+                        sx={{ width: "100%"}}
                         onChange={(e) => (searchQuery = e.target.value)}
                         onKeyDown={(e) => {
                             if (e.key === "Enter") {

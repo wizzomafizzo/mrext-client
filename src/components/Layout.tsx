@@ -186,7 +186,7 @@ export default function ResponsiveDrawer(props: {
                     icon={<GamepadIcon />}
                 />
             </List> */}
-            <Divider />
+            {/* <Divider /> */}
             <List>
                 <RouterLink to="/search" text="Search" icon={<SearchIcon />} />
                 <RouterLink
@@ -295,11 +295,10 @@ export default function ResponsiveDrawer(props: {
                 component="main"
                 sx={{
                     flexGrow: 1,
-                    p: 3,
                     width: { sm: `calc(100% - ${drawerWidth}px)` },
                 }}
             >
-                <Toolbar />
+                <Toolbar/>
                 <Routes>
                     <Route path="/systems" element={<Systems />} />
                     <Route path="/" element={<Navigate to="/systems" />} />

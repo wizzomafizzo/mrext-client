@@ -1,6 +1,7 @@
 export interface System {
     id: string;
     name: string;
+    category: string;
 }
 
 export interface Game {

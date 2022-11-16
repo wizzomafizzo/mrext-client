@@ -53,7 +53,7 @@ export default function Screenshots() {
     const [deleteId, setDeleteId] = React.useState("");
 
     return (
-        <div>
+        <div style={{margin: "15px"}}>
             <Fab
                 color="primary"
                 style={{ position: "fixed", bottom: 16, right: 16 }}

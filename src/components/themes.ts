@@ -1,4 +1,4 @@
-import { createTheme, ThemeOptions } from "@mui/material";
+import { ThemeOptions } from "@mui/material";
 
 interface ThemeDefinition {
     id: string;
@@ -7,9 +7,9 @@ interface ThemeDefinition {
 }
 
 export const themes: { [id: string]: ThemeDefinition } = {
-    default: {
-        id: "default",
-        displayName: "Default",
+    brown: {
+        id: "brown",
+        displayName: "MiSTer Brown",
         options: {
             palette: {
                 background: {
@@ -53,7 +53,7 @@ export const themes: { [id: string]: ThemeDefinition } = {
                     default: "#282a36",
                 },
                 primary: {
-                    main: "#a7a4e0",
+                    main: "#9c5cf7",
                     contrastText: "#fff",
                 },
                 secondary: {
@@ -72,5 +72,5 @@ export function getActiveTheme(): ThemeDefinition {
     if (activeTheme && themes[activeTheme]) {
         return themes[activeTheme];
     }
-    return themes.default;
+    return themes.birdybro;
 }
