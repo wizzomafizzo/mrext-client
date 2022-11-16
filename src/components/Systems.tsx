@@ -7,9 +7,6 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-
 import { BottomNavigation, BottomNavigationAction } from "@mui/material";
 
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";

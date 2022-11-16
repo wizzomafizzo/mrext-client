@@ -173,8 +173,8 @@ export default function ResponsiveDrawer() {
     const drawer = (
         <div onClick={() => setMobileOpen(false)}>
             <Toolbar sx={{ justifyContent: "center" }}>
-                <img alt="MiSTer Kun Logo" src={misterKun} height={55} />
-                <img alt="MiSTer FPGA Logo" src={misterLogo} height={55} />
+                <img alt="MiSTer Kun Logo" src={misterKun} height={48} />
+                <img alt="MiSTer FPGA Logo" src={misterLogo} height={48} />
             </Toolbar>
             {/* <List>
                 <RouterLink to="/" text="Dashboard" icon={<DashboardIcon />} />

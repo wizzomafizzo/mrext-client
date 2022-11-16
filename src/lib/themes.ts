@@ -67,10 +67,10 @@ export const themes: { [id: string]: ThemeDefinition } = {
     }
 };
 
-export function getActiveTheme(): ThemeDefinition {
-    const activeTheme = localStorage.getItem("theme");
-    if (activeTheme && themes[activeTheme]) {
-        return themes[activeTheme];
+export function getTheme(id: string): ThemeDefinition {
+    if (themes[id]) {
+        return themes[id];
+    } else {
+        return themes.birdybro;
     }
-    return themes.birdybro;
 }

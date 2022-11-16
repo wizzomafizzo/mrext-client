@@ -44,7 +44,8 @@ import TerminalIcon from "@mui/icons-material/Terminal";
 import SettingsRemoteIcon from "@mui/icons-material/SettingsRemote";
 
 import { useTheme } from "@mui/material/styles";
-import { themes, getActiveTheme } from "../lib/themes";
+import { themes, getTheme } from "../lib/themes";
+import { useUIStateStore } from "../lib/store";
 
 // import ControlApi from "../api";
 
@@ -530,13 +531,8 @@ function OSDMenuSettings(props: {
 function Remote(props: {
     setCurrentPage: React.Dispatch<React.SetStateAction<SettingsPage>>;
 }) {
-    const [activeThemeId, setActiveThemeId] = React.useState(
-        getActiveTheme().id
-    );
-
-    useEffect(() => {
-        localStorage.setItem("theme", activeThemeId);
-    }, [activeThemeId]);
+    const activeTheme = useUIStateStore((state) => state.activeTheme);
+    const setActiveTheme = useUIStateStore((state) => state.setActiveTheme);
 
     return (
         <Stack sx={{ minWidth: 120 }} spacing={3}>
@@ -548,9 +544,9 @@ function Remote(props: {
             <FormControl>
                 <InputLabel>Theme</InputLabel>
                 <Select
-                    value={activeThemeId}
+                    value={activeTheme}
                     label="Theme"
-                    onChange={(e) => setActiveThemeId(e.target.value)}
+                    onChange={(e) => setActiveTheme(e.target.value)}
                 >
                     {Object.keys(themes).map((id) => (
                         <MenuItem key={id} value={id}>
@@ -670,7 +666,7 @@ export default function Settings() {
 
     return (
         <div>
-            <div style={{ marginBottom: "45px" }}>
+            <div style={{ margin: "10px" }}>
                 {currentPage === SettingsPage.Main && (
                     <MainPage setCurrentPage={setCurrentPage} />
                 )}

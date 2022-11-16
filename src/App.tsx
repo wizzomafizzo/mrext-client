@@ -1,13 +1,16 @@
 import React from "react";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { getActiveTheme } from "./lib/themes";
+import { getTheme } from "./lib/themes";
 
 import Layout from "./components/Layout";
+import { useUIStateStore } from "./lib/store";
 
 function App() {
+    const activeTheme = useUIStateStore((state) => state.activeTheme);
+
     return (
-        <ThemeProvider theme={createTheme(getActiveTheme().options)}>
+        <ThemeProvider theme={createTheme(getTheme(activeTheme).options)}>
             <Layout />
         </ThemeProvider>
     );
