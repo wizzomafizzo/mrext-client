@@ -20,13 +20,11 @@ import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 import ControlApi from "../lib/api";
 import { Typography } from "@mui/material";
 
-import { UseQueryResult } from "@tanstack/react-query";
-import { ServerStatus } from "../lib/models";
+import { useServerStatus } from "../lib/queries";
 
-export default function Music(props: {
-    serverStatus: UseQueryResult<ServerStatus, unknown>;
-}) {
+export default function Music() {
     const api = new ControlApi();
+    const serverStatus = useServerStatus();
 
     const playlists = useQuery({
         queryKey: ["music", "playlists"],
@@ -53,11 +51,11 @@ export default function Music(props: {
         mutationFn: api.setMusicPlaylist,
     });
 
-    if (props.serverStatus.isLoading) {
+    if (serverStatus.isLoading) {
         return <div></div>;
     }
 
-    if (props.serverStatus.data?.musicService.running === false) {
+    if (serverStatus.data?.musicService.running === false) {
         return (
             <div>
                 <Typography sx={{ textAlign: "center" }}>
@@ -80,22 +78,22 @@ export default function Music(props: {
     }
 
     return (
-        <div style={{margin: "10px"}}>
+        <div style={{ margin: "10px" }}>
             <div
                 style={{
                     marginBottom: "8px",
                     textAlign: "center",
                 }}
             >
-                {props.serverStatus.data?.musicService.track !== ""
-                    ? props.serverStatus.data?.musicService.track.replace(
+                {serverStatus.data?.musicService.track !== ""
+                    ? serverStatus.data?.musicService.track.replace(
                           /\.[^/.]+$/,
                           ""
                       )
                     : "—"}
             </div>
             <div style={{ marginBottom: "0.5em", textAlign: "center" }}>
-                {props.serverStatus.data?.musicService.playing ? (
+                {serverStatus.data?.musicService.playing ? (
                     <Button
                         variant="contained"
                         onClick={() => stopMusic.mutate()}
@@ -122,7 +120,7 @@ export default function Music(props: {
                         variant="contained"
                         onClick={() => setPlayback.mutate("random")}
                         disabled={
-                            props.serverStatus.data?.musicService.playback ===
+                            serverStatus.data?.musicService.playback ===
                             "random"
                         }
                     >
@@ -132,8 +130,7 @@ export default function Music(props: {
                         variant="contained"
                         onClick={() => setPlayback.mutate("loop")}
                         disabled={
-                            props.serverStatus.data?.musicService.playback ===
-                            "loop"
+                            serverStatus.data?.musicService.playback === "loop"
                         }
                     >
                         <RepeatOneIcon />
@@ -142,7 +139,7 @@ export default function Music(props: {
                         variant="contained"
                         onClick={() => setPlayback.mutate("disabled")}
                         disabled={
-                            props.serverStatus.data?.musicService.playback ===
+                            serverStatus.data?.musicService.playback ===
                             "disabled"
                         }
                     >
@@ -150,21 +147,24 @@ export default function Music(props: {
                     </Button>
                 </ButtonGroup>
             </div>
-            <div style={{paddingTop: 10}}>
-                <Typography variant="h6" sx={{textAlign: "center"}}>Playlists</Typography>
+            <div style={{ paddingTop: 10 }}>
+                <Typography variant="h6" sx={{ textAlign: "center" }}>
+                    Playlists
+                </Typography>
                 <List>
                     {playlists.data?.slice().map((playlist) => (
-                        <ListItem key={playlist} style={{padding: 0}}>
+                        <ListItem key={playlist} style={{ padding: 0 }}>
                             <ListItemButton
                                 onClick={() => setPlaylist.mutate(playlist)}
                                 disabled={
                                     playlist ===
-                                    props.serverStatus.data?.musicService
-                                        .playlist
+                                    serverStatus.data?.musicService.playlist
                                 }
                             >
                                 <ListItemText
-                                    primary={playlist === "none" ? "None" : playlist}
+                                    primary={
+                                        playlist === "none" ? "None" : playlist
+                                    }
                                 />
                                 <SwapHorizIcon />
                             </ListItemButton>

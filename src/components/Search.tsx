@@ -21,14 +21,11 @@ import SearchIcon from "@mui/icons-material/Search";
 import { CircularProgress } from "@mui/material";
 
 import ControlApi from "../lib/api";
+import { useServerStatus } from "../lib/queries";
 
-import { UseQueryResult } from "@tanstack/react-query";
-import { ServerStatus } from "../lib/models";
-
-export default function Search(props: {
-    serverStatus: UseQueryResult<ServerStatus, unknown>;
-}) {
+export default function Search() {
     const api = new ControlApi();
+    const serverStatus = useServerStatus();
 
     let searchQuery = "";
 
@@ -50,36 +47,36 @@ export default function Search(props: {
         mutationFn: api.launchGame,
     });
 
-    if (props.serverStatus.isLoading) {
+    if (serverStatus.isLoading) {
         return <div></div>;
     }
 
-    if (props.serverStatus.data?.searchService.indexing === true) {
+    if (serverStatus.data?.searchService.indexing === true) {
         return (
             <div>
                 <Typography variant="h5">Indexing games...</Typography>
                 <LinearProgress
                     variant="determinate"
                     value={
-                        (props.serverStatus.data?.searchService.currentStep /
-                            props.serverStatus.data?.searchService.totalSteps) *
+                        (serverStatus.data?.searchService.currentStep /
+                            serverStatus.data?.searchService.totalSteps) *
                         100
                     }
                 />
                 <Typography>
-                    {props.serverStatus.data?.searchService.currentDesc}
+                    {serverStatus.data?.searchService.currentDesc}
                 </Typography>
             </div>
         );
     }
 
-    if (props.serverStatus.data?.searchService.ready === false) {
+    if (serverStatus.data?.searchService.ready === false) {
         return (
             <div style={{ textAlign: "center" }}>
                 <Typography sx={{ marginBottom: 2 }}>
-                    Searching needs an index of game files to be created.
-                    This is only required on first setup, or if the games on
-                    disk have changed.
+                    Searching needs an index of game files to be created. This
+                    is only required on first setup, or if the games on disk
+                    have changed.
                 </Typography>
                 <Button
                     variant="contained"
@@ -94,7 +91,7 @@ export default function Search(props: {
     }
 
     return (
-        <div style={{margin: "10px"}}>
+        <div style={{ margin: "10px" }}>
             <Grid
                 container
                 sx={{ alignItems: "center" }}
@@ -105,7 +102,7 @@ export default function Search(props: {
                     <TextField
                         label="Name"
                         variant="standard"
-                        sx={{ width: "100%"}}
+                        sx={{ width: "100%" }}
                         onChange={(e) => (searchQuery = e.target.value)}
                         onKeyDown={(e) => {
                             if (e.key === "Enter") {

@@ -162,9 +162,7 @@ function RouterLink(props: RouterLinkProps) {
     );
 }
 
-export default function ResponsiveDrawer(props: {
-    serverStatus: UseQueryResult<ServerStatus, unknown>;
-}) {
+export default function ResponsiveDrawer() {
     const location = useLocation();
     const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -298,20 +296,14 @@ export default function ResponsiveDrawer(props: {
                     width: { sm: `calc(100% - ${drawerWidth}px)` },
                 }}
             >
-                <Toolbar/>
+                <Toolbar />
                 <Routes>
                     <Route path="/systems" element={<Systems />} />
                     <Route path="/" element={<Navigate to="/systems" />} />
-                    <Route
-                        path="/search"
-                        element={<Search serverStatus={props.serverStatus} />}
-                    />
+                    <Route path="/search" element={<Search />} />
                     <Route path="/screenshots" element={<Screenshots />} />
                     <Route path="/control" element={<div></div>} />
-                    <Route
-                        path="/music"
-                        element={<Music serverStatus={props.serverStatus} />}
-                    />
+                    <Route path="/music" element={<Music />} />
                     <Route path="/wallpaper" element={<Wallpaper />} />
                     <Route path="/settings" element={<Settings />} />
                 </Routes>
