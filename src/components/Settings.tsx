@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 // import { useQuery, useMutation } from "@tanstack/react-query";
 
 import Stack from "@mui/material/Stack";
@@ -530,7 +530,13 @@ function OSDMenuSettings(props: {
 function Remote(props: {
     setCurrentPage: React.Dispatch<React.SetStateAction<SettingsPage>>;
 }) {
-    const theme = useTheme();
+    const [activeThemeId, setActiveThemeId] = React.useState(
+        getActiveTheme().id
+    );
+
+    useEffect(() => {
+        localStorage.setItem("theme", activeThemeId);
+    }, [activeThemeId]);
 
     return (
         <Stack sx={{ minWidth: 120 }} spacing={3}>
@@ -542,12 +548,14 @@ function Remote(props: {
             <FormControl>
                 <InputLabel>Theme</InputLabel>
                 <Select
-                    value={getActiveTheme().id}
-                    label="OSD rotation"
-                    onChange={(x) => localStorage.setItem("theme", x.target.value)}
+                    value={activeThemeId}
+                    label="Theme"
+                    onChange={(e) => setActiveThemeId(e.target.value)}
                 >
                     {Object.keys(themes).map((id) => (
-                        <MenuItem key={id} value={id}>{themes[id].displayName}</MenuItem>
+                        <MenuItem key={id} value={id}>
+                            {themes[id].displayName}
+                        </MenuItem>
                     ))}
                 </Select>
             </FormControl>

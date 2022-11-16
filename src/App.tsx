@@ -2,8 +2,8 @@ import React from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
-import { ThemeProvider } from "@mui/material/styles";
-import { themes, getActiveTheme } from "./components/themes";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { getActiveTheme } from "./components/themes";
 
 import Layout from "./components/Layout";
 
@@ -19,10 +19,8 @@ function App() {
         // refetchIntervalInBackground: true,
     });
 
-    const activeTheme = getActiveTheme();
-
     return (
-        <ThemeProvider theme={activeTheme.theme}>
+        <ThemeProvider theme={createTheme(getActiveTheme().options)}>
             <Layout serverStatus={serverStatus} />
         </ThemeProvider>
     );

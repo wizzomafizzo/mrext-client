@@ -1,16 +1,16 @@
-import { createTheme, Theme } from "@mui/material";
+import { createTheme, ThemeOptions } from "@mui/material";
 
 interface ThemeDefinition {
     id: string;
     displayName: string;
-    theme: Theme;
+    options: ThemeOptions;
 }
 
 export const themes: { [id: string]: ThemeDefinition } = {
     default: {
         id: "default",
         displayName: "Default",
-        theme: createTheme({
+        options: {
             palette: {
                 background: {
                     default: "#e6d0bb",
@@ -22,12 +22,12 @@ export const themes: { [id: string]: ThemeDefinition } = {
                     main: "#2a0000",
                 },
             },
-        }),
+        },
     },
     tron303: {
         id: "tron303",
         displayName: "Tron303",
-        theme: createTheme({
+        options: {
             palette: {
                 mode: "dark",
                 primary: {
@@ -41,12 +41,12 @@ export const themes: { [id: string]: ThemeDefinition } = {
                     secondary: "#0a6b6d",
                 }
             },
-        }),
+        },
     },
     birdybro: {
         id: "birdybro",
         displayName: "birdybro",
-        theme: createTheme({
+        options: {
             palette: {
                 mode: "dark",
                 background: {
@@ -63,7 +63,7 @@ export const themes: { [id: string]: ThemeDefinition } = {
                     primary: "#fff",
                 }
             },
-        }),
+        },
     }
 };
 
