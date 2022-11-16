@@ -41,6 +41,10 @@ import SaveIcon from "@mui/icons-material/Save";
 import SpeakerIcon from "@mui/icons-material/Speaker";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 import TerminalIcon from "@mui/icons-material/Terminal";
+import SettingsRemoteIcon from "@mui/icons-material/SettingsRemote";
+
+import { useTheme } from "@mui/material/styles";
+import { themes, getActiveTheme } from "./themes";
 
 // import ControlApi from "../api";
 
@@ -63,6 +67,7 @@ enum SettingsPage {
     Video,
     OSDMenu,
     InputDevices,
+    Remote,
 }
 
 function PageHeader(props: { title: string; backFn: () => void }) {
@@ -397,7 +402,7 @@ function InputDevices(props: {
                     label="Automatically disconnect bluetooth"
                 />
                 <Stack spacing={2} direction="row" alignItems="center">
-                <Input
+                    <Input
                         size="small"
                         inputProps={{
                             step: 10,
@@ -410,7 +415,8 @@ function InputDevices(props: {
                     <Typography>minutes</Typography>
                 </Stack>
                 <FormHelperText>
-                    Automatically disconnect and shutdown bluetooth devices after inactivity for specified time.
+                    Automatically disconnect and shutdown bluetooth devices
+                    after inactivity for specified time.
                 </FormHelperText>
             </FormControl>
 
@@ -420,7 +426,8 @@ function InputDevices(props: {
                     label="Reset bluetooth dongle before pairing"
                 />
                 <FormHelperText>
-                    May fix issues where bluetooths device will not pair with dongle.
+                    May fix issues where bluetooths device will not pair with
+                    dongle.
                 </FormHelperText>
             </FormControl>
         </Stack>
@@ -520,13 +527,41 @@ function OSDMenuSettings(props: {
     );
 }
 
+function Remote(props: {
+    setCurrentPage: React.Dispatch<React.SetStateAction<SettingsPage>>;
+}) {
+    const theme = useTheme();
+
+    return (
+        <Stack sx={{ minWidth: 120 }} spacing={3}>
+            <PageHeader
+                title="Remote"
+                backFn={() => props.setCurrentPage(SettingsPage.Main)}
+            />
+
+            <FormControl>
+                <InputLabel>Theme</InputLabel>
+                <Select
+                    value={getActiveTheme().id}
+                    label="OSD rotation"
+                    onChange={(x) => localStorage.setItem("theme", x.target.value)}
+                >
+                    {Object.keys(themes).map((id) => (
+                        <MenuItem key={id} value={id}>{themes[id].displayName}</MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
+        </Stack>
+    );
+}
+
 function MainPage(props: {
     setCurrentPage: React.Dispatch<React.SetStateAction<SettingsPage>>;
 }) {
     return (
-        <Stack sx={{ minWidth: 120 }} spacing={2}>
-            <List>
-                <ListItem disableGutters>
+        <Stack>
+            <List disablePadding>
+                {/* <ListItem disableGutters>
                     <ListItemButton
                         onClick={() => props.setCurrentPage(SettingsPage.Video)}
                     >
@@ -600,6 +635,20 @@ function MainPage(props: {
                         <ListItemText primary="System" />
                         <ArrowForwardIcon />
                     </ListItemButton>
+                </ListItem> */}
+
+                <ListItem disableGutters>
+                    <ListItemButton
+                        onClick={() =>
+                            props.setCurrentPage(SettingsPage.Remote)
+                        }
+                    >
+                        <ListItemIcon>
+                            <SettingsRemoteIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Remote" />
+                        <ArrowForwardIcon />
+                    </ListItemButton>
                 </ListItem>
             </List>
         </Stack>
@@ -629,8 +678,11 @@ export default function Settings() {
                 {currentPage === SettingsPage.InputDevices && (
                     <InputDevices setCurrentPage={setCurrentPage} />
                 )}
+                {currentPage === SettingsPage.Remote && (
+                    <Remote setCurrentPage={setCurrentPage} />
+                )}
             </div>
-            <Stack
+            {/* <Stack
                 sx={{
                     position: "fixed",
                     bottom: 0,
@@ -658,7 +710,7 @@ export default function Settings() {
                 <Button variant="text" color="error" disabled={false}>
                     Discard changes
                 </Button>
-            </Stack>
+            </Stack> */}
         </div>
     );
 }

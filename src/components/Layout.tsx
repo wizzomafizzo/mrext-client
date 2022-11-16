@@ -23,7 +23,9 @@ import PhotoCameraBackIcon from "@mui/icons-material/PhotoCameraBack";
 import FormatPaintIcon from "@mui/icons-material/FormatPaint";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 
+import { useTheme } from "@mui/material/styles";
 import misterLogo from "../images/misterlogo.svg";
+import misterKun from "../images/misterkun.svg";
 
 import {
     Routes,
@@ -173,17 +175,17 @@ export default function ResponsiveDrawer(props: {
     const drawer = (
         <div onClick={() => setMobileOpen(false)}>
             <Toolbar sx={{ justifyContent: "center" }}>
-                <img alt="MiSTer FPGA" src={misterLogo} height={55} />
+                <img alt="MiSTer Kun Logo" src={misterKun} height={55} />
+                <img alt="MiSTer FPGA Logo" src={misterLogo} height={55} />
             </Toolbar>
-            <List>
-                {/* <RouterLink to="/" text="Dashboard" icon={<DashboardIcon />} />
+            {/* <List>
+                <RouterLink to="/" text="Dashboard" icon={<DashboardIcon />} />
                 <RouterLink
                     to="/control"
                     text="Control"
                     icon={<GamepadIcon />}
-                /> */}
-                <RouterLink to="/music" text="Music" icon={<MusicNoteIcon />} />
-            </List>
+                />
+            </List> */}
             <Divider />
             <List>
                 <RouterLink to="/search" text="Search" icon={<SearchIcon />} />
@@ -200,16 +202,18 @@ export default function ResponsiveDrawer(props: {
             </List>
             <Divider />
             <List>
+                <RouterLink to="/music" text="Music" icon={<MusicNoteIcon />} />
+
                 <RouterLink
                     to="/wallpaper"
                     text="Wallpaper"
                     icon={<FormatPaintIcon />}
                 />
-                {/* <RouterLink
+                <RouterLink
                     to="/settings"
                     text="Settings"
                     icon={<SettingsIcon />}
-                /> */}
+                />
             </List>
         </div>
     );
@@ -224,7 +228,12 @@ export default function ResponsiveDrawer(props: {
                     ml: { sm: `${drawerWidth}px` },
                 }}
             >
-                <Toolbar>
+                <Toolbar
+                    sx={{
+                        backgroundColor: "secondary.main",
+                        color: "primary.contrastText",
+                    }}
+                >
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
@@ -294,10 +303,16 @@ export default function ResponsiveDrawer(props: {
                 <Routes>
                     <Route path="/systems" element={<Systems />} />
                     <Route path="/" element={<Navigate to="/systems" />} />
-                    <Route path="/search" element={<Search serverStatus={props.serverStatus} />} />
+                    <Route
+                        path="/search"
+                        element={<Search serverStatus={props.serverStatus} />}
+                    />
                     <Route path="/screenshots" element={<Screenshots />} />
                     <Route path="/control" element={<div></div>} />
-                    <Route path="/music" element={<Music serverStatus={props.serverStatus} />} />
+                    <Route
+                        path="/music"
+                        element={<Music serverStatus={props.serverStatus} />}
+                    />
                     <Route path="/wallpaper" element={<Wallpaper />} />
                     <Route path="/settings" element={<Settings />} />
                 </Routes>
