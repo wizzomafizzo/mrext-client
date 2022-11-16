@@ -44,7 +44,7 @@ import TerminalIcon from "@mui/icons-material/Terminal";
 import SettingsRemoteIcon from "@mui/icons-material/SettingsRemote";
 
 import { useTheme } from "@mui/material/styles";
-import { themes, getActiveTheme } from "./themes";
+import { themes, getActiveTheme } from "../lib/themes";
 
 // import ControlApi from "../api";
 

@@ -27,7 +27,7 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import UploadIcon from "@mui/icons-material/Upload";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
-import ControlApi from "../api";
+import ControlApi from "../lib/api";
 
 export default function Wallpaper() {
     const api = new ControlApi();

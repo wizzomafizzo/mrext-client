@@ -25,7 +25,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ShareIcon from "@mui/icons-material/Share";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
-import ControlApi from "../api";
+import ControlApi from "../lib/api";
 
 export default function Screenshots() {
     const api = new ControlApi();

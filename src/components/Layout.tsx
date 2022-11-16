@@ -37,7 +37,7 @@ import {
 } from "react-router-dom";
 
 import { UseQueryResult } from "@tanstack/react-query";
-import { ServerStatus } from "../models";
+import { ServerStatus } from "../lib/models";
 
 import Screenshots from "./Screenshots";
 import Systems from "./Systems";

@@ -14,8 +14,8 @@ import { BottomNavigation, BottomNavigationAction } from "@mui/material";
 
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
-import ControlApi from "../api";
-import { System } from "../models";
+import ControlApi from "../lib/api";
+import { System } from "../lib/models";
 
 export default function Systems() {
     const api = new ControlApi();

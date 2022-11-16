@@ -3,11 +3,11 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { getActiveTheme } from "./components/themes";
+import { getActiveTheme } from "./lib/themes";
 
 import Layout from "./components/Layout";
 
-import ControlApi from "./api";
+import ControlApi from "./lib/api";
 
 function App() {
     const api = new ControlApi();

@@ -20,10 +20,10 @@ import SearchIcon from "@mui/icons-material/Search";
 
 import { CircularProgress } from "@mui/material";
 
-import ControlApi from "../api";
+import ControlApi from "../lib/api";
 
 import { UseQueryResult } from "@tanstack/react-query";
-import { ServerStatus } from "../models";
+import { ServerStatus } from "../lib/models";
 
 export default function Search(props: {
     serverStatus: UseQueryResult<ServerStatus, unknown>;
