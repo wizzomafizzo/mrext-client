@@ -17,6 +17,8 @@ import InputDevices from "./SettingsInputDevices";
 import OSDMenuSettings from "./SettingsOSDMenu";
 import CoresSettings from "./SettingsCore";
 import Remote from "./SettingsRemote";
+import Box from "@mui/material/Box";
+import { Typography } from "@mui/material";
 
 function SettingsPageLink(props: {
     page: SettingsPageId;
@@ -28,7 +30,7 @@ function SettingsPageLink(props: {
     );
 
     return (
-        <ListItem>
+        <ListItem disableGutters>
             <ListItemButton onClick={() => setActiveSettingsPage(props.page)}>
                 <ListItemIcon>{props.icon}</ListItemIcon>
                 <ListItemText primary={props.text} />
@@ -40,43 +42,48 @@ function SettingsPageLink(props: {
 
 function MainPage() {
     return (
-        <List>
-            <SettingsPageLink
-                page={SettingsPageId.Video}
-                text="Video"
-                icon={<TvIcon />}
-            />
-            <SettingsPageLink
-                page={SettingsPageId.Video}
-                text="Audio"
-                icon={<SpeakerIcon />}
-            />
-            <SettingsPageLink
-                page={SettingsPageId.InputDevices}
-                text="Input devices"
-                icon={<SportsEsportsIcon />}
-            />
-            <SettingsPageLink
-                page={SettingsPageId.OSDMenu}
-                text="OSD and menu"
-                icon={<WysiwygIcon />}
-            />
-            <SettingsPageLink
-                page={SettingsPageId.Cores}
-                text="Cores"
-                icon={<DeveloperBoardIcon />}
-            />
-            <SettingsPageLink
-                page={SettingsPageId.Video}
-                text="System"
-                icon={<TerminalIcon />}
-            />
-            <SettingsPageLink
-                page={SettingsPageId.Remote}
-                text="Remote"
-                icon={<SettingsRemoteIcon />}
-            />
-        </List>
+        <div>
+            <Typography variant="body2">
+                Only the Remote page actually makes changes right now. All other pages will not save any changes to your MiSTer.ini file.
+            </Typography>
+            <List disablePadding>
+                <SettingsPageLink
+                    page={SettingsPageId.Video}
+                    text="Video"
+                    icon={<TvIcon />}
+                />
+                <SettingsPageLink
+                    page={SettingsPageId.Video}
+                    text="Audio"
+                    icon={<SpeakerIcon />}
+                />
+                <SettingsPageLink
+                    page={SettingsPageId.InputDevices}
+                    text="Input devices"
+                    icon={<SportsEsportsIcon />}
+                />
+                <SettingsPageLink
+                    page={SettingsPageId.OSDMenu}
+                    text="OSD and menu"
+                    icon={<WysiwygIcon />}
+                />
+                <SettingsPageLink
+                    page={SettingsPageId.Cores}
+                    text="Cores"
+                    icon={<DeveloperBoardIcon />}
+                />
+                <SettingsPageLink
+                    page={SettingsPageId.Video}
+                    text="System"
+                    icon={<TerminalIcon />}
+                />
+                <SettingsPageLink
+                    page={SettingsPageId.Remote}
+                    text="Remote"
+                    icon={<SettingsRemoteIcon />}
+                />
+            </List>
+        </div>
     );
 }
 
@@ -108,7 +115,7 @@ export default function Settings() {
 
     return (
         <div>
-            <div>{page}</div>
+            <Box sx={{ margin: 2, marginRight: 3, marginLeft: 3 }}>{page}</Box>
             {/* <Stack
                 sx={{
                     position: "fixed",
