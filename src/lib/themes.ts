@@ -7,26 +7,9 @@ interface ThemeDefinition {
 }
 
 export const themes: { [id: string]: ThemeDefinition } = {
-    brown: {
-        id: "brown",
-        displayName: "MiSTer Brown",
-        options: {
-            palette: {
-                background: {
-                    default: "#e6d0bb",
-                },
-                primary: {
-                    main: "#2a0000",
-                },
-                secondary: {
-                    main: "#2a0000",
-                },
-            },
-        },
-    },
-    tron303: {
-        id: "tron303",
-        displayName: "Tron303",
+    tron: {
+        id: "tron",
+        displayName: "Tron",
         options: {
             palette: {
                 mode: "dark",
@@ -43,9 +26,9 @@ export const themes: { [id: string]: ThemeDefinition } = {
             },
         },
     },
-    birdybro: {
-        id: "birdybro",
-        displayName: "birdybro",
+    mister: {
+        id: "mister",
+        displayName: "MiSTer",
         options: {
             palette: {
                 mode: "dark",
@@ -71,6 +54,6 @@ export function getTheme(id: string): ThemeDefinition {
     if (themes[id]) {
         return themes[id];
     } else {
-        return themes.birdybro;
+        return themes.mister;
     }
 }
