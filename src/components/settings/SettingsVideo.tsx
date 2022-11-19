@@ -15,10 +15,11 @@ import FormHelperText from "@mui/material/FormHelperText";
 import Typography from "@mui/material/Typography";
 
 import { PageHeader } from "./SettingsCommon";
-import { useIniSettingsStore } from "../lib/store";
+import { useIniSettingsStore } from "../../lib/store";
 import { useState, useEffect } from "react";
 import RadioGroup from "@mui/material/RadioGroup";
 import Radio from "@mui/material/Radio";
+import TextField from "@mui/material/TextField";
 
 const videoModes = [
     ["0", "1280x720@60"],
@@ -278,50 +279,96 @@ function VSyncAdjust() {
     );
 }
 
-export default function VideoSettings() {
+function DVIMode() {
     const dviMode = useIniSettingsStore((state) => state.dviMode);
     const setDviMode = useIniSettingsStore((state) => state.setDviMode);
+
+    return (
+        <FormControl>
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={dviMode}
+                        onChange={(e) => setDviMode(e.target.checked)}
+                    />
+                }
+                label="DVI mode"
+            />
+            <FormHelperText>
+                Disables audio being transmitted through HDMI.
+            </FormHelperText>
+        </FormControl>
+    );
+}
+
+function VScaleBorder() {
     const vscaleBorder = useIniSettingsStore((state) => state.vscaleBorder);
     const setVscaleBorder = useIniSettingsStore(
         (state) => state.setVscaleBorder
     );
 
     return (
+        <FormControl>
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={vscaleBorder > 0}
+                        onChange={(e) =>
+                            e.target.checked
+                                ? setVscaleBorder(1)
+                                : setVscaleBorder(0)
+                        }
+                    />
+                }
+                label="Vertical scale border"
+            />
+            {vscaleBorder > 0 ? (
+                <Stack spacing={2} direction="row" alignItems="center">
+                    <Slider
+                        value={vscaleBorder}
+                        onChange={(e, v) => setVscaleBorder(Number(v))}
+                        step={1}
+                        min={1}
+                        max={399}
+                    />
+                    <TextField
+                        inputProps={{
+                            inputMode: "numeric",
+                            pattern: "[0-9]*",
+                            style: { textAlign: "center" },
+                        }}
+                        size="small"
+                        sx={{ width: "100px" }}
+                        value={vscaleBorder}
+                        onChange={(e) => {
+                            const value = Number(e.target.value);
+                            if (value < 1) {
+                                setVscaleBorder(1);
+                            } else if (value > 399) {
+                                setVscaleBorder(399);
+                            } else {
+                                setVscaleBorder(value);
+                            }
+                        }}
+                    />
+                </Stack>
+            ) : null}
+            <FormHelperText>
+                Set height of a border on the top and bottom of the screen.
+            </FormHelperText>
+        </FormControl>
+    );
+}
+
+export default function VideoSettings() {
+    return (
         <Stack spacing={3}>
             <PageHeader title="Video" />
             <VideoMode />
             <VerticalScale />
             <VSyncAdjust />
-
-            <FormControl>
-                <FormControlLabel control={<Checkbox />} label="DVI mode" />
-                <FormHelperText>
-                    Disables audio being transmitted through HDMI.
-                </FormHelperText>
-            </FormControl>
-
-            <FormControl>
-                <FormControlLabel
-                    control={<Checkbox defaultChecked />}
-                    label="Vertical scale border"
-                />
-                <Stack spacing={2} direction="row" alignItems="center">
-                    <Slider />
-                    <Input
-                        size="small"
-                        inputProps={{
-                            step: 10,
-                            min: 0,
-                            max: 100,
-                            type: "number",
-                        }}
-                    />
-                    <span style={{ whiteSpace: "nowrap" }}>height</span>
-                </Stack>
-                <FormHelperText>
-                    Set a border on the top and bottom of the screen.
-                </FormHelperText>
-            </FormControl>
+            <DVIMode />
+            <VScaleBorder />
 
             <FormControl>
                 <FormControlLabel

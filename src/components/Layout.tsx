@@ -44,7 +44,7 @@ import Systems from "./Systems";
 import Wallpaper from "./Wallpaper";
 import Music from "./Music";
 import Search from "./Search";
-import Settings from "./Settings";
+import Settings from "./settings/Settings";
 
 const drawerWidth = 240;
 

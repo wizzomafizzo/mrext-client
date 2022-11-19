@@ -11,12 +11,15 @@ import SpeakerIcon from "@mui/icons-material/Speaker";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 import TerminalIcon from "@mui/icons-material/Terminal";
 import SettingsRemoteIcon from "@mui/icons-material/SettingsRemote";
-import { SettingsPageId, useUIStateStore } from "../lib/store";
+
+import { SettingsPageId, useUIStateStore } from "../../lib/store";
+
 import VideoSettings from "./SettingsVideo";
 import InputDevices from "./SettingsInputDevices";
 import OSDMenuSettings from "./SettingsOSDMenu";
 import CoresSettings from "./SettingsCore";
 import Remote from "./SettingsRemote";
+
 import Box from "@mui/material/Box";
 import { Typography } from "@mui/material";
 
