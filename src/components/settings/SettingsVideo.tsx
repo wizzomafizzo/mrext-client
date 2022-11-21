@@ -14,12 +14,19 @@ import FormHelperText from "@mui/material/FormHelperText";
 
 import Typography from "@mui/material/Typography";
 
-import { PageHeader } from "./SettingsCommon";
+import {
+    BoolOption,
+    NumberOption,
+    PageHeader,
+    SimpleSelectOption,
+    ValuePicker,
+} from "./SettingsCommon";
 import { useIniSettingsStore } from "../../lib/store";
 import { useState, useEffect } from "react";
 import RadioGroup from "@mui/material/RadioGroup";
 import Radio from "@mui/material/Radio";
 import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
 
 const videoModes = [
     ["0", "1280x720@60"],
@@ -100,24 +107,27 @@ function VerticalScale() {
     );
 
     return (
-        <FormControl>
-            <InputLabel>Vertical scale mode</InputLabel>
-            <Select
-                value={verticalScaleMode}
-                onChange={(e) => setVerticalScaleMode(Number(e.target.value))}
-                label="Vertical scale mode"
-            >
-                <MenuItem value={0}>Fit screen height</MenuItem>
-                <MenuItem value={1}>Integer scale only</MenuItem>
-                <MenuItem value={2}>0.5 steps of scale</MenuItem>
-                <MenuItem value={3}>0.25 steps of scale</MenuItem>
-                <MenuItem value={4}>Use core aspect ratio</MenuItem>
-                <MenuItem value={5}>Maintain display aspect ratio</MenuItem>
-            </Select>
-            {verticalScaleMode === 4 || verticalScaleMode === 5 ? (
-                <FormHelperText>Integer resolution scaling.</FormHelperText>
-            ) : null}
-        </FormControl>
+        <SimpleSelectOption
+            label="Vertical scale mode"
+            value={verticalScaleMode}
+            setValue={setVerticalScaleMode}
+            options={[
+                "Fit screen height",
+                "Integer scale only",
+                "0.5 steps of scale",
+                "0.25 steps of scale",
+                "Use core aspect ratio",
+                "Maintain display aspect ratio",
+            ]}
+            helpText={[
+                "",
+                "",
+                "",
+                "",
+                "Integer resolution scaling.",
+                "Integer resolution scaling.",
+            ]}
+        />
     );
 }
 
@@ -184,96 +194,31 @@ function VSyncAdjust() {
             </FormControl>
 
             {vsyncAdjust > 0 ? (
-                <FormControl>
-                    <Stack
-                        spacing={2}
-                        direction="row"
-                        alignItems="center"
-                        justifyContent="space-between"
-                    >
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={refreshMin > 0}
-                                    onChange={(e) => {
-                                        if (e.target.checked) {
-                                            setRefreshMin(60);
-                                        } else {
-                                            setRefreshMin(0);
-                                        }
-                                    }}
-                                />
-                            }
-                            label="Set minimum refresh rate"
-                        />
-                        {refreshMin > 0 ? (
-                            <Input
-                                size="small"
-                                inputProps={{
-                                    step: 1,
-                                    min: 0,
-                                    max: 240,
-                                    type: "number",
-                                }}
-                                value={refreshMin}
-                                onChange={(e) =>
-                                    setRefreshMin(Number(e.target.value))
-                                }
-                            />
-                        ) : null}
-                    </Stack>
-                    <FormHelperText>
-                        When enabled, VSync adjust will not be applied if the
-                        refresh rate is below this value. For example, on an
-                        NTSC monitor which doesn't support PAL.
-                    </FormHelperText>
-                </FormControl>
+                <NumberOption
+                    value={refreshMin}
+                    setValue={setRefreshMin}
+                    label="Minimum refresh rate"
+                    helpText="When enabled, VSync adjust will not be applied if the refresh rate is below this value. For example, on an NTSC monitor which doesn't support PAL."
+                    isEnabled={() => refreshMin > 0}
+                    disabledValue={0}
+                    defaultValue={60}
+                    min={1}
+                    max={240}
+                />
             ) : null}
 
             {vsyncAdjust > 0 ? (
-                <FormControl>
-                    <Stack
-                        spacing={2}
-                        direction="row"
-                        alignItems="center"
-                        justifyContent="space-between"
-                    >
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={refreshMax > 0}
-                                    onChange={(e) => {
-                                        if (e.target.checked) {
-                                            setRefreshMax(50);
-                                        } else {
-                                            setRefreshMax(0);
-                                        }
-                                    }}
-                                />
-                            }
-                            label="Set maximum refresh rate"
-                        />
-                        {refreshMax > 0 ? (
-                            <Input
-                                size="small"
-                                inputProps={{
-                                    step: 1,
-                                    min: 0,
-                                    max: 240,
-                                    type: "number",
-                                }}
-                                value={refreshMax}
-                                onChange={(e) =>
-                                    setRefreshMax(Number(e.target.value))
-                                }
-                            />
-                        ) : null}
-                    </Stack>
-                    <FormHelperText>
-                        Same as above, but for the maximum. For example, on a
-                        PAL monitor which doesn't support NTSC.
-                    </FormHelperText>
-                </FormControl>
+                <NumberOption
+                    value={refreshMax}
+                    setValue={setRefreshMax}
+                    label="Maximum refresh rate"
+                    helpText="Same as above, but for the maximum. For example, on a PAL monitor which doesn't support NTSC."
+                    isEnabled={() => refreshMax > 0}
+                    disabledValue={0}
+                    defaultValue={50}
+                    min={1}
+                    max={240}
+                />
             ) : null}
         </Stack>
     );
@@ -284,20 +229,12 @@ function DVIMode() {
     const setDviMode = useIniSettingsStore((state) => state.setDviMode);
 
     return (
-        <FormControl>
-            <FormControlLabel
-                control={
-                    <Checkbox
-                        checked={dviMode}
-                        onChange={(e) => setDviMode(e.target.checked)}
-                    />
-                }
-                label="DVI mode"
-            />
-            <FormHelperText>
-                Disables audio being transmitted through HDMI.
-            </FormHelperText>
-        </FormControl>
+        <BoolOption
+            label="DVI mode"
+            value={dviMode}
+            setValue={setDviMode}
+            helpText="Disables audio being transmitted through HDMI."
+        />
     );
 }
 
@@ -360,166 +297,354 @@ function VScaleBorder() {
     );
 }
 
+function VFilterGeneric(props: {
+    label: string;
+    value: string;
+    setValue: (value: string) => void;
+}) {
+    const [enabled, setEnabled] = useState(
+        props.value && props.value !== "" ? true : false
+    );
+
+    return (
+        <FormControl>
+            <FormControlLabel
+                control={
+                    <Checkbox
+                        checked={enabled}
+                        onChange={(e) => {
+                            setEnabled(e.target.checked);
+                            if (!e.target.checked) {
+                                props.setValue("");
+                            }
+                        }}
+                    />
+                }
+                label={props.label}
+            />
+            {enabled ? (
+                <ValuePicker
+                    value={props.value}
+                    setValue={props.setValue}
+                    options={[
+                        "Interpolation (Medium).txt",
+                        "No Interpolation.txt",
+                        "Scanlines (Medium).txt",
+                        "Scanlines (Strong).txt",
+                        "Scanlines (Weak).txt",
+                    ]}
+                    formatOption={(option) => option.replace(/\.[^/.]+$/, "")}
+                />
+            ) : null}
+        </FormControl>
+    );
+}
+
+function VFilter() {
+    const vfilter = useIniSettingsStore((state) => state.vfilterDefault);
+    const setVfilter = useIniSettingsStore((state) => state.setVfilterDefault);
+
+    return (
+        <VFilterGeneric
+            label="Default video filter"
+            value={vfilter}
+            setValue={setVfilter}
+        />
+    );
+}
+
+function VFilterScanlines() {
+    const vfilterScanlines = useIniSettingsStore(
+        (state) => state.vfilterScanlinesDefault
+    );
+    const setVfilterScanlines = useIniSettingsStore(
+        (state) => state.setVfilterScanlinesDefault
+    );
+
+    return (
+        <VFilterGeneric
+            label="Default scanlines video filter"
+            value={vfilterScanlines}
+            setValue={setVfilterScanlines}
+        />
+    );
+}
+
+function VFilterVertical() {
+    const vfilterVertical = useIniSettingsStore(
+        (state) => state.vfilterVerticalDefault
+    );
+    const setVfilterVertical = useIniSettingsStore(
+        (state) => state.setVfilterVerticalDefault
+    );
+
+    return (
+        <VFilterGeneric
+            label="Default vertical video filter"
+            value={vfilterVertical}
+            setValue={setVfilterVertical}
+        />
+    );
+}
+
+function ShadowMask() {
+    const shmask = useIniSettingsStore((state) => state.shmaskDefault);
+    const setShmask = useIniSettingsStore((state) => state.setShmaskDefault);
+
+    return (
+        <VFilterGeneric
+            label="Default shadow mask"
+            value={shmask}
+            setValue={setShmask}
+        />
+    );
+}
+
+function GameMode() {
+    const gameMode = useIniSettingsStore((state) => state.hdmiGameMode);
+    const setGameMode = useIniSettingsStore((state) => state.setHdmiGameMode);
+
+    return (
+        <BoolOption
+            label="Game mode on HDMI output"
+            value={gameMode}
+            setValue={setGameMode}
+        />
+    );
+}
+
+function ShadowMaskMode() {
+    const shmaskMode = useIniSettingsStore((state) => state.shmaskModeDefault);
+    const setShmaskMode = useIniSettingsStore(
+        (state) => state.setShmaskModeDefault
+    );
+
+    return (
+        <SimpleSelectOption
+            label="Default shadow mask mode"
+            value={shmaskMode}
+            setValue={setShmaskMode}
+            options={["None", "1x", "2x", "1x rotated", "2x rotated"]}
+        />
+    );
+}
+
+function LimitHDMIColor() {
+    const limitHdmiColor = useIniSettingsStore((state) => state.hdmiLimited);
+    const setLimitHdmiColor = useIniSettingsStore(
+        (state) => state.setHdmiLimited
+    );
+
+    return (
+        <SimpleSelectOption
+            label="Limit HDMI color range"
+            value={limitHdmiColor}
+            setValue={setLimitHdmiColor}
+            options={["Off", "16-235 color range", "16-255 color range"]}
+            helpText={[
+                "",
+                "Use limited (16-235) color range over HDMI.",
+                "Use limited (16-255) color range over HDMI, for VGA converters.",
+            ]}
+        />
+    );
+}
+
+function VRRMode() {
+    const vrrMode = useIniSettingsStore((state) => state.vrrMode);
+    const setVrrMode = useIniSettingsStore((state) => state.setVrrMode);
+    const vrrMinFramerate = useIniSettingsStore(
+        (state) => state.vrrMinFramerate
+    );
+    const setVrrMinFramerate = useIniSettingsStore(
+        (state) => state.setVrrMinFramerate
+    );
+    const vrrMaxFramerate = useIniSettingsStore(
+        (state) => state.vrrMaxFramerate
+    );
+    const setVrrMaxFramerate = useIniSettingsStore(
+        (state) => state.setVrrMaxFramerate
+    );
+    const vrrVesaFramerate = useIniSettingsStore(
+        (state) => state.vrrVesaFramerate
+    );
+    const setVrrVesaFramerate = useIniSettingsStore(
+        (state) => state.setVrrVesaFramerate
+    );
+
+    return (
+        <Stack spacing={3}>
+            <SimpleSelectOption
+                label="Variable refresh rate (VRR)"
+                value={vrrMode}
+                setValue={setVrrMode}
+                options={[
+                    "Off",
+                    "Auto detect",
+                    "Force FreeSync",
+                    "Force VESA HDMI Forum VRR",
+                ]}
+                helpText={[
+                    "",
+                    "Automatically detect VRR from display EDID.",
+                    "Force enable FreeSync.",
+                    "Force enable VESA HDMI Forum VRR.",
+                ]}
+            />
+
+            {vrrMode > 0 ? (
+                <NumberOption
+                    label="Minimum framerate"
+                    value={vrrMinFramerate}
+                    setValue={setVrrMinFramerate}
+                    isEnabled={() => vrrMinFramerate > 0}
+                    disabledValue={0}
+                    defaultValue={50}
+                    min={1}
+                    max={240}
+                />
+            ) : null}
+
+            {vrrMode > 0 && vrrMode !== 3 ? (
+                <NumberOption
+                    label="Maximum framerate"
+                    value={vrrMaxFramerate}
+                    setValue={setVrrMaxFramerate}
+                    helpText="Currently only used in FreeSync."
+                    isEnabled={() => vrrMaxFramerate > 0}
+                    disabledValue={0}
+                    defaultValue={60}
+                    min={1}
+                    max={240}
+                />
+            ) : null}
+
+            {vrrMode > 0 && vrrMode !== 2 ? (
+                <NumberOption
+                    label="VESA base framerate"
+                    value={vrrVesaFramerate}
+                    setValue={setVrrVesaFramerate}
+                    helpText="Normally set to the current video mode's output framerate."
+                    isEnabled={() => vrrVesaFramerate > 0}
+                    disabledValue={0}
+                    defaultValue={60}
+                    min={1}
+                    max={240}
+                />
+            ) : null}
+        </Stack>
+    );
+}
+
+function DirectVideo() {
+    const v = useIniSettingsStore((state) => state.directVideo);
+    const sv = useIniSettingsStore((state) => state.setDirectVideo);
+
+    return (
+        <BoolOption
+            label="Direct video"
+            value={v}
+            setValue={sv}
+            helpText="Use only with VGA converters. Enables core video timing over HDMI."
+        />
+    );
+}
+
+function ForcedScandoubler() {
+    const v = useIniSettingsStore((state) => state.forcedScandoubler);
+    const sv = useIniSettingsStore((state) => state.setForcedScandoubler);
+
+    return (
+        <BoolOption
+            label="Force scandoubler on VGA output"
+            value={v}
+            setValue={sv}
+            helpText="Depends on core."
+        />
+    );
+}
+
+function Ypbpr() {
+    const v = useIniSettingsStore((state) => state.ypbpr);
+    const sv = useIniSettingsStore((state) => state.setYpbpr);
+
+    return (
+        <BoolOption
+            label="YPbPr on VGA output"
+            value={v}
+            setValue={sv}
+        />
+    );
+}
+
+function CompositeSync() {
+    const v = useIniSettingsStore((state) => state.compositeSync);
+    const sv = useIniSettingsStore((state) => state.setCompositeSync);
+
+    return (
+        <BoolOption
+            label="Composite sync on VGA output"
+            value={v}
+            setValue={sv}
+            helpText="On HSync signal."
+        />
+    );
+}
+
+function VGAScaler() {
+    const v = useIniSettingsStore((state) => state.vgaScaler);
+    const sv = useIniSettingsStore((state) => state.setVgaScaler);
+
+    return (
+        <BoolOption
+            label="Connect VGA to scaler output"
+            value={v}
+            setValue={sv}
+        />
+    );
+}
+
+function Sog() {
+    const v = useIniSettingsStore((state) => state.vgaSog);
+    const sv = useIniSettingsStore((state) => state.setVgaSog);
+
+    return (
+        <BoolOption
+            label="Sync on green (SoG)"
+            value={v}
+            setValue={sv}
+            helpText="Requires analog I/O board v6.0 or newer."
+        />
+    );
+}
+
 export default function VideoSettings() {
     return (
         <Stack spacing={3}>
             <PageHeader title="Video" />
+
             <VideoMode />
             <VerticalScale />
             <VSyncAdjust />
             <DVIMode />
             <VScaleBorder />
-
-            <FormControl>
-                <FormControlLabel
-                    control={<Checkbox defaultChecked />}
-                    label="Set default video filter"
-                />
-                <Stack
-                    spacing={2}
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                >
-                    <Typography>LCD Effects/LCD_Effect_07.txt</Typography>
-                    <Button size="small">Browse...</Button>
-                </Stack>
-            </FormControl>
-
-            <FormControl>
-                <FormControlLabel
-                    control={<Checkbox defaultChecked />}
-                    label="Set default scanlines video filter"
-                />
-                <Stack
-                    spacing={2}
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                >
-                    <Typography>{"<not set>"}</Typography>
-                    <Button size="small">Browse...</Button>
-                </Stack>
-            </FormControl>
-
-            <FormControl>
-                <FormControlLabel
-                    control={<Checkbox defaultChecked />}
-                    label="Set default vertical video filter"
-                />
-                <Stack
-                    spacing={2}
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                >
-                    <Typography>{"<not set>"}</Typography>
-                    <Button size="small">Browse...</Button>
-                </Stack>
-            </FormControl>
-
-            <FormControl>
-                <FormControlLabel
-                    control={<Checkbox defaultChecked />}
-                    label="Set default shadow mask"
-                />
-                <Stack
-                    spacing={2}
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                >
-                    <Typography>{"<not set>"}</Typography>
-                    <Button size="small">Browse...</Button>
-                </Stack>
-            </FormControl>
-
-            <FormControl>
-                <InputLabel>Default shadow mask mode</InputLabel>
-                <Select value={1} label="Default shadow mask mode">
-                    <MenuItem value={0}>None</MenuItem>
-                    <MenuItem value={1}>1x</MenuItem>
-                    <MenuItem value={2}>2x</MenuItem>
-                    <MenuItem value={3}>1x rotated</MenuItem>
-                    <MenuItem value={4}>2x rotated</MenuItem>
-                </Select>
-            </FormControl>
-
-            <FormControl>
-                <FormControlLabel
-                    control={<Checkbox />}
-                    label="Game mode on HDMI output"
-                />
-            </FormControl>
-
-            <FormControl>
-                <FormControlLabel
-                    control={<Checkbox />}
-                    label="Limit HDMI color range"
-                />
-                <FormHelperText>Limits to range of 16-235.</FormHelperText>
-            </FormControl>
-
-            <FormControl>
-                <InputLabel>Variable refresh rate (VRR)</InputLabel>
-                <Select value={0} label="Variable refresh rate (VRR)">
-                    <MenuItem value={0}>Disabled</MenuItem>
-                    <MenuItem value={1}>Auto detect</MenuItem>
-                    <MenuItem value={2}>Force FreeSync</MenuItem>
-                    <MenuItem value={3}>Force VESA HDMI Forum VRR</MenuItem>
-                </Select>
-                <FormHelperText>Do not send VRR control frames.</FormHelperText>
-            </FormControl>
+            <VFilter />
+            <VFilterScanlines />
+            <VFilterVertical />
+            <ShadowMask />
+            <ShadowMaskMode />
+            <GameMode />
+            <LimitHDMIColor />
+            <VRRMode />
 
             <Typography variant="h6">Analog Video</Typography>
 
-            <FormControl>
-                <FormControlLabel control={<Checkbox />} label="Direct video" />
-                <FormHelperText>
-                    Use only with VGA converters. Enables core video timing over
-                    HDMI.
-                </FormHelperText>
-            </FormControl>
-
-            <FormControl>
-                <FormControlLabel
-                    control={<Checkbox />}
-                    label="Force scandoubler on VGA output"
-                />
-                <FormHelperText>Depends on core.</FormHelperText>
-            </FormControl>
-
-            <FormControl>
-                <FormControlLabel
-                    control={<Checkbox />}
-                    label="YPbPr on VGA output"
-                />
-            </FormControl>
-
-            <FormControl>
-                <FormControlLabel
-                    control={<Checkbox />}
-                    label="Composite sync on VGA output"
-                />
-                <FormHelperText>On HSync signal.</FormHelperText>
-            </FormControl>
-
-            <FormControl>
-                <FormControlLabel
-                    control={<Checkbox />}
-                    label="Connect VGA to scaler output"
-                />
-            </FormControl>
-
-            <FormControl>
-                <FormControlLabel
-                    control={<Checkbox />}
-                    label="Sync on green (SoG)"
-                />
-                <FormHelperText>
-                    Requires analog I/O board v6.0 or newer.
-                </FormHelperText>
-            </FormControl>
+            <DirectVideo />
+            <ForcedScandoubler />
+            <Ypbpr />
+            <CompositeSync />
+            <VGAScaler />
+            <Sog />
         </Stack>
     );
 }
