@@ -314,3 +314,67 @@ export function VerticalNumberSliderOption(props: {
     </FormControl>
   );
 }
+
+export function ToggleableNumberSliderOption(props: {
+  label: string;
+  value: number;
+  setValue: (value: number) => void;
+  helpText?: string;
+  min: number;
+  max: number;
+  disabledValue: number;
+  step: number;
+  suffix?: string;
+}) {
+  return (
+    <FormControl>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={props.value !== props.disabledValue}
+            onChange={(e) =>
+              e.target.checked
+                ? props.setValue(props.min)
+                : props.setValue(props.disabledValue)
+            }
+          />
+        }
+        label={props.label}
+      />
+      {props.value !== props.disabledValue ? (
+        <Stack spacing={2} direction="row" alignItems="center">
+          <Slider
+            value={props.value}
+            onChange={(e, v) => props.setValue(Number(v))}
+            step={props.step}
+            min={props.min}
+            max={props.max}
+          />
+          <TextField
+            type="number"
+            inputProps={{
+              inputMode: "numeric",
+              pattern: "[0-9]*",
+              style: { textAlign: "left" },
+            }}
+            size="small"
+            sx={{ width: "110px" }}
+            value={props.value}
+            onChange={(e) => {
+              const value = Number(e.target.value);
+              if (value < props.min) {
+                props.setValue(props.min);
+              } else if (value > props.max) {
+                props.setValue(props.max);
+              } else {
+                props.setValue(value);
+              }
+            }}
+          />
+          <div>{props.suffix}</div>
+        </Stack>
+      ) : null}
+      <FormHelperText>{props.helpText}</FormHelperText>
+    </FormControl>
+  );
+}

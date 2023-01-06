@@ -35,6 +35,7 @@ export const useUIStateStore = create<UIState>()(
 );
 
 export interface IniSettings {
+  // Video
   videoMode: string;
   setVideoMode: (v: string) => void;
   videoModeNtsc: string;
@@ -104,12 +105,27 @@ export interface IniSettings {
   setVideoHue: (v: number) => void;
   videoGainOffset: string;
   setVideoGainOffset: (v: string) => void;
+  // Cores
+  bootScreen: boolean;
+  setBootScreen: (v: boolean) => void;
+  recents: boolean;
+  setRecents: (v: boolean) => void;
+  videoInfo: number;
+  setVideoInfo: (v: number) => void;
+  controllerInfo: number;
+  setControllerInfo: (v: number) => void;
+  sharedFolder: string;
+  setSharedFolder: (v: string) => void;
+  logFileEntry: boolean;
+  setLogFileEntry: (v: boolean) => void;
+  keyMenuAsRgui: boolean;
+  setKeyMenuAsRgui: (v: boolean) => void;
 }
 
 export const useIniSettingsStore = create<IniSettings>()(
   persist(
     (set, get) => ({
-      // video options
+      // Video
       videoMode: "",
       setVideoMode: (v: string) => set({ videoMode: v }),
       videoModeNtsc: "",
@@ -181,6 +197,21 @@ export const useIniSettingsStore = create<IniSettings>()(
       setVideoHue: (v: number) => set({ videoHue: v }),
       videoGainOffset: "1,0,1,0,1,0",
       setVideoGainOffset: (v: string) => set({ videoGainOffset: v }),
+      // Cores
+      bootScreen: true,
+      setBootScreen: (v: boolean) => set({ bootScreen: v }),
+      recents: false,
+      setRecents: (v: boolean) => set({ recents: v }),
+      videoInfo: 0,
+      setVideoInfo: (v: number) => set({ videoInfo: v }),
+      controllerInfo: 6,
+      setControllerInfo: (v: number) => set({ controllerInfo: v }),
+      sharedFolder: "",
+      setSharedFolder: (v: string) => set({ sharedFolder: v }),
+      logFileEntry: false,
+      setLogFileEntry: (v: boolean) => set({ logFileEntry: v }),
+      keyMenuAsRgui: false,
+      setKeyMenuAsRgui: (v: boolean) => set({ keyMenuAsRgui: v }),
     }),
     {
       name: "iniSettings",

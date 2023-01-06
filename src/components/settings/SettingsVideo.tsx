@@ -21,6 +21,7 @@ import {
   PageHeader,
   SimpleSelectOption,
   TextOption,
+  ToggleableNumberSliderOption,
   ValuePicker,
   VerticalNumberSliderOption,
 } from "./SettingsCommon";
@@ -244,53 +245,16 @@ function VScaleBorder() {
   const setVscaleBorder = useIniSettingsStore((state) => state.setVscaleBorder);
 
   return (
-    <FormControl>
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={vscaleBorder > 0}
-            onChange={(e) =>
-              e.target.checked ? setVscaleBorder(1) : setVscaleBorder(0)
-            }
-          />
-        }
-        label="Vertical scale border"
-      />
-      {vscaleBorder > 0 ? (
-        <Stack spacing={2} direction="row" alignItems="center">
-          <Slider
-            value={vscaleBorder}
-            onChange={(e, v) => setVscaleBorder(Number(v))}
-            step={1}
-            min={1}
-            max={399}
-          />
-          <TextField
-            inputProps={{
-              inputMode: "numeric",
-              pattern: "[0-9]*",
-              style: { textAlign: "center" },
-            }}
-            size="small"
-            sx={{ width: "100px" }}
-            value={vscaleBorder}
-            onChange={(e) => {
-              const value = Number(e.target.value);
-              if (value < 1) {
-                setVscaleBorder(1);
-              } else if (value > 399) {
-                setVscaleBorder(399);
-              } else {
-                setVscaleBorder(value);
-              }
-            }}
-          />
-        </Stack>
-      ) : null}
-      <FormHelperText>
-        Set height of a border on the top and bottom of the screen.
-      </FormHelperText>
-    </FormControl>
+    <ToggleableNumberSliderOption
+      label="Vertical scale border"
+      value={vscaleBorder}
+      setValue={setVscaleBorder}
+      min={1}
+      max={399}
+      disabledValue={0}
+      step={1}
+      helpText="Adds a black border to the top and bottom of the screen."
+    />
   );
 }
 
