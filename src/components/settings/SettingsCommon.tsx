@@ -167,6 +167,7 @@ export function NumberOption(props: {
   defaultValue: number;
   min: number;
   max: number;
+  width?: number;
 }) {
   return (
     <FormControl>
@@ -197,10 +198,14 @@ export function NumberOption(props: {
             inputProps={{
               inputMode: "numeric",
               pattern: "[0-9]*",
-              style: { textAlign: "center" },
+              style: { textAlign: "left" },
             }}
             size="small"
-            sx={{ width: "100px" }}
+            sx={
+              props.width !== undefined
+                ? { width: props.width + "px" }
+                : { width: "100px" }
+            }
             value={props.value}
             onChange={(e) => {
               const value = Number(e.target.value);

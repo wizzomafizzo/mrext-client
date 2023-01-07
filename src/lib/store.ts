@@ -105,6 +105,7 @@ export interface IniSettings {
   setVideoHue: (v: number) => void;
   videoGainOffset: string;
   setVideoGainOffset: (v: string) => void;
+
   // Cores
   bootScreen: boolean;
   setBootScreen: (v: boolean) => void;
@@ -120,6 +121,54 @@ export interface IniSettings {
   setLogFileEntry: (v: boolean) => void;
   keyMenuAsRgui: boolean;
   setKeyMenuAsRgui: (v: boolean) => void;
+
+  // Input devices
+  btAutoDisconnect: number;
+  setBtAutoDisconnect: (v: number) => void;
+  btResetBeforePair: boolean;
+  setBtResetBeforePair: (v: boolean) => void;
+  mouseThrottle: number;
+  setMouseThrottle: (v: number) => void;
+  resetCombo: number;
+  setResetCombo: (v: number) => void;
+  player1Controller: string;
+  setPlayer1Controller: (v: string) => void;
+  player2Controller: string;
+  setPlayer2Controller: (v: string) => void;
+  player3Controller: string;
+  setPlayer3Controller: (v: string) => void;
+  player4Controller: string;
+  setPlayer4Controller: (v: string) => void;
+  sniperMode: number;
+  setSniperMode: (v: number) => void;
+  spinnerThrottle: number;
+  setSpinnerThrottle: (v: number) => void;
+  spinnerAxis: number;
+  setSpinnerAxis: (v: number) => void;
+  gamepadDefaults: number;
+  setGamepadDefaults: (v: number) => void;
+  autoFire: boolean;
+  setAutoFire: (v: boolean) => void;
+  wheelForce: number;
+  setWheelForce: (v: number) => void;
+  wheelRange: number;
+  setWheelRange: (v: number) => void;
+  spinnerVid: string;
+  setSpinnerVid: (v: string) => void;
+  spinnerPid: string;
+  setSpinnerPid: (v: string) => void;
+  keyrahMode: string;
+  setKeyrahMode: (v: string) => void;
+  jammaVid: string;
+  setJammaVid: (v: string) => void;
+  jammaPid: string;
+  setJammaPid: (v: string) => void;
+  noMergeVid: string;
+  setNoMergeVid: (v: string) => void;
+  noMergePid: string;
+  setNoMergePid: (v: string) => void;
+  noMergeVidPid: string[];
+  setNoMergeVidPid: (v: string[]) => void;
 }
 
 export const useIniSettingsStore = create<IniSettings>()(
@@ -168,7 +217,6 @@ export const useIniSettingsStore = create<IniSettings>()(
       setVrrMaxFramerate: (v: number) => set({ vrrMaxFramerate: v }),
       vrrVesaFramerate: 0,
       setVrrVesaFramerate: (v: number) => set({ vrrVesaFramerate: v }),
-      // analog video options
       directVideo: false,
       setDirectVideo: (v: boolean) => set({ directVideo: v }),
       forcedScandoubler: false,
@@ -197,6 +245,7 @@ export const useIniSettingsStore = create<IniSettings>()(
       setVideoHue: (v: number) => set({ videoHue: v }),
       videoGainOffset: "1,0,1,0,1,0",
       setVideoGainOffset: (v: string) => set({ videoGainOffset: v }),
+
       // Cores
       bootScreen: true,
       setBootScreen: (v: boolean) => set({ bootScreen: v }),
@@ -212,6 +261,54 @@ export const useIniSettingsStore = create<IniSettings>()(
       setLogFileEntry: (v: boolean) => set({ logFileEntry: v }),
       keyMenuAsRgui: false,
       setKeyMenuAsRgui: (v: boolean) => set({ keyMenuAsRgui: v }),
+
+      // Input devices
+      btAutoDisconnect: 0,
+      setBtAutoDisconnect: (v: number) => set({ btAutoDisconnect: v }),
+      btResetBeforePair: false,
+      setBtResetBeforePair: (v: boolean) => set({ btResetBeforePair: v }),
+      mouseThrottle: 10,
+      setMouseThrottle: (v: number) => set({ mouseThrottle: v }),
+      resetCombo: 0,
+      setResetCombo: (v: number) => set({ resetCombo: v }),
+      player1Controller: "",
+      setPlayer1Controller: (v: string) => set({ player1Controller: v }),
+      player2Controller: "",
+      setPlayer2Controller: (v: string) => set({ player2Controller: v }),
+      player3Controller: "",
+      setPlayer3Controller: (v: string) => set({ player3Controller: v }),
+      player4Controller: "",
+      setPlayer4Controller: (v: string) => set({ player4Controller: v }),
+      sniperMode: 0,
+      setSniperMode: (v: number) => set({ sniperMode: v }),
+      spinnerThrottle: 100,
+      setSpinnerThrottle: (v: number) => set({ spinnerThrottle: v }),
+      spinnerAxis: 1,
+      setSpinnerAxis: (v: number) => set({ spinnerAxis: v }),
+      gamepadDefaults: 0,
+      setGamepadDefaults: (v: number) => set({ gamepadDefaults: v }),
+      autoFire: true,
+      setAutoFire: (v: boolean) => set({ autoFire: v }),
+      wheelForce: 50,
+      setWheelForce: (v: number) => set({ wheelForce: v }),
+      wheelRange: 200,
+      setWheelRange: (v: number) => set({ wheelRange: v }),
+      spinnerVid: "",
+      setSpinnerVid: (v: string) => set({ spinnerVid: v }),
+      spinnerPid: "",
+      setSpinnerPid: (v: string) => set({ spinnerPid: v }),
+      keyrahMode: "",
+      setKeyrahMode: (v: string) => set({ keyrahMode: v }),
+      jammaVid: "",
+      setJammaVid: (v: string) => set({ jammaVid: v }),
+      jammaPid: "",
+      setJammaPid: (v: string) => set({ jammaPid: v }),
+      noMergeVid: "",
+      setNoMergeVid: (v: string) => set({ noMergeVid: v }),
+      noMergePid: "",
+      setNoMergePid: (v: string) => set({ noMergePid: v }),
+      noMergeVidPid: [],
+      setNoMergeVidPid: (v: string[]) => set({ noMergeVidPid: v }),
     }),
     {
       name: "iniSettings",
