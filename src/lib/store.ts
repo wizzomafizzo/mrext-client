@@ -169,6 +169,12 @@ export interface IniSettings {
   setNoMergePid: (v: string) => void;
   noMergeVidPid: string[];
   setNoMergeVidPid: (v: string[]) => void;
+
+  // Audio
+  hdmiAudio96k: boolean;
+  setHdmiAudio96k: (v: boolean) => void;
+  aFilterDefault: string;
+  setAFilterDefault: (v: string) => void;
 }
 
 export const useIniSettingsStore = create<IniSettings>()(
@@ -309,6 +315,12 @@ export const useIniSettingsStore = create<IniSettings>()(
       setNoMergePid: (v: string) => set({ noMergePid: v }),
       noMergeVidPid: [],
       setNoMergeVidPid: (v: string[]) => set({ noMergeVidPid: v }),
+
+      // Audio
+      hdmiAudio96k: false,
+      setHdmiAudio96k: (v: boolean) => set({ hdmiAudio96k: v }),
+      aFilterDefault: "",
+      setAFilterDefault: (v: string) => set({ aFilterDefault: v }),
     }),
     {
       name: "iniSettings",
