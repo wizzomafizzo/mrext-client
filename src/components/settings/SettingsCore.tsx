@@ -48,7 +48,7 @@ function VideoInfo() {
       label="Display video info"
       value={v}
       setValue={sv}
-      disabledValue={0}
+      defaultValue={0}
       min={1}
       max={10}
       step={1}
@@ -67,7 +67,7 @@ function ControllerInfo() {
       label="Display controller info"
       value={v}
       setValue={sv}
-      disabledValue={0}
+      defaultValue={6}
       min={1}
       max={10}
       step={1}

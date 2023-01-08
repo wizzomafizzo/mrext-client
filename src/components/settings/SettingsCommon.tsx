@@ -86,8 +86,8 @@ export function ValuePicker(props: {
 }
 
 export function BoolOption(props: {
-  value: boolean;
-  setValue: (value: boolean) => void;
+  value: number;
+  setValue: (value: number) => void;
   label: string;
   helpText?: string;
 }) {
@@ -96,8 +96,8 @@ export function BoolOption(props: {
       <FormControlLabel
         control={
           <Checkbox
-            checked={props.value}
-            onChange={(e) => props.setValue(e.target.checked)}
+            checked={props.value > 0}
+            onChange={(e) => props.setValue(e.target.checked ? 1 : 0)}
           />
         }
         label={props.label}
@@ -162,13 +162,14 @@ export function NumberOption(props: {
   setValue: (value: number) => void;
   label: string;
   helpText?: string;
-  isEnabled: () => boolean;
-  disabledValue: number;
-  defaultValue: number;
   min: number;
   max: number;
+  defaultValue: number;
   width?: number;
+  suffix?: string;
 }) {
+  const [enabled, setEnabled] = useState(props.value !== 0);
+
   return (
     <FormControl>
       <Stack
@@ -180,44 +181,55 @@ export function NumberOption(props: {
         <FormControlLabel
           control={
             <Checkbox
-              checked={props.isEnabled()}
+              checked={enabled}
               onChange={(e) => {
                 if (e.target.checked) {
                   props.setValue(props.defaultValue);
+                  setEnabled(true);
                 } else {
-                  props.setValue(props.disabledValue);
+                  props.setValue(0);
+                  setEnabled(false);
                 }
               }}
             />
           }
           label={props.label}
         />
-        {props.isEnabled() ? (
-          <TextField
-            type="number"
-            inputProps={{
-              inputMode: "numeric",
-              pattern: "[0-9]*",
-              style: { textAlign: "left" },
+        {enabled ? (
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{
+              alignItems: "center",
             }}
-            size="small"
-            sx={
-              props.width !== undefined
-                ? { width: props.width + "px" }
-                : { width: "100px" }
-            }
-            value={props.value}
-            onChange={(e) => {
-              const value = Number(e.target.value);
-              if (value < props.min) {
-                props.setValue(props.min);
-              } else if (value > props.max) {
-                props.setValue(props.max);
-              } else {
-                props.setValue(value);
+          >
+            <TextField
+              type="number"
+              inputProps={{
+                inputMode: "numeric",
+                pattern: "[0-9]*",
+                style: { textAlign: "left" },
+              }}
+              size="small"
+              sx={
+                props.width !== undefined
+                  ? { width: props.width + "px" }
+                  : { width: "100px" }
               }
-            }}
-          />
+              value={props.value}
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                if (value < props.min) {
+                  props.setValue(props.min);
+                } else if (value > props.max) {
+                  props.setValue(props.max);
+                } else {
+                  props.setValue(value);
+                }
+              }}
+            />
+            {props.suffix ? <div>{props.suffix}</div> : null}
+          </Stack>
         ) : null}
       </Stack>
       <FormHelperText>{props.helpText}</FormHelperText>
@@ -327,26 +339,32 @@ export function ToggleableNumberSliderOption(props: {
   helpText?: string;
   min: number;
   max: number;
-  disabledValue: number;
   step: number;
+  defaultValue: number;
   suffix?: string;
 }) {
+  const [enabled, setEnabled] = useState(props.value !== 0);
+
   return (
     <FormControl>
       <FormControlLabel
         control={
           <Checkbox
-            checked={props.value !== props.disabledValue}
-            onChange={(e) =>
-              e.target.checked
-                ? props.setValue(props.min)
-                : props.setValue(props.disabledValue)
-            }
+            checked={enabled}
+            onChange={(e) => {
+              if (e.target.checked) {
+                props.setValue(props.defaultValue);
+                setEnabled(true);
+              } else {
+                props.setValue(0);
+                setEnabled(false);
+              }
+            }}
           />
         }
         label={props.label}
       />
-      {props.value !== props.disabledValue ? (
+      {enabled ? (
         <Stack spacing={2} direction="row" alignItems="center">
           <Slider
             value={props.value}

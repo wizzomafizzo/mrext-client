@@ -26,7 +26,7 @@ function BtAutoDisconnect() {
       setValue={sv}
       min={1}
       max={60}
-      disabledValue={0}
+      defaultValue={1}
       step={1}
       suffix="minutes"
       helpText="Automatically disconnects Bluetooth controllers after a period of inactivity. Useful for controllers which do not automatically do this themselves."
@@ -59,7 +59,7 @@ function MouseThrottle() {
       setValue={sv}
       min={1}
       max={100}
-      disabledValue={0}
+      defaultValue={10}
       step={1}
       helpText="Divides the mouse speed by given number. Useful for very sensitive mice."
     />
@@ -127,19 +127,16 @@ function SpinnerThrottle() {
   const v = useIniSettingsStore((state) => state.spinnerThrottle);
   const sv = useIniSettingsStore((state) => state.setSpinnerThrottle);
 
-  // TODO: this disabled value means we need to check explicitly for disabled values when serialising
   return (
     <NumberOption
       value={v}
       setValue={sv}
       label="Spinner speed throttling"
       helpText="Base value of 100 gives 1 spinner step per tick. Higher values will slow down spinner speed, lower values will speed it up, and negative values will invert the spinner direction."
-      isEnabled={() => v !== 10002}
-      disabledValue={10002}
-      defaultValue={100}
       min={-10000}
       max={10000}
       width={120}
+      defaultValue={200}
     />
   );
 }
@@ -190,8 +187,6 @@ function WheelForce() {
       min={0}
       max={100}
       defaultValue={50}
-      isEnabled={() => v >= 0}
-      disabledValue={-1}
     />
   );
 }
@@ -209,8 +204,6 @@ function WheelRange() {
       min={-10000}
       max={10000}
       defaultValue={200}
-      isEnabled={() => v < 10001}
-      disabledValue={10001}
       helpText="Supported ranges depends on specific wheel model. If not set, then default range (depending on driver) is used."
     />
   );

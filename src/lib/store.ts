@@ -34,6 +34,10 @@ export const useUIStateStore = create<UIState>()(
   )
 );
 
+// TODO: KBD_NOMOUSE
+// TODO: RUMBLE
+// TODO: DVI_MODE is presented as a bool, but defaults to 2, don't know what 0 and 1 actually do
+
 export interface IniSettings {
   // Video
   videoMode: string;
@@ -50,8 +54,8 @@ export interface IniSettings {
   setRefreshMin: (v: number) => void;
   refreshMax: number;
   setRefreshMax: (v: number) => void;
-  dviMode: boolean;
-  setDviMode: (v: boolean) => void;
+  dviMode: number;
+  setDviMode: (v: number) => void;
   vscaleBorder: number;
   setVscaleBorder: (v: number) => void;
   vfilterDefault: string;
@@ -64,8 +68,8 @@ export interface IniSettings {
   setShmaskDefault: (v: string) => void;
   shmaskModeDefault: number;
   setShmaskModeDefault: (v: number) => void;
-  hdmiGameMode: boolean;
-  setHdmiGameMode: (v: boolean) => void;
+  hdmiGameMode: number;
+  setHdmiGameMode: (v: number) => void;
   hdmiLimited: number;
   setHdmiLimited: (v: number) => void;
   vrrMode: number;
@@ -77,18 +81,18 @@ export interface IniSettings {
   vrrVesaFramerate: number;
   setVrrVesaFramerate: (v: number) => void;
   // analog options
-  directVideo: boolean;
-  setDirectVideo: (v: boolean) => void;
-  forcedScandoubler: boolean;
-  setForcedScandoubler: (v: boolean) => void;
-  ypbpr: boolean;
-  setYpbpr: (v: boolean) => void;
-  compositeSync: boolean;
-  setCompositeSync: (v: boolean) => void;
-  vgaScaler: boolean;
-  setVgaScaler: (v: boolean) => void;
-  vgaSog: boolean;
-  setVgaSog: (v: boolean) => void;
+  directVideo: number;
+  setDirectVideo: (v: number) => void;
+  forcedScandoubler: number;
+  setForcedScandoubler: (v: number) => void;
+  ypbpr: number;
+  setYpbpr: (v: number) => void;
+  compositeSync: number;
+  setCompositeSync: (v: number) => void;
+  vgaScaler: number;
+  setVgaScaler: (v: number) => void;
+  vgaSog: number;
+  setVgaSog: (v: number) => void;
   customAspectRatio1: string;
   setCustomAspectRatio1: (v: string) => void;
   customAspectRatio2: string;
@@ -107,26 +111,26 @@ export interface IniSettings {
   setVideoGainOffset: (v: string) => void;
 
   // Cores
-  bootScreen: boolean;
-  setBootScreen: (v: boolean) => void;
-  recents: boolean;
-  setRecents: (v: boolean) => void;
+  bootScreen: number;
+  setBootScreen: (v: number) => void;
+  recents: number;
+  setRecents: (v: number) => void;
   videoInfo: number;
   setVideoInfo: (v: number) => void;
   controllerInfo: number;
   setControllerInfo: (v: number) => void;
   sharedFolder: string;
   setSharedFolder: (v: string) => void;
-  logFileEntry: boolean;
-  setLogFileEntry: (v: boolean) => void;
-  keyMenuAsRgui: boolean;
-  setKeyMenuAsRgui: (v: boolean) => void;
+  logFileEntry: number;
+  setLogFileEntry: (v: number) => void;
+  keyMenuAsRgui: number;
+  setKeyMenuAsRgui: (v: number) => void;
 
   // Input devices
   btAutoDisconnect: number;
   setBtAutoDisconnect: (v: number) => void;
-  btResetBeforePair: boolean;
-  setBtResetBeforePair: (v: boolean) => void;
+  btResetBeforePair: number;
+  setBtResetBeforePair: (v: number) => void;
   mouseThrottle: number;
   setMouseThrottle: (v: number) => void;
   resetCombo: number;
@@ -147,8 +151,8 @@ export interface IniSettings {
   setSpinnerAxis: (v: number) => void;
   gamepadDefaults: number;
   setGamepadDefaults: (v: number) => void;
-  autoFire: boolean;
-  setAutoFire: (v: boolean) => void;
+  autoFire: number;
+  setAutoFire: (v: number) => void;
   wheelForce: number;
   setWheelForce: (v: number) => void;
   wheelRange: number;
@@ -169,12 +173,46 @@ export interface IniSettings {
   setNoMergePid: (v: string) => void;
   noMergeVidPid: string[];
   setNoMergeVidPid: (v: string[]) => void;
+  rumble: number;
+  setRumble: (v: number) => void;
+  keyboardNoMouse: number;
+  setKeyboardNoMouse: (v: number) => void;
 
   // Audio
-  hdmiAudio96k: boolean;
-  setHdmiAudio96k: (v: boolean) => void;
+  hdmiAudio96k: number;
+  setHdmiAudio96k: (v: number) => void;
   aFilterDefault: string;
   setAFilterDefault: (v: string) => void;
+
+  // System
+  fbSize: number;
+  setFbSize: (v: number) => void;
+  fbTerminal: number;
+  setFbTerminal: (v: number) => void;
+  bootCore: string;
+  setBootCore: (v: string) => void;
+  bootCoreTimeout: number;
+  setBootCoreTimeout: (v: number) => void;
+  waitMount: string;
+  setWaitMount: (v: string) => void;
+
+  // OSD/Menu
+  rbfHideDatecode: number;
+  setRbfHideDatecode: (v: number) => void;
+  osdRotate: number;
+  setOsdRotate: (v: number) => void;
+  browseExpand: number;
+  setBrowseExpand: (v: number) => void;
+  osdTimeout: number;
+  setOsdTimeout: (v: number) => void;
+  videoOff: number;
+  setVideoOff: (v: number) => void;
+  menuPal: number;
+  setMenuPal: (v: number) => void;
+  font: string;
+  setFont: (v: string) => void;
+  logo: number;
+  setLogo: (v: number) => void;
 }
 
 export const useIniSettingsStore = create<IniSettings>()(
@@ -195,8 +233,8 @@ export const useIniSettingsStore = create<IniSettings>()(
       setRefreshMin: (v: number) => set({ refreshMin: v }),
       refreshMax: 0,
       setRefreshMax: (v: number) => set({ refreshMax: v }),
-      dviMode: false,
-      setDviMode: (v: boolean) => set({ dviMode: v }),
+      dviMode: 2,
+      setDviMode: (v: number) => set({ dviMode: v }),
       vscaleBorder: 0,
       setVscaleBorder: (v: number) => set({ vscaleBorder: v }),
       vfilterDefault: "",
@@ -209,10 +247,10 @@ export const useIniSettingsStore = create<IniSettings>()(
         set({ vfilterScanlinesDefault: v }),
       shmaskDefault: "",
       setShmaskDefault: (v: string) => set({ shmaskDefault: v }),
-      shmaskModeDefault: 1,
+      shmaskModeDefault: 0,
       setShmaskModeDefault: (v: number) => set({ shmaskModeDefault: v }),
-      hdmiGameMode: true,
-      setHdmiGameMode: (v: boolean) => set({ hdmiGameMode: v }),
+      hdmiGameMode: 0,
+      setHdmiGameMode: (v: number) => set({ hdmiGameMode: v }),
       hdmiLimited: 0,
       setHdmiLimited: (v: number) => set({ hdmiLimited: v }),
       vrrMode: 0,
@@ -223,18 +261,18 @@ export const useIniSettingsStore = create<IniSettings>()(
       setVrrMaxFramerate: (v: number) => set({ vrrMaxFramerate: v }),
       vrrVesaFramerate: 0,
       setVrrVesaFramerate: (v: number) => set({ vrrVesaFramerate: v }),
-      directVideo: false,
-      setDirectVideo: (v: boolean) => set({ directVideo: v }),
-      forcedScandoubler: false,
-      setForcedScandoubler: (v: boolean) => set({ forcedScandoubler: v }),
-      ypbpr: false,
-      setYpbpr: (v: boolean) => set({ ypbpr: v }),
-      compositeSync: false,
-      setCompositeSync: (v: boolean) => set({ compositeSync: v }),
-      vgaScaler: false,
-      setVgaScaler: (v: boolean) => set({ vgaScaler: v }),
-      vgaSog: false,
-      setVgaSog: (v: boolean) => set({ vgaSog: v }),
+      directVideo: 0,
+      setDirectVideo: (v: number) => set({ directVideo: v }),
+      forcedScandoubler: 0,
+      setForcedScandoubler: (v: number) => set({ forcedScandoubler: v }),
+      ypbpr: 0,
+      setYpbpr: (v: number) => set({ ypbpr: v }),
+      compositeSync: 0,
+      setCompositeSync: (v: number) => set({ compositeSync: v }),
+      vgaScaler: 0,
+      setVgaScaler: (v: number) => set({ vgaScaler: v }),
+      vgaSog: 0,
+      setVgaSog: (v: number) => set({ vgaSog: v }),
       customAspectRatio1: "",
       setCustomAspectRatio1: (v: string) => set({ customAspectRatio1: v }),
       customAspectRatio2: "",
@@ -249,31 +287,31 @@ export const useIniSettingsStore = create<IniSettings>()(
       setVideoSaturation: (v: number) => set({ videoSaturation: v }),
       videoHue: 0,
       setVideoHue: (v: number) => set({ videoHue: v }),
-      videoGainOffset: "1,0,1,0,1,0",
+      videoGainOffset: "1, 0, 1, 0, 1, 0",
       setVideoGainOffset: (v: string) => set({ videoGainOffset: v }),
 
       // Cores
-      bootScreen: true,
-      setBootScreen: (v: boolean) => set({ bootScreen: v }),
-      recents: false,
-      setRecents: (v: boolean) => set({ recents: v }),
+      bootScreen: 1,
+      setBootScreen: (v: number) => set({ bootScreen: v }),
+      recents: 0,
+      setRecents: (v: number) => set({ recents: v }),
       videoInfo: 0,
       setVideoInfo: (v: number) => set({ videoInfo: v }),
       controllerInfo: 6,
       setControllerInfo: (v: number) => set({ controllerInfo: v }),
       sharedFolder: "",
       setSharedFolder: (v: string) => set({ sharedFolder: v }),
-      logFileEntry: false,
-      setLogFileEntry: (v: boolean) => set({ logFileEntry: v }),
-      keyMenuAsRgui: false,
-      setKeyMenuAsRgui: (v: boolean) => set({ keyMenuAsRgui: v }),
+      logFileEntry: 0,
+      setLogFileEntry: (v: number) => set({ logFileEntry: v }),
+      keyMenuAsRgui: 0,
+      setKeyMenuAsRgui: (v: number) => set({ keyMenuAsRgui: v }),
 
       // Input devices
       btAutoDisconnect: 0,
       setBtAutoDisconnect: (v: number) => set({ btAutoDisconnect: v }),
-      btResetBeforePair: false,
-      setBtResetBeforePair: (v: boolean) => set({ btResetBeforePair: v }),
-      mouseThrottle: 10,
+      btResetBeforePair: 0,
+      setBtResetBeforePair: (v: number) => set({ btResetBeforePair: v }),
+      mouseThrottle: 0,
       setMouseThrottle: (v: number) => set({ mouseThrottle: v }),
       resetCombo: 0,
       setResetCombo: (v: number) => set({ resetCombo: v }),
@@ -287,17 +325,17 @@ export const useIniSettingsStore = create<IniSettings>()(
       setPlayer4Controller: (v: string) => set({ player4Controller: v }),
       sniperMode: 0,
       setSniperMode: (v: number) => set({ sniperMode: v }),
-      spinnerThrottle: 100,
+      spinnerThrottle: 0,
       setSpinnerThrottle: (v: number) => set({ spinnerThrottle: v }),
-      spinnerAxis: 1,
+      spinnerAxis: 0,
       setSpinnerAxis: (v: number) => set({ spinnerAxis: v }),
       gamepadDefaults: 0,
       setGamepadDefaults: (v: number) => set({ gamepadDefaults: v }),
-      autoFire: true,
-      setAutoFire: (v: boolean) => set({ autoFire: v }),
+      autoFire: 0,
+      setAutoFire: (v: number) => set({ autoFire: v }),
       wheelForce: 50,
       setWheelForce: (v: number) => set({ wheelForce: v }),
-      wheelRange: 200,
+      wheelRange: 0,
       setWheelRange: (v: number) => set({ wheelRange: v }),
       spinnerVid: "",
       setSpinnerVid: (v: string) => set({ spinnerVid: v }),
@@ -315,12 +353,46 @@ export const useIniSettingsStore = create<IniSettings>()(
       setNoMergePid: (v: string) => set({ noMergePid: v }),
       noMergeVidPid: [],
       setNoMergeVidPid: (v: string[]) => set({ noMergeVidPid: v }),
+      rumble: 1,
+      setRumble: (v: number) => set({ rumble: v }),
+      keyboardNoMouse: 0,
+      setKeyboardNoMouse: (v: number) => set({ keyboardNoMouse: v }),
 
       // Audio
-      hdmiAudio96k: false,
-      setHdmiAudio96k: (v: boolean) => set({ hdmiAudio96k: v }),
+      hdmiAudio96k: 0,
+      setHdmiAudio96k: (v: number) => set({ hdmiAudio96k: v }),
       aFilterDefault: "",
       setAFilterDefault: (v: string) => set({ aFilterDefault: v }),
+
+      // System
+      fbSize: 0,
+      setFbSize: (v: number) => set({ fbSize: v }),
+      fbTerminal: 1,
+      setFbTerminal: (v: number) => set({ fbTerminal: v }),
+      bootCore: "",
+      setBootCore: (v: string) => set({ bootCore: v }),
+      bootCoreTimeout: 0,
+      setBootCoreTimeout: (v: number) => set({ bootCoreTimeout: v }),
+      waitMount: "",
+      setWaitMount: (v: string) => set({ waitMount: v }),
+
+      // OSD/Menu
+      rbfHideDatecode: 0,
+      setRbfHideDatecode: (v: number) => set({ rbfHideDatecode: v }),
+      osdRotate: 0,
+      setOsdRotate: (v: number) => set({ osdRotate: v }),
+      browseExpand: 1,
+      setBrowseExpand: (v: number) => set({ browseExpand: v }),
+      osdTimeout: 0,
+      setOsdTimeout: (v: number) => set({ osdTimeout: v }),
+      videoOff: 0,
+      setVideoOff: (v: number) => set({ videoOff: v }),
+      menuPal: 0,
+      setMenuPal: (v: number) => set({ menuPal: v }),
+      font: "",
+      setFont: (v: string) => set({ font: v }),
+      logo: 1,
+      setLogo: (v: number) => set({ logo: v }),
     }),
     {
       name: "iniSettings",

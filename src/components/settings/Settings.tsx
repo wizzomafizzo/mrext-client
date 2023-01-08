@@ -23,6 +23,7 @@ import Remote from "./SettingsRemote";
 import Box from "@mui/material/Box";
 import { Typography } from "@mui/material";
 import AudioSettings from "./SettingsAudio";
+import SystemSettings from "./SettingsSystem";
 
 function SettingsPageLink(props: {
   page: SettingsPageId;
@@ -78,7 +79,7 @@ function MainPage() {
           icon={<DeveloperBoardIcon />}
         />
         <SettingsPageLink
-          page={SettingsPageId.Video}
+          page={SettingsPageId.System}
           text="System"
           icon={<TerminalIcon />}
         />
@@ -111,8 +112,8 @@ export default function Settings() {
         return <OSDMenuSettings />;
       case SettingsPageId.Cores:
         return <CoresSettings />;
-      // case SettingsPageId.System:
-      //     return <SystemPage />;
+      case SettingsPageId.System:
+        return <SystemSettings />;
       case SettingsPageId.Remote:
         return <Remote />;
     }

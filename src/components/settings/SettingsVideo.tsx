@@ -201,11 +201,9 @@ function VSyncAdjust() {
           setValue={setRefreshMin}
           label="Minimum refresh rate"
           helpText="When enabled, VSync adjust will not be applied if the refresh rate is below this value. For example, on an NTSC monitor which doesn't support PAL."
-          isEnabled={() => refreshMin > 0}
-          disabledValue={0}
-          defaultValue={60}
           min={1}
           max={240}
+          defaultValue={0}
         />
       ) : null}
 
@@ -215,11 +213,9 @@ function VSyncAdjust() {
           setValue={setRefreshMax}
           label="Maximum refresh rate"
           helpText="Same as above, but for the maximum. For example, on a PAL monitor which doesn't support NTSC."
-          isEnabled={() => refreshMax > 0}
-          disabledValue={0}
-          defaultValue={50}
           min={1}
           max={240}
+          defaultValue={0}
         />
       ) : null}
     </Stack>
@@ -251,7 +247,7 @@ function VScaleBorder() {
       setValue={setVscaleBorder}
       min={1}
       max={399}
-      disabledValue={0}
+      defaultValue={1}
       step={1}
       helpText="Adds a black border to the top and bottom of the screen."
     />
@@ -454,11 +450,9 @@ function VRRMode() {
           label="Minimum framerate"
           value={vrrMinFramerate}
           setValue={setVrrMinFramerate}
-          isEnabled={() => vrrMinFramerate > 0}
-          disabledValue={0}
-          defaultValue={50}
           min={1}
           max={240}
+          defaultValue={0}
         />
       ) : null}
 
@@ -468,11 +462,9 @@ function VRRMode() {
           value={vrrMaxFramerate}
           setValue={setVrrMaxFramerate}
           helpText="Currently only used in FreeSync."
-          isEnabled={() => vrrMaxFramerate > 0}
-          disabledValue={0}
-          defaultValue={60}
           min={1}
           max={240}
+          defaultValue={0}
         />
       ) : null}
 
@@ -482,11 +474,9 @@ function VRRMode() {
           value={vrrVesaFramerate}
           setValue={setVrrVesaFramerate}
           helpText="Normally set to the current video mode's output framerate."
-          isEnabled={() => vrrVesaFramerate > 0}
-          disabledValue={0}
-          defaultValue={60}
           min={1}
           max={240}
+          defaultValue={0}
         />
       ) : null}
     </Stack>
@@ -589,11 +579,11 @@ function ConditionalVideoMode() {
   const setVideoModePal = useIniSettingsStore((state) => state.setVideoModePal);
 
   const [showSection, setShowSection] = useState(
-    videoModeNtsc !== "" || videoModePal !== ""
+    videoModeNtsc !== "" || videoModePal !== "" ? 1 : 0
   );
 
-  const handleSectionToggle = (v: boolean) => {
-    if (!v) {
+  const handleSectionToggle = (v: number) => {
+    if (v === 0) {
       setVideoModeNtsc("");
       setVideoModePal("");
     }
