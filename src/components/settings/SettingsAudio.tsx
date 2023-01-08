@@ -1,5 +1,10 @@
 import Stack from "@mui/material/Stack";
-import { BoolOption, PageHeader, ValuePicker } from "./SettingsCommon";
+import {
+  BoolOption,
+  PageHeader,
+  SaveButton,
+  ValuePicker,
+} from "./SettingsCommon";
 import { useIniSettingsStore } from "../../lib/store";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -66,6 +71,8 @@ export default function AudioSettings() {
 
       <HdmiAudio96k />
       <AFilterDefault />
+
+      <SaveButton />
     </Stack>
   );
 }

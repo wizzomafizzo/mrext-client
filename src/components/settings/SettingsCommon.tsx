@@ -4,7 +4,11 @@ import Typography from "@mui/material/Typography";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-import { useUIStateStore, SettingsPageId } from "../../lib/store";
+import {
+  useUIStateStore,
+  SettingsPageId,
+  useIniSettingsStore,
+} from "../../lib/store";
 import { useEffect, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import List from "@mui/material/List";
@@ -21,23 +25,58 @@ import MenuItem from "@mui/material/MenuItem";
 import { TextField } from "@mui/material";
 import FormLabel from "@mui/material/FormLabel";
 import Slider from "@mui/material/Slider";
+import Grid from "@mui/material/Grid";
+import { newIniResponse } from "../../lib/ini";
 
 export function PageHeader(props: { title: string }) {
   const setActiveSettingsPage = useUIStateStore(
     (state) => state.setActiveSettingsPage
   );
 
+  const modified = useIniSettingsStore((state) => state.modified);
+
   return (
-    <Stack spacing={1} direction="row">
-      <Button
-        variant="text"
-        onClick={() => setActiveSettingsPage(SettingsPageId.Main)}
-        startIcon={<ArrowBackIcon />}
-      >
-        Back
-      </Button>
-      <Typography variant="h5">{props.title}</Typography>
-    </Stack>
+    <Grid container sx={{ alignItems: "center" }}>
+      <Grid item xs={2} sx={{ pl: 0.5 }}>
+        <Button
+          variant="text"
+          onClick={() => setActiveSettingsPage(SettingsPageId.Main)}
+          startIcon={<ArrowBackIcon />}
+        >
+          Back
+        </Button>
+      </Grid>
+      <Grid item xs={8} sx={{ textAlign: "center" }}>
+        <Typography variant="h5">{props.title}</Typography>
+      </Grid>
+      <Grid item xs={2} sx={{ textAlign: "right", pr: 0.8 }}>
+        {modified && (
+          <Button variant="text" color="error">
+            Revert
+          </Button>
+        )}
+      </Grid>
+    </Grid>
+  );
+}
+
+export function SaveButton() {
+  const store = useIniSettingsStore();
+  const modified = useIniSettingsStore((state) => state.modified);
+  const setModified = useIniSettingsStore((state) => state.setModified);
+
+  return (
+    <Button
+      variant="contained"
+      onClick={() => {
+        console.log(newIniResponse(store));
+        setModified(false);
+      }}
+      disabled={!modified}
+      color="success"
+    >
+      Save
+    </Button>
   );
 }
 
@@ -90,14 +129,25 @@ export function BoolOption(props: {
   setValue: (value: number) => void;
   label: string;
   helpText?: string;
+  invert?: boolean;
 }) {
   return (
     <FormControl>
       <FormControlLabel
         control={
           <Checkbox
-            checked={props.value > 0}
-            onChange={(e) => props.setValue(e.target.checked ? 1 : 0)}
+            checked={props.invert ? props.value == 0 : props.value == 1}
+            onChange={(e) => {
+              props.setValue(
+                props.invert
+                  ? e.target.checked
+                    ? 0
+                    : 1
+                  : e.target.checked
+                  ? 1
+                  : 0
+              );
+            }}
           />
         }
         label={props.label}

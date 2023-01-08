@@ -9,11 +9,16 @@ import {
   BoolOption,
   NumberOption,
   PageHeader,
+  SaveButton,
   SimpleSelectOption,
   TextOption,
   ToggleableNumberSliderOption,
 } from "./SettingsCommon";
 import { useIniSettingsStore } from "../../lib/store";
+
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
+import { Save } from "@mui/icons-material";
 
 function BtAutoDisconnect() {
   const v = useIniSettingsStore((state) => state.btAutoDisconnect);
@@ -269,10 +274,10 @@ function NoMergeVidPid() {
 }
 
 function AutoFire() {
-  const v = useIniSettingsStore((state) => state.autoFire);
-  const sv = useIniSettingsStore((state) => state.setAutoFire);
+  const v = useIniSettingsStore((state) => state.disableAutoFire);
+  const sv = useIniSettingsStore((state) => state.setDisableAutoFire);
 
-  return <BoolOption value={v} setValue={sv} label="Enable autofire" />;
+  return <BoolOption value={v} setValue={sv} label="Enable autofire" invert />;
 }
 
 export default function InputDevices() {
@@ -282,24 +287,56 @@ export default function InputDevices() {
 
       <BtAutoDisconnect />
       <BtResetBeforePair />
-      <MouseThrottle />
-      <ResetCombo />
-      <PlayerControllers />
-      <SniperMode />
-      <SpinnerThrottle />
-      <SpinnerAxis />
-      <GamepadDefaults />
       <AutoFire />
-      <WheelForce />
-      <WheelRange />
-      <SpinnerVid />
-      <SpinnerPid />
-      <KeyrahMode />
-      <JammaVid />
-      <JammaPid />
-      <NoMergeVid />
-      <NoMergePid />
-      <NoMergeVidPid />
+      <SniperMode />
+
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography variant="h6">Keyboard and mouse</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Stack spacing={3}>
+            <MouseThrottle />
+            <ResetCombo />
+          </Stack>
+        </AccordionDetails>
+      </Accordion>
+
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography variant="h6">Wheels and spinners</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Stack spacing={3}>
+            <WheelForce />
+            <WheelRange />
+            <SpinnerThrottle />
+            <SpinnerAxis />
+          </Stack>
+        </AccordionDetails>
+      </Accordion>
+
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography variant="h6">Advanced</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Stack spacing={3}>
+            <PlayerControllers />
+            <GamepadDefaults />
+            <SpinnerVid />
+            <SpinnerPid />
+            <KeyrahMode />
+            <JammaVid />
+            <JammaPid />
+            <NoMergeVid />
+            <NoMergePid />
+            <NoMergeVidPid />
+          </Stack>
+        </AccordionDetails>
+      </Accordion>
+
+      <SaveButton />
     </Stack>
   );
 }

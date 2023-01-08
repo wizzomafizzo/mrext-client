@@ -14,6 +14,7 @@ import {
   BoolOption,
   NumberOption,
   PageHeader,
+  SaveButton,
   SimpleSelectOption,
   ValuePicker,
 } from "./SettingsCommon";
@@ -156,6 +157,8 @@ export default function OSDMenuSettings() {
       <VideoOff />
       <Logo />
       <MenuPal />
+
+      <SaveButton />
     </Stack>
   );
 }

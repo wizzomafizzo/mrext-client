@@ -6,6 +6,7 @@ import Stack from "@mui/material/Stack";
 import {
   BoolOption,
   PageHeader,
+  SaveButton,
   TextOption,
   ToggleableNumberSliderOption,
 } from "./SettingsCommon";
@@ -131,6 +132,8 @@ export default function CoresSettings() {
       <BootScreen />
       <KeyMenuAsRgui />
       <SharedFolder />
+
+      <SaveButton />
     </Stack>
   );
 }

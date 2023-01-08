@@ -3,6 +3,7 @@ import {
   BoolOption,
   NumberOption,
   PageHeader,
+  SaveButton,
   SimpleSelectOption,
   TextOption,
   ValuePicker,
@@ -119,6 +120,8 @@ export default function SystemSettings() {
       <BootCore />
       <BootCoreTimeout />
       <WaitMount />
+
+      <SaveButton />
     </Stack>
   );
 }

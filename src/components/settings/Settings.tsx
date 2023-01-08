@@ -48,10 +48,6 @@ function SettingsPageLink(props: {
 function MainPage() {
   return (
     <div>
-      <Typography variant="body2">
-        Only the Remote page actually makes changes right now. All other pages
-        will not save any changes to your MiSTer.ini file.
-      </Typography>
       <List disablePadding>
         <SettingsPageLink
           page={SettingsPageId.Video}

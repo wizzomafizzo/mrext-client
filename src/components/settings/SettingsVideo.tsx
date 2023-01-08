@@ -14,11 +14,14 @@ import FormHelperText from "@mui/material/FormHelperText";
 
 import Typography from "@mui/material/Typography";
 
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 import {
   BoolOption,
   NumberOption,
   NumberSliderOption,
   PageHeader,
+  SaveButton,
   SimpleSelectOption,
   TextOption,
   ToggleableNumberSliderOption,
@@ -32,6 +35,7 @@ import Radio from "@mui/material/Radio";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import FormLabel from "@mui/material/FormLabel";
+import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 
 const videoModes = [
   ["0", "1280x720@60"],
@@ -889,37 +893,75 @@ export default function VideoSettings() {
       <PageHeader title="Video" />
 
       <MainVideoMode />
-      <ConditionalVideoMode />
       <VerticalScale />
-      <VSyncAdjust />
-      <DVIMode />
-      <VScaleBorder />
-      <VFilter />
-      <VFilterScanlines />
-      <VFilterVertical />
-      <ShadowMask />
-      <ShadowMaskMode />
-      <GameMode />
-      <LimitHDMIColor />
       <VRRMode />
-      <CustomAspectRatios />
-      <Hdr />
+      <VSyncAdjust />
 
-      <Typography variant="h6">HDMI Color Controls</Typography>
-      <VideoBrightness />
-      <VideoContrast />
-      <VideoSaturation />
-      <VideoHue />
-      <VideoGainOffset />
-      <ColorControlPresets />
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography variant="h6">Filters</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Stack spacing={3}>
+            <VScaleBorder />
+            <VFilter />
+            <VFilterScanlines />
+            <VFilterVertical />
+            <ShadowMask />
+            <ShadowMaskMode />
+          </Stack>
+        </AccordionDetails>
+      </Accordion>
 
-      <Typography variant="h6">Analog Video</Typography>
-      <DirectVideo />
-      <ForcedScandoubler />
-      <Ypbpr />
-      <CompositeSync />
-      <VGAScaler />
-      <Sog />
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography variant="h6">Analog Video</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Stack spacing={3}>
+            <DirectVideo />
+            <ForcedScandoubler />
+            <Ypbpr />
+            <CompositeSync />
+            <VGAScaler />
+            <Sog />
+          </Stack>
+        </AccordionDetails>
+      </Accordion>
+
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography variant="h6">HDMI Color Controls</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Stack spacing={3}>
+            <Hdr />
+            <VideoBrightness />
+            <VideoContrast />
+            <VideoSaturation />
+            <VideoHue />
+            <VideoGainOffset />
+            <ColorControlPresets />
+          </Stack>
+        </AccordionDetails>
+      </Accordion>
+
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography variant="h6">Advanced</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Stack spacing={3}>
+            <DVIMode />
+            <GameMode />
+            <LimitHDMIColor />
+            <ConditionalVideoMode />
+            <CustomAspectRatios />
+          </Stack>
+        </AccordionDetails>
+      </Accordion>
+
+      <SaveButton />
     </Stack>
   );
 }
