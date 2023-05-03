@@ -21,7 +21,6 @@ import CoresSettings from "./SettingsCore";
 import Remote from "./SettingsRemote";
 
 import Box from "@mui/material/Box";
-import { Typography } from "@mui/material";
 import AudioSettings from "./SettingsAudio";
 import SystemSettings from "./SettingsSystem";
 
