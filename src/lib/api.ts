@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import {
+  IndexedSystems,
   Screenshot,
   SearchResults,
   ServerStatus,
@@ -82,19 +83,19 @@ export default class ControlApi {
   // wallpaper
 
   async getWallpapers(): Promise<Wallpaper[]> {
-    return (await axios.get<Wallpaper[]>(`/wallpaper`)).data;
+    return (await axios.get<Wallpaper[]>(`/wallpapers`)).data;
   }
 
   getWallpaperUrl(filename: string): string {
-    return `${this.apiUrl}/wallpaper/${filename}`;
+    return `${this.apiUrl}/wallpapers/${filename}`;
   }
 
   async setWallpaper(filename: string): Promise<void> {
-    await axios.post(`/wallpaper/${filename}`);
+    await axios.post(`/wallpapers/${filename}`);
   }
 
   async deleteWallpaper(filename: string): Promise<void> {
-    await axios.delete(`/wallpaper/${filename}`);
+    await axios.delete(`/wallpapers/${filename}`);
   }
 
   // music
@@ -125,8 +126,11 @@ export default class ControlApi {
 
   // games
 
-  async searchGames(query: string): Promise<SearchResults> {
-    return (await axios.post<SearchResults>(`/games/search`, { query })).data;
+  async searchGames(data: {
+    query: string;
+    system: string;
+  }): Promise<SearchResults> {
+    return (await axios.post<SearchResults>(`/games/search`, data)).data;
   }
 
   async launchGame(path: string): Promise<void> {
@@ -137,9 +141,13 @@ export default class ControlApi {
     await axios.post(`/games/index`);
   }
 
+  async indexedSystems(): Promise<IndexedSystems> {
+    return (await axios.get<IndexedSystems>(`/games/search/systems`)).data;
+  }
+
   // control
 
   async sendKeyboard(key: KeyboardCodes) {
-    await axios.post(`/control/keyboard/${key}`);
+    await axios.post(`/controls/keyboard/${key}`);
   }
 }

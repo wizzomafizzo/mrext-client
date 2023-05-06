@@ -1,5 +1,5 @@
 {
-  "short_name": "MiSTer Remote",
+  "short_name": "Remote",
   "name": "MiSTer FPGA Remote",
   "icons": [
     {
@@ -20,6 +20,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#2A0000",
-  "background_color": "#E6D0BB"
+  "theme_color": "#9c5cf7",
+  "background_color": "#282a36"
 }
