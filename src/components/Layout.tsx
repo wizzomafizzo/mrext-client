@@ -23,9 +23,6 @@ import PhotoCameraBackIcon from "@mui/icons-material/PhotoCameraBack";
 import FormatPaintIcon from "@mui/icons-material/FormatPaint";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 
-import misterLogo from "../images/misterlogo.svg";
-import misterKun from "../images/misterkun.svg";
-
 import {
   Navigate,
   NavLink,
@@ -167,8 +164,8 @@ export default function ResponsiveDrawer() {
   const drawer = (
     <div onClick={() => setMobileOpen(false)}>
       <Toolbar sx={{ justifyContent: "center" }}>
-        <img alt="MiSTer Kun Logo" src={misterKun} height={48} />
-        <img alt="MiSTer FPGA Logo" src={misterLogo} height={48} />
+        <img alt="MiSTer Kun Logo" src="/misterkun.svg" height={48} />
+        <img alt="MiSTer FPGA Logo" src="/misterlogo.svg" height={48} />
       </Toolbar>
       <List>
         {/*<RouterLink to="/" text="Dashboard" icon={<DashboardIcon />} />*/}
