@@ -79,7 +79,7 @@ function SearchResultsList(props: { results?: SearchResults }) {
   const displayed = new Set<string>();
   const displayResults: Game[] = [];
 
-  if (props.results) {
+  if (props.results && props.results.data) {
     for (const game of props.results.data) {
       if (displayed.has(game.name)) {
         continue;
