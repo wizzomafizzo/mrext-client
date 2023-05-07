@@ -150,4 +150,8 @@ export default class ControlApi {
   async sendKeyboard(key: KeyboardCodes) {
     await axios.post(`/controls/keyboard/${key}`);
   }
+
+  async sendRawKeyboard(key: number) {
+    await axios.post(`/controls/keyboard_raw/${key}`);
+  }
 }
