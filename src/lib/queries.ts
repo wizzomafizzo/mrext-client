@@ -17,3 +17,9 @@ export const useIndexedSystems = () =>
     queryKey: ["games", "indexedSystems"],
     queryFn: api.indexedSystems,
   });
+
+export const useListMenuFolder = (path: string) =>
+  useQuery({
+    queryKey: ["listMenu", path],
+    queryFn: () => api.listMenuFolder(path),
+  });

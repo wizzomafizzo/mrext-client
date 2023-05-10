@@ -22,6 +22,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import PhotoCameraBackIcon from "@mui/icons-material/PhotoCameraBack";
 import FormatPaintIcon from "@mui/icons-material/FormatPaint";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
+import DvrIcon from '@mui/icons-material/Dvr';
 
 import {
   Navigate,
@@ -39,6 +40,8 @@ import Music from "./Music";
 import Search from "./Search";
 import Settings from "./settings/Settings";
 import Control from "./Control";
+import {SwipeableDrawer} from "@mui/material";
+import Menu from "./Menu";
 
 const drawerWidth = 240;
 
@@ -98,6 +101,12 @@ const pages: Page[] = [
     buttonText: "Music",
     icon: <MusicNoteIcon />,
   },
+  {
+    path: "/menu",
+    titleText: "Menu",
+    buttonText: "Menu",
+    icon: <DvrIcon />,
+  }
 ];
 
 function getPage(path: string): Page | undefined {
@@ -170,6 +179,7 @@ export default function ResponsiveDrawer() {
       <List>
         {/*<RouterLink to="/" text="Dashboard" icon={<DashboardIcon />} />*/}
         <RouterLink to="/control" text="Control" icon={<GamepadIcon />} />
+        <RouterLink to="menu" text="Menu" icon={<DvrIcon />} />
       </List>
       <Divider />
       <List>
@@ -240,11 +250,13 @@ export default function ResponsiveDrawer() {
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
         aria-label="mailbox folders"
       >
-        <Drawer
+        <SwipeableDrawer
           container={window.document.body}
           variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
+          onOpen={handleDrawerToggle}
+          disableBackdropTransition
           ModalProps={{
             keepMounted: true, // Better open performance on mobile.
           }}
@@ -257,7 +269,7 @@ export default function ResponsiveDrawer() {
           }}
         >
           {drawer}
-        </Drawer>
+        </SwipeableDrawer>
         <Drawer
           variant="permanent"
           sx={{
@@ -289,6 +301,7 @@ export default function ResponsiveDrawer() {
           <Route path="/music" element={<Music />} />
           <Route path="/wallpaper" element={<Wallpaper />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/menu" element={<Menu />} />
         </Routes>
       </Box>
     </Box>

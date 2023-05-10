@@ -61,3 +61,18 @@ export interface ServerStatus {
   searchService: SearchServiceStatus;
   musicService: MusicServiceStatus;
 }
+
+export interface MenuItem {
+  name: string;
+  namesTxt?: string;
+  path: string;
+  next?: string;
+  type: "folder" | "rbf" | "mra" | "mgl";
+  modified: string;
+  version?: string;
+}
+
+export interface ViewMenu {
+  up?: string;
+  items: MenuItem[];
+}

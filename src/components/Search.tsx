@@ -29,46 +29,12 @@ import {
 
 import ControlApi from "../lib/api";
 import { useIndexedSystems, useServerStatus } from "../lib/queries";
-import Fab from "@mui/material/Fab";
-import { KeyboardArrowUp } from "@mui/icons-material";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { Game, SearchResults } from "../lib/models";
 import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-
-// https://dilshankelsen.com/creating-scroll-to-top-button-with-react-mui/
-function ScrollToTopFab() {
-  const trigger = useScrollTrigger({
-    threshold: 100,
-  });
-
-  const scrollToTop = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
-
-  return (
-    <Zoom in={trigger}>
-      <Box
-        role="presentation"
-        sx={{
-          position: "fixed",
-          bottom: 16,
-          right: 16,
-          zIndex: 1,
-        }}
-      >
-        <Fab
-          onClick={scrollToTop}
-          color="primary"
-          aria-label="Scroll back to top"
-        >
-          <KeyboardArrowUp fontSize="large" />
-        </Fab>
-      </Box>
-    </Zoom>
-  );
-}
+import ScrollToTopFab from "./ScrollToTop";
 
 function SearchResultsList(props: { results?: SearchResults }) {
   const api = new ControlApi();
@@ -294,7 +260,7 @@ export default function Search() {
           >
             <Paper sx={{ m: 1 }}>
               <ClickAwayListener onClickAway={handleClose}>
-                <MenuList id="split-button-menu" autoFocusItem>
+                <MenuList>
                   <MenuItem
                     onClick={(e) => {
                       setOpen(false);

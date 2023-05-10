@@ -159,7 +159,7 @@ export default function Control() {
       <Grid container spacing={3}>
         <Grid item xs={4}>
           <Button
-            variant="contained"
+            variant="outlined"
             size="large"
             sx={{ width: "100%", height: 75 }}
             onClick={() => {
@@ -183,7 +183,7 @@ export default function Control() {
         </Grid>
         <Grid item xs={4}>
           <Button
-            variant="contained"
+            variant="outlined"
             size="large"
             sx={{ width: "100%", height: 75 }}
             onClick={() => {
@@ -231,7 +231,7 @@ export default function Control() {
         </Grid>
         <Grid item xs={4}>
           <Button
-            variant="contained"
+            variant="outlined"
             size="large"
             sx={{ width: "100%", height: 75 }}
             onClick={() => {
@@ -259,7 +259,7 @@ export default function Control() {
       <Grid container spacing={2} sx={{ mt: 3 }}>
         <Grid item xs={6}>
           <Button
-            variant="contained"
+            variant="outlined"
             sx={{ width: "100%" }}
             onClick={() => {
               api.sendKeyboard("volume_up");
@@ -271,7 +271,7 @@ export default function Control() {
         </Grid>
         <Grid item xs={6}>
           <Button
-            variant="contained"
+            variant="outlined"
             sx={{ width: "100%" }}
             onClick={() => {
               api.sendKeyboard("screenshot");
@@ -284,7 +284,7 @@ export default function Control() {
 
         <Grid item xs={6}>
           <Button
-            variant="contained"
+            variant="outlined"
             sx={{ width: "100%" }}
             onClick={() => {
               api.sendKeyboard("volume_down");
@@ -296,7 +296,7 @@ export default function Control() {
         </Grid>
         <Grid item xs={6}>
           <Button
-            variant="contained"
+            variant="outlined"
             sx={{ width: "100%" }}
             onClick={() => {
               api.sendKeyboard("raw_screenshot");
@@ -309,7 +309,7 @@ export default function Control() {
 
         <Grid item xs={6}>
           <Button
-            variant="contained"
+            variant="outlined"
             sx={{ width: "100%" }}
             onClick={() => {
               api.sendKeyboard("volume_mute");
@@ -321,7 +321,7 @@ export default function Control() {
         </Grid>
         <Grid item xs={6}>
           <Button
-            variant="contained"
+            variant="outlined"
             sx={{ width: "100%" }}
             onClick={() => {
               api.sendKeyboard("user");
@@ -333,7 +333,7 @@ export default function Control() {
         </Grid>
         <Grid item xs={6}>
           <Button
-            variant="contained"
+            variant="outlined"
             sx={{ width: "100%" }}
             onClick={() => {
               api.sendKeyboard("pair_bluetooth");
@@ -345,7 +345,7 @@ export default function Control() {
         </Grid>
         <Grid item xs={6}>
           <Button
-            variant="contained"
+            variant="outlined"
             sx={{ width: "100%" }}
             onClick={() => {
               api.sendKeyboard("reset");
@@ -357,7 +357,7 @@ export default function Control() {
         </Grid>
         <Grid item xs={12}>
           <Button
-            variant="contained"
+            variant="outlined"
             sx={{ width: "100%" }}
             onClick={() => {
               setKeyboardOpen(true);

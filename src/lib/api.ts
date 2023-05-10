@@ -6,6 +6,7 @@ import {
   SearchResults,
   ServerStatus,
   System,
+  ViewMenu,
   Wallpaper,
 } from "./models";
 
@@ -153,5 +154,16 @@ export default class ControlApi {
 
   async sendRawKeyboard(key: number) {
     await axios.post(`/controls/keyboard_raw/${key}`);
+  }
+
+  // menu
+
+  async listMenuFolder(path: string): Promise<ViewMenu> {
+    return (await axios.get<ViewMenu>(`/menu/view/${path}`)).data;
+  }
+
+  // launch
+  async launchFile(path: string) {
+    await axios.post(`/launch`, { path });
   }
 }

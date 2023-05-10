@@ -23,6 +23,7 @@ import Remote from "./SettingsRemote";
 import Box from "@mui/material/Box";
 import AudioSettings from "./SettingsAudio";
 import SystemSettings from "./SettingsSystem";
+import Typography from "@mui/material/Typography";
 
 function SettingsPageLink(props: {
   page: SettingsPageId;
@@ -115,8 +116,12 @@ export default function Settings() {
   })();
 
   return (
-    <div>
-      <Box sx={{ margin: 2, marginRight: 3, marginLeft: 3 }}>{page}</Box>
+    <Box sx={{ margin: 2, marginRight: 3, marginLeft: 3 }}>
+      <Typography sx={{ textAlign: "center", mb: 1 }} color="error">
+        INI settings editing is still in development. Any changes made in Remote
+        will not be saved to your MiSTer.
+      </Typography>
+      <Box>{page}</Box>
       {/* <Stack
                 sx={{
                     position: "fixed",
@@ -146,6 +151,6 @@ export default function Settings() {
                     Discard changes
                 </Button>
             </Stack> */}
-    </div>
+    </Box>
   );
 }
