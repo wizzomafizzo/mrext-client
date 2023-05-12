@@ -23,6 +23,9 @@ import PhotoCameraBackIcon from "@mui/icons-material/PhotoCameraBack";
 import FormatPaintIcon from "@mui/icons-material/FormatPaint";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import DvrIcon from "@mui/icons-material/Dvr";
+import SignalWifiBadIcon from "@mui/icons-material/SignalWifiBad";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PauseIcon from "@mui/icons-material/Pause";
 
 import {
   Navigate,
@@ -40,11 +43,21 @@ import Music from "./Music";
 import Search from "./Search";
 import Settings from "./settings/Settings";
 import Control from "./Control";
-import { SwipeableDrawer } from "@mui/material";
+import {
+  ClickAwayListener,
+  Grow,
+  MenuList,
+  Paper,
+  Popper,
+  SwipeableDrawer,
+} from "@mui/material";
 import Menu from "./Menu";
 import useWebSocket from "react-use-websocket";
-import {WebSocketHook} from "react-use-websocket/dist/lib/types";
+import { WebSocketHook } from "react-use-websocket/dist/lib/types";
 import useWs from "./WebSocket";
+import { useServerStateStore } from "../lib/store";
+import Stack from "@mui/material/Stack";
+import MenuItem from "@mui/material/MenuItem";
 
 const drawerWidth = 240;
 
@@ -165,12 +178,82 @@ function RouterLink(props: RouterLinkProps) {
   );
 }
 
+function PlayingButton() {
+  const ws = useWs();
+  const serverState = useServerStateStore();
+  let icon = <PauseIcon />;
+  const anchorRef = React.useRef<HTMLButtonElement>(null);
+  const [open, setOpen] = React.useState(false);
 
+  const handleClose = (event: Event) => {
+    if (
+      anchorRef.current &&
+      anchorRef.current.contains(event.target as HTMLElement)
+    ) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  if (ws.readyState !== WebSocket.OPEN) {
+    icon = <SignalWifiBadIcon />;
+  } else if (serverState.activeGame !== "" || serverState.activeCore !== "") {
+    icon = <PlayArrowIcon />;
+  } else {
+    icon = <PauseIcon />;
+  }
+
+  return (
+    <>
+      <IconButton
+        ref={anchorRef}
+        sx={{ ml: 3, pr: 0 }}
+        onClick={() => setOpen(!open)}
+      >
+        {icon}
+      </IconButton>
+      <Popper
+        sx={{
+          zIndex: 1,
+        }}
+        open={open}
+        anchorEl={anchorRef.current}
+        role={undefined}
+        transition
+        disablePortal
+      >
+        {({ TransitionProps, placement }) => (
+          <Grow
+            {...TransitionProps}
+            style={{
+              transformOrigin:
+                placement === "bottom" ? "center top" : "center bottom",
+            }}
+          >
+            <Paper sx={{ mr: 1 }}>
+              <ClickAwayListener onClickAway={handleClose}>
+                <Box sx={{ p: 1 }}>
+                  <Typography>
+                    Core: {serverState.activeCore || "None"}
+                  </Typography>
+                  <Typography>
+                    Game: {serverState.activeGame || "None"}
+                  </Typography>
+                </Box>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
+    </>
+  );
+}
 
 export default function ResponsiveDrawer() {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  
+
   const ws = useWs();
 
   const handleDrawerToggle = () => {
@@ -241,15 +324,25 @@ export default function ResponsiveDrawer() {
           >
             <MenuIcon />
           </IconButton>
-          {getPage(location.pathname)?.icon}
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ marginLeft: 1 }}
+          <Stack
+            direction="row"
+            sx={{
+              flexGrow: 1,
+              alignItems: "center",
+              textAlign: "center",
+              justifyContent: "center",
+            }}
           >
-            {getPage(location.pathname)?.titleText}
-          </Typography>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ marginLeft: 1 }}
+            >
+              {getPage(location.pathname)?.titleText}
+            </Typography>
+          </Stack>
+          <PlayingButton />
         </Toolbar>
       </AppBar>
       <Box
@@ -301,7 +394,7 @@ export default function ResponsiveDrawer() {
         <Toolbar />
         <Routes>
           <Route path="/systems" element={<Systems />} />
-          <Route path="/" element={<Navigate to="/systems" />} />
+          <Route path="/" element={<Navigate to="/control" />} />
           <Route path="/search" element={<Search />} />
           <Route path="/screenshots" element={<Screenshots />} />
           <Route path="/control" element={<Control />} />

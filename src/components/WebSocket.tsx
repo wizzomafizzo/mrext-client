@@ -24,6 +24,19 @@ function handleMessage(event: MessageEvent, serverState: ServerState) {
           currentDesc: currentDesc,
         });
       }
+      break;
+    case "gameStart":
+      serverState.setActiveGame(data);
+      break;
+    case "gameStop":
+      serverState.setActiveGame("");
+      break;
+    case "coreStart":
+      serverState.setActiveCore(data);
+      break;
+    case "coreStop":
+      serverState.setActiveCore("");
+      break;
   }
 }
 

@@ -38,6 +38,10 @@ export const useUIStateStore = create<UIState>()(
 export interface ServerState {
   search: SearchServiceStatus;
   setSearch: (search: SearchServiceStatus) => void;
+  activeGame: string;
+  setActiveGame: (game: string) => void;
+  activeCore: string;
+  setActiveCore: (core: string) => void;
 }
 
 export const useServerStateStore = create<ServerState>()((set, get) => ({
@@ -49,6 +53,10 @@ export const useServerStateStore = create<ServerState>()((set, get) => ({
     currentDesc: "",
   },
   setSearch: (search: SearchServiceStatus) => set({ search }),
+  activeGame: "",
+  setActiveGame: (game: string) => set({ activeGame: game }),
+  activeCore: "",
+  setActiveCore: (core: string) => set({ activeCore: core }),
 }));
 
 // TODO: KBD_NOMOUSE
