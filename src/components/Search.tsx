@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { useMutation } from "@tanstack/react-query";
 
 import Button from "@mui/material/Button";
@@ -23,18 +23,18 @@ import {
   MenuList,
   Paper,
   Popper,
-  useScrollTrigger,
-  Zoom,
 } from "@mui/material";
 
 import ControlApi from "../lib/api";
-import { useIndexedSystems, useServerStatus } from "../lib/queries";
+import { useIndexedSystems } from "../lib/queries";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { Game, SearchResults } from "../lib/models";
 import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ScrollToTopFab from "./ScrollToTop";
+import { useServerStateStore } from "../lib/store";
+import useWs from "./WebSocket";
 
 function SearchResultsList(props: { results?: SearchResults }) {
   const api = new ControlApi();
@@ -89,14 +89,19 @@ function SearchResultsList(props: { results?: SearchResults }) {
 
 export default function Search() {
   const api = new ControlApi();
-  const serverStatus = useServerStatus();
   const systems = useIndexedSystems();
+  const serverState = useServerStateStore();
+  const ws = useWs();
 
   const [searchQuery, setSearchQuery] = React.useState("");
   const [searchSystem, setSearchSystem] = React.useState("all");
 
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    ws.sendMessage("getIndexStatus");
+  }, []);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -129,28 +134,27 @@ export default function Search() {
     return <SearchResultsList results={searchGames.data} />;
   }, [searchGames.data]);
 
-  if (serverStatus.isLoading) {
+  if (ws.readyState !== WebSocket.OPEN) {
     return <></>;
   }
 
-  if (serverStatus.data?.searchService.indexing === true) {
+  if (serverState.search.indexing) {
     return (
       <Box m={2}>
         <Typography variant="h5">Indexing games...</Typography>
         <LinearProgress
           variant="determinate"
           value={
-            (serverStatus.data?.searchService.currentStep /
-              serverStatus.data?.searchService.totalSteps) *
+            (serverState.search.currentStep / serverState.search.totalSteps) *
             100
           }
         />
-        <Typography>{serverStatus.data?.searchService.currentDesc}</Typography>
+        <Typography>{serverState.search.currentDesc}</Typography>
       </Box>
     );
   }
 
-  if (serverStatus.data?.searchService.ready === false) {
+  if (!serverState.search.ready) {
     return (
       <Box m={2} sx={{ textAlign: "center" }}>
         <Typography sx={{ marginBottom: 2 }}>
@@ -262,7 +266,7 @@ export default function Search() {
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList>
                   <MenuItem
-                    onClick={(e) => {
+                    onClick={() => {
                       setOpen(false);
                       startIndex.mutate();
                     }}

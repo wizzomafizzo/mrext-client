@@ -56,12 +56,6 @@ export interface SearchServiceStatus {
   currentDesc: string;
 }
 
-export interface ServerStatus {
-  online: boolean;
-  searchService: SearchServiceStatus;
-  musicService: MusicServiceStatus;
-}
-
 export interface MenuItem {
   name: string;
   namesTxt?: string;

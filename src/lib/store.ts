@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { SearchServiceStatus } from "./models";
 
 export enum SettingsPageId {
   Main,
@@ -33,6 +34,22 @@ export const useUIStateStore = create<UIState>()(
     }
   )
 );
+
+export interface ServerState {
+  search: SearchServiceStatus;
+  setSearch: (search: SearchServiceStatus) => void;
+}
+
+export const useServerStateStore = create<ServerState>()((set, get) => ({
+  search: {
+    ready: true,
+    indexing: false,
+    totalSteps: 0,
+    currentStep: 0,
+    currentDesc: "",
+  },
+  setSearch: (search: SearchServiceStatus) => set({ search }),
+}));
 
 // TODO: KBD_NOMOUSE
 // TODO: RUMBLE

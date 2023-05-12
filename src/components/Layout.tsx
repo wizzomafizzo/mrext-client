@@ -22,7 +22,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import PhotoCameraBackIcon from "@mui/icons-material/PhotoCameraBack";
 import FormatPaintIcon from "@mui/icons-material/FormatPaint";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
-import DvrIcon from '@mui/icons-material/Dvr';
+import DvrIcon from "@mui/icons-material/Dvr";
 
 import {
   Navigate,
@@ -40,8 +40,11 @@ import Music from "./Music";
 import Search from "./Search";
 import Settings from "./settings/Settings";
 import Control from "./Control";
-import {SwipeableDrawer} from "@mui/material";
+import { SwipeableDrawer } from "@mui/material";
 import Menu from "./Menu";
+import useWebSocket from "react-use-websocket";
+import {WebSocketHook} from "react-use-websocket/dist/lib/types";
+import useWs from "./WebSocket";
 
 const drawerWidth = 240;
 
@@ -106,7 +109,7 @@ const pages: Page[] = [
     titleText: "Menu",
     buttonText: "Menu",
     icon: <DvrIcon />,
-  }
+  },
 ];
 
 function getPage(path: string): Page | undefined {
@@ -162,9 +165,13 @@ function RouterLink(props: RouterLinkProps) {
   );
 }
 
+
+
 export default function ResponsiveDrawer() {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  
+  const ws = useWs();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);

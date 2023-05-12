@@ -44,7 +44,7 @@ export default function Menu() {
   const api = new ControlApi();
 
   const [currentPath, setCurrentPath] = useState<string>("");
-  const [sort, setSort] = useState<Sort>(Sort.DateAsc);
+  const [sort, setSort] = useState<Sort>(Sort.NameAsc);
 
   const listMenuFolder = useListMenuFolder(currentPath);
 

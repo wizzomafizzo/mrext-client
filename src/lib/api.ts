@@ -2,9 +2,9 @@ import axios from "axios";
 
 import {
   IndexedSystems,
+  MusicServiceStatus,
   Screenshot,
   SearchResults,
-  ServerStatus,
   System,
   ViewMenu,
   Wallpaper,
@@ -41,16 +41,12 @@ export default class ControlApi {
     let apiUrl = localStorage.getItem("api");
 
     if (apiUrl) {
-      axios.defaults.baseURL = apiUrl;
-      this.apiUrl = apiUrl;
+      axios.defaults.baseURL = "http://" + apiUrl;
+      this.apiUrl = "http://" + apiUrl;
     } else {
-      axios.defaults.baseURL = "/api";
-      this.apiUrl = "/api";
+      axios.defaults.baseURL = window.location.protocol + "//" + window.location.host + "/api";
+      this.apiUrl = window.location.protocol + "//" + window.location.host + "/api";
     }
-  }
-
-  async serverStatus(): Promise<ServerStatus> {
-    return (await axios.get<ServerStatus>(`/server`)).data;
   }
 
   // screenshots
@@ -100,6 +96,10 @@ export default class ControlApi {
   }
 
   // music
+
+  async musicStatus(): Promise<MusicServiceStatus> {
+    return (await axios.get<MusicServiceStatus>(`/music/status`)).data;
+  }
 
   async playMusic(): Promise<void> {
     await axios.post(`/music/play`);

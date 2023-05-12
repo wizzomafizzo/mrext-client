@@ -4,12 +4,12 @@ import ControlApi from "./api";
 
 const api = new ControlApi();
 
-export const useServerStatus = () =>
+export const useMusicStatus = () =>
   useQuery({
-    queryKey: ["server"],
-    queryFn: api.serverStatus,
-    refetchInterval: 200,
-    // refetchIntervalInBackground: true,
+    queryKey: ["music", "status"],
+    queryFn: api.musicStatus,
+    refetchInterval: 1000,
+    refetchIntervalInBackground: false,
   });
 
 export const useIndexedSystems = () =>
