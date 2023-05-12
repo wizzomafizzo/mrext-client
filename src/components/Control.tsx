@@ -20,6 +20,7 @@ import ControlApi from "../lib/api";
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
 import { Dialog } from "@mui/material";
+import useWs from "./WebSocket";
 
 const keyMap: { [key: string]: number } = {
   ESC: 1,
@@ -154,6 +155,16 @@ export default function Control() {
   const [keyboardLayout, setKeyboardLayout] = React.useState("default");
   const [keyboardOpen, setKeyboardOpen] = React.useState(false);
 
+  const ws = useWs();
+
+  const sendKey = (key: string) => {
+    ws.sendMessage("kbd:" + key);
+  };
+
+  const sendRawKey = (code: number) => {
+    ws.sendMessage("kbdRaw:" + code);
+  }
+
   return (
     <Box margin={3}>
       <Grid container spacing={3}>
@@ -163,7 +174,7 @@ export default function Control() {
             size="large"
             sx={{ width: "100%", height: 75 }}
             onClick={() => {
-              api.sendKeyboard("back");
+              sendKey("back");
             }}
           >
             <ArrowBackIcon />
@@ -175,7 +186,7 @@ export default function Control() {
             size="large"
             sx={{ width: "100%", height: 75 }}
             onClick={() => {
-              api.sendKeyboard("up");
+              sendKey("up");
             }}
           >
             <KeyboardArrowUpIcon />
@@ -187,7 +198,7 @@ export default function Control() {
             size="large"
             sx={{ width: "100%", height: 75 }}
             onClick={() => {
-              api.sendKeyboard("osd");
+              sendKey("osd");
             }}
           >
             OSD
@@ -199,7 +210,7 @@ export default function Control() {
             size="large"
             sx={{ width: "100%", height: 75 }}
             onClick={() => {
-              api.sendKeyboard("left");
+              sendKey("left");
             }}
           >
             <KeyboardArrowLeftIcon />
@@ -211,7 +222,7 @@ export default function Control() {
             size="large"
             sx={{ width: "100%", height: 75 }}
             onClick={() => {
-              api.sendKeyboard("confirm");
+              sendKey("confirm");
             }}
           >
             OK
@@ -223,7 +234,7 @@ export default function Control() {
             size="large"
             sx={{ width: "100%", height: 75 }}
             onClick={() => {
-              api.sendKeyboard("right");
+              sendKey("right");
             }}
           >
             <KeyboardArrowRightIcon />
@@ -235,7 +246,7 @@ export default function Control() {
             size="large"
             sx={{ width: "100%", height: 75 }}
             onClick={() => {
-              api.sendKeyboard("cancel");
+              sendKey("cancel");
             }}
           >
             Cancel
@@ -247,7 +258,7 @@ export default function Control() {
             size="large"
             sx={{ width: "100%", height: 75 }}
             onClick={() => {
-              api.sendKeyboard("down");
+              sendKey("down");
             }}
           >
             <KeyboardArrowDownIcon />
@@ -262,7 +273,7 @@ export default function Control() {
             variant="outlined"
             sx={{ width: "100%" }}
             onClick={() => {
-              api.sendKeyboard("volume_up");
+              sendKey("volume_up");
             }}
             startIcon={<VolumeUpIcon />}
           >
@@ -274,7 +285,7 @@ export default function Control() {
             variant="outlined"
             sx={{ width: "100%" }}
             onClick={() => {
-              api.sendKeyboard("screenshot");
+              sendKey("screenshot");
             }}
             startIcon={<AddAPhotoIcon />}
           >
@@ -287,7 +298,7 @@ export default function Control() {
             variant="outlined"
             sx={{ width: "100%" }}
             onClick={() => {
-              api.sendKeyboard("volume_down");
+              sendKey("volume_down");
             }}
             startIcon={<VolumeDownIcon />}
           >
@@ -299,7 +310,7 @@ export default function Control() {
             variant="outlined"
             sx={{ width: "100%" }}
             onClick={() => {
-              api.sendKeyboard("raw_screenshot");
+              sendKey("raw_screenshot");
             }}
             startIcon={<AddAPhotoIcon />}
           >
@@ -312,7 +323,7 @@ export default function Control() {
             variant="outlined"
             sx={{ width: "100%" }}
             onClick={() => {
-              api.sendKeyboard("volume_mute");
+              sendKey("volume_mute");
             }}
             startIcon={<VolumeOffIcon />}
           >
@@ -324,7 +335,7 @@ export default function Control() {
             variant="outlined"
             sx={{ width: "100%" }}
             onClick={() => {
-              api.sendKeyboard("user");
+              sendKey("user");
             }}
             startIcon={<PersonIcon />}
           >
@@ -336,7 +347,7 @@ export default function Control() {
             variant="outlined"
             sx={{ width: "100%" }}
             onClick={() => {
-              api.sendKeyboard("pair_bluetooth");
+              sendKey("pair_bluetooth");
             }}
             startIcon={<BluetoothIcon />}
           >
@@ -348,7 +359,7 @@ export default function Control() {
             variant="outlined"
             sx={{ width: "100%" }}
             onClick={() => {
-              api.sendKeyboard("reset");
+              sendKey("reset");
             }}
             startIcon={<RestartAltIcon />}
           >
@@ -442,7 +453,7 @@ export default function Control() {
               }
 
               if (input in keyMap) {
-                api.sendRawKeyboard(keyMap[input]);
+                sendRawKey(keyMap[input]);
               }
             }}
           />
