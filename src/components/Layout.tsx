@@ -58,6 +58,8 @@ import useWs from "./WebSocket";
 import { useServerStateStore } from "../lib/store";
 import Stack from "@mui/material/Stack";
 import MenuItem from "@mui/material/MenuItem";
+import Button from "@mui/material/Button";
+import ControlApi from "../lib/api";
 
 const drawerWidth = 240;
 
@@ -184,6 +186,7 @@ function PlayingButton() {
   let icon = <PauseIcon />;
   const anchorRef = React.useRef<HTMLButtonElement>(null);
   const [open, setOpen] = React.useState(false);
+  const api = new ControlApi();
 
   const handleClose = (event: Event) => {
     if (
@@ -208,7 +211,7 @@ function PlayingButton() {
     <>
       <IconButton
         ref={anchorRef}
-        sx={{ ml: 3, pr: 0 }}
+        sx={{ ml: 3 }}
         onClick={() => setOpen(!open)}
       >
         {icon}
@@ -233,14 +236,17 @@ function PlayingButton() {
           >
             <Paper sx={{ mr: 1 }}>
               <ClickAwayListener onClickAway={handleClose}>
-                <Box sx={{ p: 1 }}>
+                <Stack sx={{ p: 1 }}>
                   <Typography>
                     Core: {serverState.activeCore || "None"}
                   </Typography>
                   <Typography>
                     Game: {serverState.activeGame || "None"}
                   </Typography>
-                </Box>
+                  {serverState.activeCore ? (
+                    <Button onClick={() => api.launchMenu()}>Exit to menu</Button>
+                  ) : null}
+                </Stack>
               </ClickAwayListener>
             </Paper>
           </Grow>
@@ -313,6 +319,7 @@ export default function ResponsiveDrawer() {
           sx={{
             backgroundColor: "secondary.main",
             color: "primary.contrastText",
+            pr: 1,
           }}
         >
           <IconButton

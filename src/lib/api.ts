@@ -166,4 +166,8 @@ export default class ControlApi {
   async launchFile(path: string) {
     await axios.post(`/launch`, { path });
   }
+
+  async launchMenu(): Promise<void> {
+    return (await axios.post(`/launch/menu`)).data;
+  }
 }
