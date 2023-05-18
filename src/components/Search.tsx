@@ -13,18 +13,6 @@ import LinearProgress from "@mui/material/LinearProgress";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import SearchIcon from "@mui/icons-material/Search";
-
-import {
-  Box,
-  CircularProgress,
-  ClickAwayListener,
-  FormControl,
-  Grow,
-  MenuList,
-  Paper,
-  Popper,
-} from "@mui/material";
-
 import ControlApi from "../lib/api";
 import { useIndexedSystems } from "../lib/queries";
 import MenuItem from "@mui/material/MenuItem";
@@ -35,8 +23,26 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ScrollToTopFab from "./ScrollToTop";
 import { useServerStateStore } from "../lib/store";
 import useWs from "./WebSocket";
+import Box from "@mui/material/Box";
+import FormControl from "@mui/material/FormControl";
+import CircularProgress from "@mui/material/CircularProgress";
+import Popper from "@mui/material/Popper";
+import Grow from "@mui/material/Grow";
+import Paper from "@mui/material/Paper";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
+import MenuList from "@mui/material/MenuList";
+import Dialog from "@mui/material/Dialog";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import ShortcutIcon from "@mui/icons-material/Shortcut";
+import { useNavigate } from "react-router-dom";
+import { SingleShortcut } from "./Shortcuts";
 
-function SearchResultsList(props: { results?: SearchResults }) {
+function SearchResultsList(props: {
+  results?: SearchResults;
+  selectedGame: Game | null;
+  setSelectedGame: (game: Game | null) => void;
+  setOpenShortcut: (open: boolean) => void;
+}) {
   const api = new ControlApi();
   const launchGame = useMutation({
     mutationFn: api.launchGame,
@@ -44,6 +50,7 @@ function SearchResultsList(props: { results?: SearchResults }) {
 
   const displayed = new Set<string>();
   const displayResults: Game[] = [];
+  const [gameInfoOpen, setGameInfoOpen] = React.useState(false);
 
   if (props.results && props.results.data) {
     for (const game of props.results.data) {
@@ -72,7 +79,10 @@ function SearchResultsList(props: { results?: SearchResults }) {
           .map((game) => (
             <ListItem key={game.path} disableGutters disablePadding>
               <ListItemButton
-                onClick={() => launchGame.mutate(game.path)}
+                onClick={() => {
+                  props.setSelectedGame(game);
+                  setGameInfoOpen(true);
+                }}
                 disableGutters
               >
                 <ListItemText
@@ -83,6 +93,52 @@ function SearchResultsList(props: { results?: SearchResults }) {
             </ListItem>
           ))}
       </List>
+      <Dialog
+        open={gameInfoOpen}
+        onClose={() => {
+          setGameInfoOpen(false);
+          props.setSelectedGame(null);
+        }}
+      >
+        {props.selectedGame ? (
+          <Stack sx={{ m: 1, minWidth: "250px" }}>
+            <Box sx={{ mb: 2 }}>
+              <Typography>{props.selectedGame.name}</Typography>
+              <Typography variant="body2">
+                {props.selectedGame.system.name}
+              </Typography>
+            </Box>
+            <Button
+              variant="contained"
+              onClick={() => {
+                if (props.selectedGame) {
+                  launchGame.mutate(props.selectedGame.path);
+                  setGameInfoOpen(false);
+                }
+              }}
+              startIcon={<PlayArrowIcon />}
+            >
+              Launch
+            </Button>
+            <Button
+              sx={{ mt: 1 }}
+              startIcon={<ShortcutIcon />}
+              onClick={() => props.setOpenShortcut(true)}
+            >
+              Create shortcut
+            </Button>
+            <Button
+              sx={{ mt: 1 }}
+              onClick={() => {
+                setGameInfoOpen(false);
+                props.setSelectedGame(null);
+              }}
+            >
+              Close
+            </Button>
+          </Stack>
+        ) : null}
+      </Dialog>
     </Box>
   );
 }
@@ -98,6 +154,9 @@ export default function Search() {
 
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLDivElement>(null);
+
+  const [openShortcut, setOpenShortcut] = React.useState(false);
+  const [selectedGame, setSelectedGame] = React.useState<Game | null>(null);
 
   useEffect(() => {
     ws.sendMessage("getIndexStatus");
@@ -131,8 +190,15 @@ export default function Search() {
   });
 
   const resultsList = useMemo(() => {
-    return <SearchResultsList results={searchGames.data} />;
-  }, [searchGames.data]);
+    return (
+      <SearchResultsList
+        results={searchGames.data}
+        selectedGame={selectedGame}
+        setSelectedGame={setSelectedGame}
+        setOpenShortcut={setOpenShortcut}
+      />
+    );
+  }, [searchGames.data, selectedGame]);
 
   if (ws.readyState !== WebSocket.OPEN) {
     return <></>;
@@ -170,6 +236,15 @@ export default function Search() {
           Generate Index
         </Button>
       </Box>
+    );
+  }
+
+  if (openShortcut && selectedGame) {
+    return (
+      <SingleShortcut
+        path={selectedGame?.path}
+        back={() => setOpenShortcut(false)}
+      />
     );
   }
 

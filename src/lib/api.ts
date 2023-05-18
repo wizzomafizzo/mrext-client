@@ -34,6 +34,12 @@ export type KeyboardCodes =
   | "console"
   | "computer_osd";
 
+interface CreateLauncherRequest {
+  gamePath: string;
+  folder: string;
+  name: string;
+}
+
 export default class ControlApi {
   apiUrl: string;
 
@@ -44,8 +50,10 @@ export default class ControlApi {
       axios.defaults.baseURL = "http://" + apiUrl;
       this.apiUrl = "http://" + apiUrl;
     } else {
-      axios.defaults.baseURL = window.location.protocol + "//" + window.location.host + "/api";
-      this.apiUrl = window.location.protocol + "//" + window.location.host + "/api";
+      axios.defaults.baseURL =
+        window.location.protocol + "//" + window.location.host + "/api";
+      this.apiUrl =
+        window.location.protocol + "//" + window.location.host + "/api";
     }
   }
 
@@ -169,5 +177,9 @@ export default class ControlApi {
 
   async launchMenu(): Promise<void> {
     return (await axios.post(`/launch/menu`)).data;
+  }
+
+  async createLauncher(data: CreateLauncherRequest): Promise<{ path: string }> {
+    return (await axios.post(`/launch/new`, data)).data;
   }
 }

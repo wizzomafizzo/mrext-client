@@ -60,6 +60,7 @@ import Stack from "@mui/material/Stack";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import ControlApi from "../lib/api";
+import { SingleShortcut } from "./Shortcuts";
 
 const drawerWidth = 240;
 
@@ -209,11 +210,7 @@ function PlayingButton() {
 
   return (
     <>
-      <IconButton
-        ref={anchorRef}
-        sx={{ ml: 3 }}
-        onClick={() => setOpen(!open)}
-      >
+      <IconButton ref={anchorRef} sx={{ ml: 3 }} onClick={() => setOpen(!open)}>
         {icon}
       </IconButton>
       <Popper
@@ -244,7 +241,9 @@ function PlayingButton() {
                     Game: {serverState.activeGame || "None"}
                   </Typography>
                   {serverState.activeCore ? (
-                    <Button onClick={() => api.launchMenu()}>Exit to menu</Button>
+                    <Button onClick={() => api.launchMenu()}>
+                      Exit to menu
+                    </Button>
                   ) : null}
                 </Stack>
               </ClickAwayListener>
@@ -320,6 +319,7 @@ export default function ResponsiveDrawer() {
             backgroundColor: "secondary.main",
             color: "primary.contrastText",
             pr: 1,
+            pl: 2.2,
           }}
         >
           <IconButton

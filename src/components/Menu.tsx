@@ -11,15 +11,6 @@ import ListItemText from "@mui/material/ListItemText";
 import { MenuItem as MEMenuItem } from "../lib/models";
 import moment from "moment";
 import ListItemButton from "@mui/material/ListItemButton";
-import {
-  ClickAwayListener,
-  Grow,
-  IconButton,
-  ListSubheader,
-  MenuList,
-  Paper,
-  Popper,
-} from "@mui/material";
 import ScrollToTopFab from "./ScrollToTop";
 import Typography from "@mui/material/Typography";
 import LinearProgress from "@mui/material/LinearProgress";
@@ -32,6 +23,13 @@ import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
 import CheckBoxOutlineBlankOutlinedIcon from "@mui/icons-material/CheckBoxOutlineBlankOutlined";
 import CheckBoxOutlinedIcon from "@mui/icons-material/CheckBoxOutlined";
+import { formatCurrentPath } from "./Shortcuts";
+import Paper from "@mui/material/Paper";
+import IconButton from "@mui/material/IconButton";
+import Popper from "@mui/material/Popper";
+import Grow from "@mui/material/Grow";
+import ClickAwayListener from "@mui/material/ClickAwayListener";
+import MenuList from "@mui/material/MenuList";
 
 enum Sort {
   NameAsc,
@@ -72,23 +70,6 @@ export default function Menu() {
     }
   };
 
-  const formatCurrentPath = (path: string) => {
-    if (path === "" || path === ".") {
-      return "Home";
-    }
-
-    if (path.includes("/")) {
-      const parts = path.split("/");
-      path = parts[parts.length - 1];
-    }
-
-    if (path.startsWith("_")) {
-      return path.substring(1);
-    }
-
-    return path;
-  };
-
   const sortItems = (items: MEMenuItem[] | undefined) => {
     if (!items) {
       return [];
@@ -117,15 +98,33 @@ export default function Menu() {
     return [...folders, ...files];
   };
 
+  const resetScroll = () => {
+    window.scrollTo({
+      top: 0,
+    });
+  };
+
   return (
     <>
-      <Paper sx={{ boxShadow: 2 }}>
-        <Stack direction="row" sx={{ p: 1, pl: 2, alignItems: "center" }}>
+      <Paper
+        sx={{
+          boxShadow: 2,
+          position: "fixed",
+          width: 1,
+          height: "55px",
+          zIndex: 1,
+        }}
+      >
+        <Stack
+          direction="row"
+          sx={{ p: 1, pl: 2, alignItems: "center", height: "55px" }}
+        >
           <IconButton
             sx={{ pl: 0, pr: 4 }}
             disabled={currentPath === "" || currentPath === "."}
             onClick={() => {
               setCurrentPath("");
+              resetScroll();
             }}
           >
             <HomeIcon />
@@ -141,6 +140,7 @@ export default function Menu() {
           </IconButton>
         </Stack>
       </Paper>
+      <Box sx={{ height: "55px" }}></Box>
       {listMenuFolder.isLoading ? <LinearProgress /> : null}
       <Box>
         {!listMenuFolder.isLoading ? (
@@ -151,6 +151,7 @@ export default function Menu() {
                   setCurrentPath(
                     listMenuFolder.data.up ? listMenuFolder.data.up : ""
                   );
+                  resetScroll();
                 }}
               >
                 <ListItemIcon>
@@ -165,6 +166,7 @@ export default function Menu() {
                 onClick={() => {
                   if (item.next) {
                     setCurrentPath(item.next);
+                    resetScroll();
                   } else {
                     api.launchFile(item.path);
                   }
@@ -187,7 +189,7 @@ export default function Menu() {
       </Box>
       <Popper
         sx={{
-          zIndex: 1,
+          zIndex: 2,
         }}
         open={sortOpen}
         anchorEl={sortAnchorRef.current}
@@ -216,9 +218,9 @@ export default function Menu() {
                   {/*  </ListItemIcon>*/}
                   {/*  <ListItemText>Show hidden files</ListItemText>*/}
                   {/*</MenuItem>*/}
-                  <ListSubheader sx={{ backgroundColor: "transparent" }}>
+                  <Typography sx={{ pl: 1, fontWeight: 500 }}>
                     Sort by
-                  </ListSubheader>
+                  </Typography>
                   <MenuItem
                     onClick={(e) => {
                       setSort(Sort.NameAsc);
