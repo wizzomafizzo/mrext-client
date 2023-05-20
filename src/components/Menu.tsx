@@ -113,6 +113,7 @@ export default function Menu() {
           width: 1,
           height: "55px",
           zIndex: 1,
+          borderRadius: 0,
         }}
       >
         <Stack

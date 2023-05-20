@@ -1,15 +1,6 @@
-import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
 import FormControl from "@mui/material/FormControl";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormHelperText from "@mui/material/FormHelperText";
 import FormLabel from "@mui/material/FormLabel";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
 import {
   BoolOption,
   NumberOption,
@@ -20,6 +11,7 @@ import {
 } from "./SettingsCommon";
 import { useIniSettingsStore } from "../../lib/store";
 import { useState } from "react";
+import Typography from "@mui/material/Typography";
 
 function RbfHideDatecode() {
   const v = useIniSettingsStore((state) => state.rbfHideDatecode);
@@ -146,19 +138,24 @@ function Logo() {
 
 export default function OSDMenuSettings() {
   return (
-    <Stack sx={{ minWidth: 120 }} spacing={3}>
+    <>
       <PageHeader title="OSD and Menu" />
+      <Stack spacing={2} m={2}>
+        <Typography sx={{ textAlign: "center" }} color="error">
+          INI settings editing is still in development. Any changes made here
+          will not be saved to your MiSTer.
+        </Typography>
 
-      <Font />
-      <OsdRotate />
-      <RbfHideDatecode />
-      <BrowseExpand />
-      <OSDTimeout />
-      <VideoOff />
-      <Logo />
-      <MenuPal />
-
+        <Font />
+        <OsdRotate />
+        <RbfHideDatecode />
+        <BrowseExpand />
+        <OSDTimeout />
+        <VideoOff />
+        <Logo />
+        <MenuPal />
+      </Stack>
       <SaveButton />
-    </Stack>
+    </>
   );
 }

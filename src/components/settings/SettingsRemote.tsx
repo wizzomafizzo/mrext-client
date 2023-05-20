@@ -17,41 +17,42 @@ export default function Remote() {
   const [apiEndpoint, setApiEndpoint] = useState(localStorage.getItem("api"));
 
   return (
-    <Stack sx={{ minWidth: 120 }} spacing={3}>
-      <PageHeader title="Remote" />
-
-      <FormControl>
-        <InputLabel>Theme</InputLabel>
-        <Select
-          value={activeTheme}
-          label="Theme"
-          onChange={(e) => setActiveTheme(e.target.value)}
-        >
-          {Object.keys(themes).map((id) => (
-            <MenuItem key={id} value={id}>
-              {themes[id].displayName}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-
-      {!import.meta.env.PROD ? (
+    <>
+      <PageHeader title="Remote" noRevert />
+      <Stack spacing={2} m={2}>
         <FormControl>
-          <TextField
-            label="API endpoint"
-            value={apiEndpoint}
-            onChange={(e) => setApiEndpoint(e.target.value)}
-          />
-          <Button
-            onClick={() => {
-              localStorage.setItem("api", apiEndpoint ? apiEndpoint : "");
-              window.location.reload();
-            }}
+          <InputLabel>Theme</InputLabel>
+          <Select
+            value={activeTheme}
+            label="Theme"
+            onChange={(e) => setActiveTheme(e.target.value)}
           >
-            Set endpoint
-          </Button>
+            {Object.keys(themes).map((id) => (
+              <MenuItem key={id} value={id}>
+                {themes[id].displayName}
+              </MenuItem>
+            ))}
+          </Select>
         </FormControl>
-      ) : null}
-    </Stack>
+
+        {!import.meta.env.PROD ? (
+          <FormControl>
+            <TextField
+              label="API endpoint"
+              value={apiEndpoint}
+              onChange={(e) => setApiEndpoint(e.target.value)}
+            />
+            <Button
+              onClick={() => {
+                localStorage.setItem("api", apiEndpoint ? apiEndpoint : "");
+                window.location.reload();
+              }}
+            >
+              Set endpoint
+            </Button>
+          </FormControl>
+        ) : null}
+      </Stack>
+    </>
   );
 }

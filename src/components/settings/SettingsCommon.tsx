@@ -27,8 +27,9 @@ import FormLabel from "@mui/material/FormLabel";
 import Slider from "@mui/material/Slider";
 import Grid from "@mui/material/Grid";
 import { newIniResponse } from "../../lib/ini";
+import Paper from "@mui/material/Paper";
 
-export function PageHeader(props: { title: string }) {
+export function PageHeader(props: { title: string; noRevert?: boolean }) {
   const setActiveSettingsPage = useUIStateStore(
     (state) => state.setActiveSettingsPage
   );
@@ -36,27 +37,41 @@ export function PageHeader(props: { title: string }) {
   const modified = useIniSettingsStore((state) => state.modified);
 
   return (
-    <Grid container sx={{ alignItems: "center" }}>
-      <Grid item xs={2} sx={{ pl: 0.5 }}>
-        <Button
-          variant="text"
-          onClick={() => setActiveSettingsPage(SettingsPageId.Main)}
-          startIcon={<ArrowBackIcon />}
-        >
-          Back
-        </Button>
-      </Grid>
-      <Grid item xs={8} sx={{ textAlign: "center" }}>
-        <Typography variant="h5">{props.title}</Typography>
-      </Grid>
-      <Grid item xs={2} sx={{ textAlign: "right", pr: 0.8 }}>
-        {modified && (
-          <Button variant="text" color="error">
-            Revert
-          </Button>
-        )}
-      </Grid>
-    </Grid>
+    <>
+      <Paper
+        sx={{
+          boxShadow: 2,
+          position: "fixed",
+          width: 1,
+          height: "45px",
+          zIndex: 2,
+          borderRadius: 0,
+        }}
+      >
+        <Grid container sx={{ alignItems: "center", height: "45px" }}>
+          <Grid item xs={3} sx={{ pl: 1 }}>
+            <Button
+              variant="text"
+              onClick={() => setActiveSettingsPage(SettingsPageId.Main)}
+              startIcon={<ArrowBackIcon />}
+            >
+              Back
+            </Button>
+          </Grid>
+          <Grid item xs={6} sx={{ textAlign: "center" }}>
+            <Typography variant="h6">{props.title}</Typography>
+          </Grid>
+          <Grid item xs={3} sx={{ textAlign: "right" }}>
+            {modified && !props.noRevert && (
+              <Button variant="text" color="error">
+                Revert
+              </Button>
+            )}
+          </Grid>
+        </Grid>
+      </Paper>
+      <Box sx={{ height: "45px" }}></Box>
+    </>
   );
 }
 
@@ -66,17 +81,37 @@ export function SaveButton() {
   const setModified = useIniSettingsStore((state) => state.setModified);
 
   return (
-    <Button
-      variant="contained"
-      onClick={() => {
-        console.log(newIniResponse(store));
-        setModified(false);
-      }}
-      disabled={!modified}
-      color="success"
-    >
-      Save
-    </Button>
+    <>
+      <Paper
+        sx={{
+          boxShadow: 2,
+          position: "fixed",
+          bottom: 0,
+          width: 1,
+          height: "50px",
+          zIndex: 2,
+          borderRadius: 0,
+        }}
+      >
+        <Grid container sx={{ alignItems: "center", height: "50px" }}>
+          <Grid item xs={12} sx={{ p: 1, pt: 0.5, pb: 0.5 }}>
+            <Button
+              variant="contained"
+              onClick={() => {
+                console.log(newIniResponse(store));
+                setModified(false);
+              }}
+              disabled={!modified}
+              color="success"
+              fullWidth
+            >
+              Save
+            </Button>
+          </Grid>
+        </Grid>
+      </Paper>
+      <Box sx={{ height: "50px" }}></Box>
+    </>
   );
 }
 
@@ -298,8 +333,9 @@ export function NumberSliderOption(props: {
   return (
     <FormControl>
       <FormLabel>{props.label}</FormLabel>
-      <Stack spacing={2} direction="row" alignItems="center">
+      <Stack spacing={1} direction="row" alignItems="center">
         <Slider
+          sx={{ ml: 1.5, mr: 1.5 }}
           value={props.value}
           min={props.min}
           max={props.max}
@@ -417,6 +453,7 @@ export function ToggleableNumberSliderOption(props: {
       {enabled ? (
         <Stack spacing={2} direction="row" alignItems="center">
           <Slider
+            sx={{ ml: 1.5, mr: 1.5 }}
             value={props.value}
             onChange={(e, v) => props.setValue(Number(v))}
             step={props.step}
@@ -449,5 +486,13 @@ export function ToggleableNumberSliderOption(props: {
       ) : null}
       <FormHelperText>{props.helpText}</FormHelperText>
     </FormControl>
+  );
+}
+
+export function SectionHeader(props: { text: string }) {
+  return (
+    <Typography variant="h6" sx={{ pt: 3 }}>
+      {props.text}
+    </Typography>
   );
 }

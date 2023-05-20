@@ -1,20 +1,13 @@
 import Stack from "@mui/material/Stack";
-
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import Slider from "@mui/material/Slider";
-import Input from "@mui/material/Input";
-
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormHelperText from "@mui/material/FormHelperText";
-
 import Typography from "@mui/material/Typography";
-
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import {
   BoolOption,
@@ -22,6 +15,7 @@ import {
   NumberSliderOption,
   PageHeader,
   SaveButton,
+  SectionHeader,
   SimpleSelectOption,
   TextOption,
   ToggleableNumberSliderOption,
@@ -32,10 +26,8 @@ import { useIniSettingsStore } from "../../lib/store";
 import { useState, useEffect } from "react";
 import RadioGroup from "@mui/material/RadioGroup";
 import Radio from "@mui/material/Radio";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
 import FormLabel from "@mui/material/FormLabel";
-import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
+import Card from "@mui/material/Card";
 
 const videoModes = [
   ["0", "1280x720@60"],
@@ -758,7 +750,7 @@ function VideoGainOffset() {
         spacing={3}
         sx={{
           justifyContent: "space-between",
-          pr: 0.5,
+          pt: 1,
         }}
       >
         <VerticalNumberSliderOption
@@ -794,7 +786,7 @@ function VideoGainOffset() {
         spacing={3}
         sx={{
           justifyContent: "space-between",
-          pr: 0.5,
+          pt: 1,
         }}
       >
         <VerticalNumberSliderOption
@@ -889,79 +881,56 @@ function ColorControlPresets() {
 
 export default function VideoSettings() {
   return (
-    <Stack spacing={3}>
+    <>
       <PageHeader title="Video" />
+      <Stack spacing={2} m={2}>
+        <Typography sx={{ textAlign: "center", pb: 1 }} color="error">
+          INI settings editing is still in development. Any changes made here
+          will not be saved to your MiSTer.
+        </Typography>
 
-      <MainVideoMode />
-      <VerticalScale />
-      <VRRMode />
-      <VSyncAdjust />
+        <MainVideoMode />
+        <VerticalScale />
+        <VRRMode />
+        <VSyncAdjust />
 
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant="h6">Filters</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Stack spacing={3}>
-            <VScaleBorder />
-            <VFilter />
-            <VFilterScanlines />
-            <VFilterVertical />
-            <ShadowMask />
-            <ShadowMaskMode />
-          </Stack>
-        </AccordionDetails>
-      </Accordion>
+        <SectionHeader text="Filters" />
+        <VScaleBorder />
+        <VFilter />
+        <VFilterScanlines />
+        <VFilterVertical />
+        <ShadowMask />
+        <ShadowMaskMode />
 
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant="h6">Analog Video</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Stack spacing={3}>
-            <DirectVideo />
-            <ForcedScandoubler />
-            <Ypbpr />
-            <CompositeSync />
-            <VGAScaler />
-            <Sog />
-          </Stack>
-        </AccordionDetails>
-      </Accordion>
+        <SectionHeader text="Analog video" />
+        <DirectVideo />
+        <ForcedScandoubler />
+        <Ypbpr />
+        <CompositeSync />
+        <VGAScaler />
+        <Sog />
 
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant="h6">HDMI Color Controls</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Stack spacing={3}>
-            <Hdr />
+        <SectionHeader text="HDMI color controls" />
+        <Hdr />
+        <Card>
+          <Stack m={1}>
             <VideoBrightness />
             <VideoContrast />
             <VideoSaturation />
             <VideoHue />
             <VideoGainOffset />
-            <ColorControlPresets />
           </Stack>
-        </AccordionDetails>
-      </Accordion>
+        </Card>
+        <ColorControlPresets />
 
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant="h6">Advanced</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Stack spacing={3}>
-            <DVIMode />
-            <GameMode />
-            <LimitHDMIColor />
-            <ConditionalVideoMode />
-            <CustomAspectRatios />
-          </Stack>
-        </AccordionDetails>
-      </Accordion>
-
+        <SectionHeader text="Advanced" />
+        <DVIMode />
+        <GameMode />
+        <LimitHDMIColor />
+        <ConditionalVideoMode />
+        <CustomAspectRatios />
+      </Stack>
       <SaveButton />
-    </Stack>
+    </>
   );
 }

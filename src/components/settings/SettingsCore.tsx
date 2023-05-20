@@ -1,7 +1,3 @@
-import Checkbox from "@mui/material/Checkbox";
-import FormControl from "@mui/material/FormControl";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
 import {
   BoolOption,
@@ -11,6 +7,7 @@ import {
   ToggleableNumberSliderOption,
 } from "./SettingsCommon";
 import { useIniSettingsStore } from "../../lib/store";
+import Typography from "@mui/material/Typography";
 
 function BootScreen() {
   const v = useIniSettingsStore((state) => state.bootScreen);
@@ -122,18 +119,23 @@ function KeyMenuAsRgui() {
 
 export default function CoresSettings() {
   return (
-    <Stack spacing={3}>
+    <>
       <PageHeader title="Cores" />
+      <Stack spacing={2} m={2}>
+        <Typography sx={{ textAlign: "center" }} color="error">
+          INI settings editing is still in development. Any changes made here
+          will not be saved to your MiSTer.
+        </Typography>
 
-      <VideoInfo />
-      <ControllerInfo />
-      <Recents />
-      <LogFileEntry />
-      <BootScreen />
-      <KeyMenuAsRgui />
-      <SharedFolder />
-
+        <VideoInfo />
+        <ControllerInfo />
+        <Recents />
+        <LogFileEntry />
+        <BootScreen />
+        <KeyMenuAsRgui />
+        <SharedFolder />
+      </Stack>
       <SaveButton />
-    </Stack>
+    </>
   );
 }

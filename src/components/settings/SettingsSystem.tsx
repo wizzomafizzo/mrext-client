@@ -13,6 +13,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import FormControl from "@mui/material/FormControl";
 import { useState } from "react";
+import Typography from "@mui/material/Typography";
 
 function FbSize() {
   const v = useIniSettingsStore((state) => state.fbSize);
@@ -29,7 +30,7 @@ function FbSize() {
         "1/4 of resolution",
       ]}
       label={"Framebuffer size"}
-      helpText="Set the final resolution of the framebuffer (the Linux console shown when running scripts). It's normal to see graphical glitches when running the framebuffer at a high resolution."
+      helpText="Set the final resolution of the Linux-based GUI displayed outside cores. It's common to see graphical glitches when running the framebuffer at a high resolution."
     />
   );
 }
@@ -112,16 +113,21 @@ function WaitMount() {
 
 export default function SystemSettings() {
   return (
-    <Stack spacing={3}>
+    <>
       <PageHeader title="System" />
+      <Stack spacing={2} m={2}>
+        <Typography sx={{ textAlign: "center", pb: 1 }} color="error">
+          INI settings editing is still in development. Any changes made here
+          will not be saved to your MiSTer.
+        </Typography>
 
-      <FbSize />
-      <FbTerminal />
-      <BootCore />
-      <BootCoreTimeout />
-      <WaitMount />
-
+        <FbSize />
+        <FbTerminal />
+        <BootCore />
+        <BootCoreTimeout />
+        <WaitMount />
+      </Stack>
       <SaveButton />
-    </Stack>
+    </>
   );
 }

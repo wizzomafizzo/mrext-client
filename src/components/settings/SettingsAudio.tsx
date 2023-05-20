@@ -10,6 +10,7 @@ import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { useState } from "react";
+import Typography from "@mui/material/Typography";
 
 function HdmiAudio96k() {
   const v = useIniSettingsStore((state) => state.hdmiAudio96k);
@@ -66,13 +67,18 @@ function AFilterDefault() {
 
 export default function AudioSettings() {
   return (
-    <Stack spacing={3}>
+    <>
       <PageHeader title="Audio" />
+      <Stack spacing={2} m={2}>
+        <Typography sx={{ textAlign: "center" }} color="error">
+          INI settings editing is still in development. Any changes made here
+          will not be saved to your MiSTer.
+        </Typography>
 
-      <HdmiAudio96k />
-      <AFilterDefault />
-
+        <HdmiAudio96k />
+        <AFilterDefault />
+      </Stack>
       <SaveButton />
-    </Stack>
+    </>
   );
 }

@@ -115,42 +115,5 @@ export default function Settings() {
     }
   })();
 
-  return (
-    <Box sx={{ margin: 2, marginRight: 3, marginLeft: 3 }}>
-      <Typography sx={{ textAlign: "center", mb: 1 }} color="error">
-        INI settings editing is still in development. Any changes made in Remote
-        will not be saved to your MiSTer.
-      </Typography>
-      <Box>{page}</Box>
-      {/* <Stack
-                sx={{
-                    position: "fixed",
-                    bottom: 0,
-                    left: 0,
-                    width: "100%",
-                    backgroundColor: "#E6D0BB",
-                    borderTop: 1,
-                    borderColor: "divider",
-                    boxShadow: 3,
-                    zIndex: 1,
-                }}
-                spacing={2}
-                direction="row"
-                justifyContent="center"
-                padding={1}
-            >
-                <Button
-                    variant="outlined"
-                    color="success"
-                    disabled={false}
-                    startIcon={<SaveIcon />}
-                >
-                    Apply settings
-                </Button>
-                <Button variant="text" color="error" disabled={false}>
-                    Discard changes
-                </Button>
-            </Stack> */}
-    </Box>
-  );
+  return <Box>{page}</Box>;
 }

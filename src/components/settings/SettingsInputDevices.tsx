@@ -10,6 +10,7 @@ import {
   NumberOption,
   PageHeader,
   SaveButton,
+  SectionHeader,
   SimpleSelectOption,
   TextOption,
   ToggleableNumberSliderOption,
@@ -282,61 +283,42 @@ function AutoFire() {
 
 export default function InputDevices() {
   return (
-    <Stack spacing={3}>
+    <>
       <PageHeader title="Input Devices" />
+      <Stack spacing={2} m={2}>
+        <Typography sx={{ textAlign: "center" }} color="error">
+          INI settings editing is still in development. Any changes made here
+          will not be saved to your MiSTer.
+        </Typography>
 
-      <BtAutoDisconnect />
-      <BtResetBeforePair />
-      <AutoFire />
-      <SniperMode />
+        <BtAutoDisconnect />
+        <BtResetBeforePair />
+        <AutoFire />
+        <SniperMode />
 
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant="h6">Keyboard and mouse</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Stack spacing={3}>
-            <MouseThrottle />
-            <ResetCombo />
-          </Stack>
-        </AccordionDetails>
-      </Accordion>
+        <SectionHeader text="Keyboard and mouse" />
+        <MouseThrottle />
+        <ResetCombo />
 
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant="h6">Wheels and spinners</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Stack spacing={3}>
-            <WheelForce />
-            <WheelRange />
-            <SpinnerThrottle />
-            <SpinnerAxis />
-          </Stack>
-        </AccordionDetails>
-      </Accordion>
+        <SectionHeader text="Wheels and spinners" />
+        <WheelForce />
+        <WheelRange />
+        <SpinnerThrottle />
+        <SpinnerAxis />
 
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant="h6">Advanced</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Stack spacing={3}>
-            <PlayerControllers />
-            <GamepadDefaults />
-            <SpinnerVid />
-            <SpinnerPid />
-            <KeyrahMode />
-            <JammaVid />
-            <JammaPid />
-            <NoMergeVid />
-            <NoMergePid />
-            <NoMergeVidPid />
-          </Stack>
-        </AccordionDetails>
-      </Accordion>
-
+        <SectionHeader text="Advanced" />
+        <PlayerControllers />
+        <GamepadDefaults />
+        <SpinnerVid />
+        <SpinnerPid />
+        <KeyrahMode />
+        <JammaVid />
+        <JammaPid />
+        <NoMergeVid />
+        <NoMergePid />
+        <NoMergeVidPid />
+      </Stack>
       <SaveButton />
-    </Stack>
+    </>
   );
 }
