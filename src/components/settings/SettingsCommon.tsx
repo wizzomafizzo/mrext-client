@@ -26,8 +26,9 @@ import { TextField } from "@mui/material";
 import FormLabel from "@mui/material/FormLabel";
 import Slider from "@mui/material/Slider";
 import Grid from "@mui/material/Grid";
-import { newIniResponse } from "../../lib/ini";
+import { newIniRequest } from "../../lib/ini";
 import Paper from "@mui/material/Paper";
+import ControlApi from "../../lib/api";
 
 export function PageHeader(props: { title: string; noRevert?: boolean }) {
   const setActiveSettingsPage = useUIStateStore(
@@ -62,7 +63,7 @@ export function PageHeader(props: { title: string; noRevert?: boolean }) {
             <Typography variant="h6">{props.title}</Typography>
           </Grid>
           <Grid item xs={3} sx={{ textAlign: "right" }}>
-            {modified && !props.noRevert && (
+            {modified.length > 0 && !props.noRevert && (
               <Button variant="text" color="error">
                 Revert
               </Button>
@@ -76,9 +77,10 @@ export function PageHeader(props: { title: string; noRevert?: boolean }) {
 }
 
 export function SaveButton() {
+  const api = new ControlApi();
   const store = useIniSettingsStore();
   const modified = useIniSettingsStore((state) => state.modified);
-  const setModified = useIniSettingsStore((state) => state.setModified);
+  const resetModified = useIniSettingsStore((state) => state.resetModified);
 
   return (
     <>
@@ -98,10 +100,12 @@ export function SaveButton() {
             <Button
               variant="contained"
               onClick={() => {
-                console.log(newIniResponse(store));
-                setModified(false);
+                console.log(modified);
+                console.log(newIniRequest(store));
+                api.saveMisterIni();
+                resetModified();
               }}
-              disabled={!modified}
+              disabled={modified.length === 0}
               color="success"
               fullWidth
             >
@@ -121,11 +125,11 @@ export function ValuePicker(props: {
   options: string[];
   formatOption: (option: string) => string;
 }) {
-  const unsetValue = "<not set>";
+  const unsetValue = "<unset>";
   const [open, setOpen] = useState(false);
 
   return (
-    <Box>
+    <FormControl>
       <Stack
         spacing={2}
         direction="row"
@@ -155,7 +159,7 @@ export function ValuePicker(props: {
           ))}
         </List>
       </Dialog>
-    </Box>
+    </FormControl>
   );
 }
 

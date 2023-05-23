@@ -23,12 +23,12 @@ import Remote from "./SettingsRemote";
 import Box from "@mui/material/Box";
 import AudioSettings from "./SettingsAudio";
 import SystemSettings from "./SettingsSystem";
-import Typography from "@mui/material/Typography";
+import { ReactNode } from "react";
 
 function SettingsPageLink(props: {
   page: SettingsPageId;
   text: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
 }) {
   const setActiveSettingsPage = useUIStateStore(
     (state) => state.setActiveSettingsPage

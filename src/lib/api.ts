@@ -182,4 +182,9 @@ export default class ControlApi {
   async createLauncher(data: CreateLauncherRequest): Promise<{ path: string }> {
     return (await axios.post(`/launch/new`, data)).data;
   }
+
+  // settings
+  async saveMisterIni(): Promise<void> {
+    await axios.post(`/settings/ini`);
+  }
 }
