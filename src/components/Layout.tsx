@@ -241,7 +241,12 @@ function PlayingButton() {
                     Game: {serverState.activeGame || "None"}
                   </Typography>
                   {serverState.activeCore ? (
-                    <Button onClick={() => api.launchMenu()}>
+                    <Button
+                      onClick={() => {
+                        api.launchMenu();
+                        setOpen(false);
+                      }}
+                    >
                       Exit to menu
                     </Button>
                   ) : null}
