@@ -23,3 +23,9 @@ export const useListMenuFolder = (path: string) =>
     queryKey: ["listMenu", path],
     queryFn: () => api.listMenuFolder(path),
   });
+
+export const useListMisterInis = () =>
+  useQuery({
+    queryKey: ["settings", "inis"],
+    queryFn: () => api.listMisterInis(),
+  });

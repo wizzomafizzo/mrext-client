@@ -23,7 +23,13 @@ import Remote from "./SettingsRemote";
 import Box from "@mui/material/Box";
 import AudioSettings from "./SettingsAudio";
 import SystemSettings from "./SettingsSystem";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
+import { useListMisterInis } from "../../lib/queries";
+import Button from "@mui/material/Button";
+import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
+import Dialog from "@mui/material/Dialog";
+import Typography from "@mui/material/Typography";
+import ControlApi from "../../lib/api";
 
 function SettingsPageLink(props: {
   page: SettingsPageId;
@@ -46,9 +52,78 @@ function SettingsPageLink(props: {
 }
 
 function MainPage() {
+  const inis = useListMisterInis();
+  const [iniDialogOpen, setIniDialogOpen] = useState(false);
+  const api = new ControlApi();
+
+  let activeIni = {
+    name: "Main",
+    id: 1,
+  };
+
+  if (inis.data && inis.data.inis.length > 0) {
+    let id = 1;
+
+    if (inis.data.active === 0) {
+      id = 1;
+    } else {
+      id = inis.data.active;
+    }
+
+    activeIni.name = inis.data.inis[id - 1].displayName;
+    activeIni.id = id;
+  }
+
+  const iniButton = (
+    <ListItem sx={{ pb: 0, pt: 2 }}>
+      <Button
+        fullWidth
+        variant="contained"
+        endIcon={<SwapHorizIcon />}
+        onClick={() => setIniDialogOpen(true)}
+      >
+        Active INI: {activeIni.name}
+      </Button>
+    </ListItem>
+  );
+
   return (
     <div>
+      <Dialog open={iniDialogOpen} onClose={() => setIniDialogOpen(false)}>
+        <Box sx={{ p: 2, minWidth: 200 }}>
+          <List disablePadding>
+            <ListItem sx={{ pt: 0 }}>
+              <Typography
+                sx={{
+                  fontWeight: 500,
+                  textAlign: "center",
+                  width: 1,
+                }}
+              >
+                Set active INI
+              </Typography>
+            </ListItem>
+            {(inis.data?.inis || []).map((ini, i) => (
+              <ListItem key={ini.filename} disableGutters>
+                <Button
+                  fullWidth
+                  variant={activeIni.id == i + 1 ? "contained" : "outlined"}
+                  onClick={() => {
+                    setIniDialogOpen(false);
+                    api.setMisterIni({ ini: i + 1 }).then(() => {
+                      inis.refetch();
+                    });
+                  }}
+                >
+                  {ini.displayName}
+                </Button>
+              </ListItem>
+            ))}
+          </List>
+        </Box>
+      </Dialog>
       <List disablePadding>
+        {iniButton}
         <SettingsPageLink
           page={SettingsPageId.Video}
           text="Video"

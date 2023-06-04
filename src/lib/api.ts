@@ -40,6 +40,17 @@ interface CreateLauncherRequest {
   name: string;
 }
 
+interface IniResponse {
+  displayName: string;
+  filename: string;
+  path: string;
+}
+
+interface ListInisPayload {
+  active: number;
+  inis: IniResponse[];
+}
+
 export default class ControlApi {
   apiUrl: string;
 
@@ -186,5 +197,13 @@ export default class ControlApi {
   // settings
   async saveMisterIni(): Promise<void> {
     await axios.post(`/settings/ini`);
+  }
+
+  async listMisterInis(): Promise<ListInisPayload> {
+    return (await axios.get<ListInisPayload>(`/settings/inis`)).data;
+  }
+
+  async setMisterIni(data: { ini: number }): Promise<void> {
+    await axios.put(`/settings/inis`, data);
   }
 }
