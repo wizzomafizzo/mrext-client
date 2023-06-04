@@ -10,8 +10,8 @@ import PersonIcon from "@mui/icons-material/Person";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import BluetoothIcon from "@mui/icons-material/Bluetooth";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
-import KeyboardIcon from '@mui/icons-material/Keyboard';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import KeyboardIcon from "@mui/icons-material/Keyboard";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
@@ -163,7 +163,7 @@ export default function Control() {
 
   const sendRawKey = (code: number) => {
     ws.sendMessage("kbdRaw:" + code);
-  }
+  };
 
   return (
     <Box margin={3}>
@@ -268,6 +268,55 @@ export default function Control() {
       </Grid>
 
       <Grid container spacing={2} sx={{ mt: 3 }}>
+        <Grid item xs={4}>
+          <Button
+            variant="outlined"
+            sx={{ width: "100%" }}
+            onClick={() => {
+              sendRawKey(2);
+            }}
+          >
+            1
+          </Button>
+        </Grid>
+        <Grid item xs={4}>
+          <Button
+            variant="outlined"
+            sx={{ width: "100%" }}
+            onClick={() => {
+              sendRawKey(57);
+            }}
+          >
+            Space
+          </Button>
+        </Grid>
+        <Grid item xs={4}>
+          <Button
+            variant="outlined"
+            sx={{ width: "100%" }}
+            onClick={() => {
+              sendRawKey(6);
+            }}
+          >
+            5
+          </Button>
+        </Grid>
+      </Grid>
+
+      <Grid container spacing={2} sx={{ mt: 3 }}>
+        <Grid item xs={12}>
+          <Button
+            variant="outlined"
+            sx={{ width: "100%" }}
+            onClick={() => {
+              setKeyboardOpen(true);
+            }}
+            startIcon={<KeyboardIcon />}
+          >
+            Keyboard
+          </Button>
+        </Grid>
+
         <Grid item xs={6}>
           <Button
             variant="outlined"
@@ -366,25 +415,21 @@ export default function Control() {
             Reset
           </Button>
         </Grid>
-        <Grid item xs={12}>
-          <Button
-            variant="outlined"
-            sx={{ width: "100%" }}
-            onClick={() => {
-              setKeyboardOpen(true);
-            }}
-            startIcon={<KeyboardIcon />}
-          >
-            Keyboard
-          </Button>
-        </Grid>
       </Grid>
 
       <Dialog
         onClose={() => setKeyboardOpen(false)}
         open={keyboardOpen}
         fullWidth
-        PaperProps={{ sx: { position: "fixed", bottom: 10, m: 0, maxWidth: "95%", width: "95%" } }}
+        PaperProps={{
+          sx: {
+            position: "fixed",
+            bottom: 10,
+            m: 0,
+            maxWidth: "95%",
+            width: "95%",
+          },
+        }}
       >
         <div style={{ color: "black" }}>
           <Keyboard
