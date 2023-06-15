@@ -154,14 +154,17 @@ export default function Control() {
   const api = new ControlApi();
   const [keyboardLayout, setKeyboardLayout] = React.useState("default");
   const [keyboardOpen, setKeyboardOpen] = React.useState(false);
+  const [numpadOpen, setNumpadOpen] = React.useState(false);
 
   const ws = useWs();
 
   const sendKey = (key: string) => {
+    console.log("sending key", key);
     ws.sendMessage("kbd:" + key);
   };
 
   const sendRawKey = (code: number) => {
+    console.log("sending key", code);
     ws.sendMessage("kbdRaw:" + code);
   };
 
@@ -314,6 +317,29 @@ export default function Control() {
             startIcon={<KeyboardIcon />}
           >
             Keyboard
+          </Button>
+        </Grid>
+
+        <Grid item xs={6}>
+          <Button
+            variant="outlined"
+            sx={{ width: "100%" }}
+            onClick={() => {
+              setNumpadOpen(true);
+            }}
+          >
+            Keypad
+          </Button>
+        </Grid>
+        <Grid item xs={6}>
+          <Button
+            variant="outlined"
+            sx={{ width: "100%" }}
+            onClick={() => {
+              sendKey("computer_osd");
+            }}
+          >
+            Comp. OSD
           </Button>
         </Grid>
 
@@ -497,6 +523,34 @@ export default function Control() {
                 return;
               }
 
+              if (input in keyMap) {
+                sendRawKey(keyMap[input]);
+              }
+            }}
+          />
+        </div>
+      </Dialog>
+
+      <Dialog
+        onClose={() => setNumpadOpen(false)}
+        open={numpadOpen}
+        fullWidth
+        PaperProps={{
+          sx: {
+            position: "fixed",
+            bottom: 10,
+            m: 0,
+            // maxWidth: "95%",
+            // width: "95%",
+          },
+        }}
+      >
+        <div style={{ color: "black" }}>
+          <Keyboard
+            layout={{
+              default: ["1 2 3", "4 5 6", "7 8 9", "* 0 #"],
+            }}
+            onKeyPress={(input) => {
               if (input in keyMap) {
                 sendRawKey(keyMap[input]);
               }
