@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import {
+  AllWallpapers,
   IndexedSystems,
   MusicServiceStatus,
   Screenshot,
@@ -98,8 +99,8 @@ export default class ControlApi {
 
   // wallpaper
 
-  async getWallpapers(): Promise<Wallpaper[]> {
-    return (await axios.get<Wallpaper[]>(`/wallpapers`)).data;
+  async getWallpapers(): Promise<AllWallpapers> {
+    return (await axios.get<AllWallpapers>(`/wallpapers`)).data;
   }
 
   getWallpaperUrl(filename: string): string {
@@ -108,6 +109,10 @@ export default class ControlApi {
 
   async setWallpaper(filename: string): Promise<void> {
     await axios.post(`/wallpapers/${filename}`);
+  }
+
+  async unsetWallpaper(): Promise<void> {
+    await axios.delete(`/wallpapers`);
   }
 
   async deleteWallpaper(filename: string): Promise<void> {
@@ -205,5 +210,9 @@ export default class ControlApi {
 
   async setMisterIni(data: { ini: number }): Promise<void> {
     await axios.put(`/settings/inis`, data);
+  }
+
+  async setMenuBackgroundMode(data: { mode: number }): Promise<void> {
+    await axios.put(`/settings/cores/menu`, data);
   }
 }

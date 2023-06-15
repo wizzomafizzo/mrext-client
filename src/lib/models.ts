@@ -40,6 +40,12 @@ export interface Wallpaper {
   active: boolean;
 }
 
+export interface AllWallpapers {
+  active: string;
+  backgroundMode: number;
+  wallpapers: Wallpaper[];
+}
+
 export interface MusicServiceStatus {
   running: boolean;
   playing: boolean;
