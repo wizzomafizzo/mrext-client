@@ -159,12 +159,10 @@ export default function Control() {
   const ws = useWs();
 
   const sendKey = (key: string) => {
-    console.log("sending key", key);
     ws.sendMessage("kbd:" + key);
   };
 
   const sendRawKey = (code: number) => {
-    console.log("sending key", code);
     ws.sendMessage("kbdRaw:" + code);
   };
 

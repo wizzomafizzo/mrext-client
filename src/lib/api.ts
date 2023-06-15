@@ -215,4 +215,8 @@ export default class ControlApi {
   async setMenuBackgroundMode(data: { mode: number }): Promise<void> {
     await axios.put(`/settings/cores/menu`, data);
   }
+
+  async restartRemoteService(): Promise<void> {
+    await axios.post(`/settings/remote/restart`);
+  }
 }

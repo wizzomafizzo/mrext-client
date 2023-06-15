@@ -9,10 +9,12 @@ import { PageHeader } from "./SettingsCommon";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useState } from "react";
+import ControlApi from "../../lib/api";
 
 export default function Remote() {
   const activeTheme = useUIStateStore((state) => state.activeTheme);
   const setActiveTheme = useUIStateStore((state) => state.setActiveTheme);
+  const api = new ControlApi();
 
   const [apiEndpoint, setApiEndpoint] = useState(localStorage.getItem("api"));
 
@@ -52,6 +54,18 @@ export default function Remote() {
             </Button>
           </FormControl>
         ) : null}
+
+        <FormControl>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              api.restartRemoteService();
+              // window.location.reload();
+            }}
+          >
+            Restart remote service
+          </Button>
+        </FormControl>
       </Stack>
     </>
   );
