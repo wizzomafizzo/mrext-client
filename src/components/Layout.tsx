@@ -208,6 +208,11 @@ function PlayingButton() {
     icon = <PauseIcon />;
   }
 
+  const parseActiveGame = (activeGame: string) => {
+    const game = activeGame.split("/").pop();
+    return game?.split(".").shift();
+  };
+
   return (
     <>
       <IconButton ref={anchorRef} sx={{ ml: 3 }} onClick={() => setOpen(!open)}>
@@ -238,7 +243,7 @@ function PlayingButton() {
                     Core: {serverState.activeCore || "None"}
                   </Typography>
                   <Typography>
-                    Game: {serverState.activeGame || "None"}
+                    Game: {parseActiveGame(serverState.activeGame) || "None"}
                   </Typography>
                   {serverState.activeCore ? (
                     <Button
