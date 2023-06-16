@@ -18,6 +18,7 @@ import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
 import { useMutation } from "@tanstack/react-query";
 import { ControlApi } from "../lib/api";
+import { useUIStateStore } from "../lib/store";
 
 export const formatCurrentPath = (path: string) => {
   if (path === "" || path === ".") {
@@ -42,7 +43,10 @@ export function MenuFolderPicker(props: {
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
-  const [currentPath, setCurrentPath] = useState<string>("");
+  const uiState = useUIStateStore();
+  const [currentPath, setCurrentPath] = useState<string>(
+    uiState.lastFavoriteFolder
+  );
   const listMenuFolder = useListMenuFolder(currentPath);
 
   const results = (
@@ -55,9 +59,8 @@ export function MenuFolderPicker(props: {
       {listMenuFolder.data?.up ? (
         <ListItemButton
           onClick={() => {
-            setCurrentPath(
-              listMenuFolder.data.up ? listMenuFolder.data.up : ""
-            );
+            const path = listMenuFolder.data.up ? listMenuFolder.data.up : "";
+            setCurrentPath(path);
           }}
         >
           <ListItemIcon>
@@ -112,6 +115,7 @@ export function MenuFolderPicker(props: {
             sx={{ mt: 1, mb: 1 }}
             onClick={() => {
               props.setPath(currentPath);
+              uiState.setLastFavoriteFolder(currentPath);
               props.setOpen(false);
             }}
           >
@@ -127,9 +131,12 @@ export function MenuFolderPicker(props: {
 
 export function SingleShortcut(props: { path: string; back: () => void }) {
   const api = new ControlApi();
+  const uiState = useUIStateStore();
 
   const [folderPickerOpen, setFolderPickerOpen] = useState<boolean>(false);
-  const [selectedFolder, setSelectedFolder] = useState<string>("");
+  const [selectedFolder, setSelectedFolder] = useState<string>(
+    uiState.lastFavoriteFolder
+  );
 
   const [filename] = props.path.split("/").slice(-1);
   const name = filename.substring(0, filename.lastIndexOf(".")) || filename;

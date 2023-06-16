@@ -18,6 +18,8 @@ export interface UIState {
   setActiveTheme: (theme: string) => void;
   activeSettingsPage: SettingsPageId;
   setActiveSettingsPage: (page: SettingsPageId) => void;
+  lastFavoriteFolder: string;
+  setLastFavoriteFolder: (folder: string) => void;
 }
 
 export const useUIStateStore = create<UIState>()(
@@ -28,6 +30,9 @@ export const useUIStateStore = create<UIState>()(
       activeSettingsPage: SettingsPageId.Main,
       setActiveSettingsPage: (page: SettingsPageId) =>
         set({ activeSettingsPage: page }),
+      lastFavoriteFolder: "",
+      setLastFavoriteFolder: (folder: string) =>
+        set({ lastFavoriteFolder: folder }),
     }),
     {
       name: "uiState",
