@@ -76,3 +76,44 @@ export interface ViewMenu {
   up?: string;
   items: MenuItem[];
 }
+
+export type KeyboardCodes =
+  | "up"
+  | "down"
+  | "left"
+  | "right"
+  | "volume_up"
+  | "volume_down"
+  | "volume_mute"
+  | "menu"
+  | "back"
+  | "confirm"
+  | "cancel"
+  | "osd"
+  | "screenshot"
+  | "raw_screenshot"
+  | "pair_bluetooth"
+  | "change_background"
+  | "core_select"
+  | "user"
+  | "reset"
+  | "toggle_core_dates"
+  | "console"
+  | "computer_osd";
+
+export interface CreateLauncherRequest {
+  gamePath: string;
+  folder: string;
+  name: string;
+}
+
+interface IniResponse {
+  displayName: string;
+  filename: string;
+  path: string;
+}
+
+export interface ListInisPayload {
+  active: number;
+  inis: IniResponse[];
+}

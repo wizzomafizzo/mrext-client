@@ -1,6 +1,7 @@
 import { WebSocketHook } from "react-use-websocket/dist/lib/types";
 import useWebSocket from "react-use-websocket";
 import { ServerState, useServerStateStore } from "../lib/store";
+import { getWsEndpoint } from "../lib/api";
 
 function handleMessage(event: MessageEvent, serverState: ServerState) {
   const msg = event.data;
@@ -39,17 +40,9 @@ function handleMessage(event: MessageEvent, serverState: ServerState) {
 }
 
 export default function useWs(): WebSocketHook {
-  let url = localStorage.getItem("api");
-
-  if (url) {
-    url = "ws://" + url + "/ws";
-  } else {
-    url = "ws://" + window.location.host + "/api/ws";
-  }
-
   const serverState = useServerStateStore();
 
-  return useWebSocket(url, {
+  return useWebSocket(getWsEndpoint(), {
     onMessage: (event) => handleMessage(event, serverState),
     shouldReconnect: () => true,
     share: true,

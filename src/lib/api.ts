@@ -8,65 +8,61 @@ import {
   SearchResults,
   System,
   ViewMenu,
-  Wallpaper,
+  CreateLauncherRequest,
+  KeyboardCodes,
+  ListInisPayload,
 } from "./models";
 
-export type KeyboardCodes =
-  | "up"
-  | "down"
-  | "left"
-  | "right"
-  | "volume_up"
-  | "volume_down"
-  | "volume_mute"
-  | "menu"
-  | "back"
-  | "confirm"
-  | "cancel"
-  | "osd"
-  | "screenshot"
-  | "raw_screenshot"
-  | "pair_bluetooth"
-  | "change_background"
-  | "core_select"
-  | "user"
-  | "reset"
-  | "toggle_core_dates"
-  | "console"
-  | "computer_osd";
+const API_ENDPOINT_KEY = "apiEndpoint";
+const WS_ENDPOINT_KEY = "wsEndpoint";
 
-interface CreateLauncherRequest {
-  gamePath: string;
-  folder: string;
-  name: string;
+export function getStoredApiEndpoint(): string | null {
+  return localStorage.getItem(API_ENDPOINT_KEY);
 }
 
-interface IniResponse {
-  displayName: string;
-  filename: string;
-  path: string;
+export function getApiEndpoint(): string {
+  const stored = getStoredApiEndpoint();
+
+  if (stored) {
+    return stored;
+  } else {
+    return window.location.protocol + "//" + window.location.host + "/api";
+  }
 }
 
-interface ListInisPayload {
-  active: number;
-  inis: IniResponse[];
+export function setApiEndpoint(endpoint: string): void {
+  localStorage.setItem(API_ENDPOINT_KEY, endpoint);
+}
+
+export function getStoredWsEndpoint(): string | null {
+  return localStorage.getItem(WS_ENDPOINT_KEY);
+}
+
+export function getWsEndpoint(): string {
+  const stored = getStoredWsEndpoint();
+  const apiEndpoint = getStoredApiEndpoint();
+
+  if (stored) {
+    return stored;
+  } else if (apiEndpoint) {
+    return apiEndpoint.replace(/^http/, "ws") + "/ws";
+  } else {
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    return protocol + "//" + window.location.host + "/api/ws";
+  }
+}
+
+export function setWsEndpoint(endpoint: string): void {
+  localStorage.setItem(WS_ENDPOINT_KEY, endpoint);
 }
 
 export class ControlApi {
   apiUrl: string;
 
   constructor() {
-    let apiUrl = localStorage.getItem("api");
-
-    if (apiUrl) {
-      axios.defaults.baseURL = "http://" + apiUrl;
-      this.apiUrl = "http://" + apiUrl;
-    } else {
-      axios.defaults.baseURL =
-        window.location.protocol + "//" + window.location.host + "/api";
-      this.apiUrl =
-        window.location.protocol + "//" + window.location.host + "/api";
-    }
+    let endpoint = getApiEndpoint();
+    axios.defaults.baseURL = endpoint;
+    this.apiUrl = endpoint;
   }
 
   // screenshots

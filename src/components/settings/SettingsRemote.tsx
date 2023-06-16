@@ -5,18 +5,35 @@ import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import { useUIStateStore } from "../../lib/store";
 import { themes } from "../../lib/themes";
-import { PageHeader } from "./SettingsCommon";
+import { PageHeader, SectionHeader } from "./SettingsCommon";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useState } from "react";
-import { ControlApi } from "../../lib/api";
+import {
+  ControlApi,
+  getApiEndpoint,
+  getStoredApiEndpoint,
+  setApiEndpoint,
+  getStoredWsEndpoint,
+  getWsEndpoint,
+  setWsEndpoint,
+} from "../../lib/api";
+import { Card } from "@mui/material";
 
 export default function Remote() {
   const activeTheme = useUIStateStore((state) => state.activeTheme);
   const setActiveTheme = useUIStateStore((state) => state.setActiveTheme);
   const api = new ControlApi();
 
-  const [apiEndpoint, setApiEndpoint] = useState(localStorage.getItem("api"));
+  const storedApiEndpoint = getStoredApiEndpoint();
+  const [settingApiEndpoint, setSettingApiEndpoint] = useState(
+    storedApiEndpoint ? storedApiEndpoint : ""
+  );
+
+  const storedWsEndpoint = getStoredWsEndpoint();
+  const [settingWsEndpoint, setSettingWsEndpoint] = useState(
+    storedWsEndpoint ? storedWsEndpoint : ""
+  );
 
   return (
     <>
@@ -37,35 +54,52 @@ export default function Remote() {
           </Select>
         </FormControl>
 
-        {!import.meta.env.PROD ? (
-          <FormControl>
-            <TextField
-              label="API endpoint"
-              value={apiEndpoint}
-              onChange={(e) => setApiEndpoint(e.target.value)}
-            />
-            <Button
-              onClick={() => {
-                localStorage.setItem("api", apiEndpoint ? apiEndpoint : "");
-                window.location.reload();
-              }}
-            >
-              Set endpoint
-            </Button>
-          </FormControl>
-        ) : null}
+        <SectionHeader text={"Advanced"} />
 
         <FormControl>
           <Button
             variant="outlined"
             onClick={() => {
               api.restartRemoteService();
-              // window.location.reload();
             }}
           >
             Restart remote service
           </Button>
         </FormControl>
+
+        <Card>
+          <Stack m={1} spacing={1}>
+            <FormControl>
+              <TextField
+                label="API endpoint URL"
+                value={settingApiEndpoint}
+                placeholder={getApiEndpoint()}
+                onChange={(e) => setSettingApiEndpoint(e.target.value)}
+                autoComplete="off"
+              />
+            </FormControl>
+            <FormControl>
+              <TextField
+                label="WebSocket endpoint URL"
+                value={settingWsEndpoint}
+                placeholder={getWsEndpoint()}
+                onChange={(e) => setSettingWsEndpoint(e.target.value)}
+                autoComplete="off"
+                helperText="Leave blank to auto-configure based on API endpoint URL."
+              />
+            </FormControl>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                setApiEndpoint(settingApiEndpoint);
+                setWsEndpoint(settingWsEndpoint);
+                window.location.reload();
+              }}
+            >
+              Save endpoints
+            </Button>
+          </Stack>
+        </Card>
       </Stack>
     </>
   );
