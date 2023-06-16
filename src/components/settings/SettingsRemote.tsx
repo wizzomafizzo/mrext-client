@@ -9,7 +9,7 @@ import { PageHeader } from "./SettingsCommon";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useState } from "react";
-import ControlApi from "../../lib/api";
+import { ControlApi } from "../../lib/api";
 
 export default function Remote() {
   const activeTheme = useUIStateStore((state) => state.activeTheme);

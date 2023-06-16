@@ -1,8 +1,4 @@
-import Checkbox from "@mui/material/Checkbox";
-import FormControl from "@mui/material/FormControl";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import FormHelperText from "@mui/material/FormHelperText";
-import Input from "@mui/material/Input";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import {
@@ -16,10 +12,6 @@ import {
   ToggleableNumberSliderOption,
 } from "./SettingsCommon";
 import { useIniSettingsStore } from "../../lib/store";
-
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
-import { Save } from "@mui/icons-material";
 
 function BtAutoDisconnect() {
   const v = useIniSettingsStore((state) => state.btAutoDisconnect);

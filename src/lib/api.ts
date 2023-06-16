@@ -52,7 +52,7 @@ interface ListInisPayload {
   inis: IniResponse[];
 }
 
-export default class ControlApi {
+export class ControlApi {
   apiUrl: string;
 
   constructor() {

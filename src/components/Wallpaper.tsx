@@ -17,18 +17,10 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import ClearIcon from "@mui/icons-material/Clear";
-
-import Fab from "@mui/material/Fab";
-import { CircularProgress } from "@mui/material";
-
-import DeleteIcon from "@mui/icons-material/Delete";
-// import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import StarIcon from "@mui/icons-material/Star";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
-import UploadIcon from "@mui/icons-material/Upload";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
-import ControlApi from "../lib/api";
+import { ControlApi } from "../lib/api";
 import ScrollToTopFab from "./ScrollToTop";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";

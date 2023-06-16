@@ -14,7 +14,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ScrollToTopFab from "./ScrollToTop";
 import Typography from "@mui/material/Typography";
 import LinearProgress from "@mui/material/LinearProgress";
-import ControlApi from "../lib/api";
+import { ControlApi } from "../lib/api";
 import Stack from "@mui/material/Stack";
 import HomeIcon from "@mui/icons-material/Home";
 import MenuItem from "@mui/material/MenuItem";

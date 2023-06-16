@@ -17,7 +17,7 @@ import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
 import { useMutation } from "@tanstack/react-query";
-import ControlApi from "../lib/api";
+import { ControlApi } from "../lib/api";
 
 export const formatCurrentPath = (path: string) => {
   if (path === "" || path === ".") {

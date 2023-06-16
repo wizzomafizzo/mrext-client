@@ -29,7 +29,7 @@ import Button from "@mui/material/Button";
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 import Dialog from "@mui/material/Dialog";
 import Typography from "@mui/material/Typography";
-import ControlApi from "../../lib/api";
+import { ControlApi } from "../../lib/api";
 
 function SettingsPageLink(props: {
   page: SettingsPageId;
@@ -103,22 +103,30 @@ function MainPage() {
                 Set active INI
               </Typography>
             </ListItem>
-            {(inis.data?.inis || []).map((ini, i) => (
-              <ListItem key={ini.filename} disableGutters>
-                <Button
-                  fullWidth
-                  variant={activeIni.id == i + 1 ? "contained" : "outlined"}
-                  onClick={() => {
-                    setIniDialogOpen(false);
-                    api.setMisterIni({ ini: i + 1 }).then(() => {
-                      inis.refetch();
-                    });
-                  }}
-                >
-                  {ini.displayName}
-                </Button>
-              </ListItem>
-            ))}
+            {(inis.data?.inis || []).map(
+              (
+                ini: {
+                  filename: string;
+                  displayName: string;
+                },
+                i: number
+              ) => (
+                <ListItem key={ini.filename} disableGutters>
+                  <Button
+                    fullWidth
+                    variant={activeIni.id == i + 1 ? "contained" : "outlined"}
+                    onClick={() => {
+                      setIniDialogOpen(false);
+                      api.setMisterIni({ ini: i + 1 }).then(() => {
+                        inis.refetch();
+                      });
+                    }}
+                  >
+                    {ini.displayName}
+                  </Button>
+                </ListItem>
+              )
+            )}
           </List>
         </Box>
       </Dialog>

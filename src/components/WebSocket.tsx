@@ -9,8 +9,6 @@ function handleMessage(event: MessageEvent, serverState: ServerState) {
   const cmd = msg.substring(0, idx);
   const data = msg.substring(idx + 1);
 
-  console.log("cmd: " + cmd + ", data: " + data);
-
   switch (cmd) {
     case "indexStatus":
       const args = data.split(",");

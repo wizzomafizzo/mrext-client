@@ -28,7 +28,7 @@ import Slider from "@mui/material/Slider";
 import Grid from "@mui/material/Grid";
 import { newIniRequest } from "../../lib/ini";
 import Paper from "@mui/material/Paper";
-import ControlApi from "../../lib/api";
+import { ControlApi } from "../../lib/api";
 
 export function PageHeader(props: { title: string; noRevert?: boolean }) {
   const setActiveSettingsPage = useUIStateStore(

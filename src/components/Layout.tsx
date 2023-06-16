@@ -46,21 +46,16 @@ import Control from "./Control";
 import {
   ClickAwayListener,
   Grow,
-  MenuList,
   Paper,
   Popper,
   SwipeableDrawer,
 } from "@mui/material";
 import Menu from "./Menu";
-import useWebSocket from "react-use-websocket";
-import { WebSocketHook } from "react-use-websocket/dist/lib/types";
 import useWs from "./WebSocket";
 import { useServerStateStore } from "../lib/store";
 import Stack from "@mui/material/Stack";
-import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
-import ControlApi from "../lib/api";
-import { SingleShortcut } from "./Shortcuts";
+import { ControlApi } from "../lib/api";
 
 const drawerWidth = 240;
 

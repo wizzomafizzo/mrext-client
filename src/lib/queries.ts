@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import ControlApi from "./api";
+import { ControlApi } from "./api";
 
 const api = new ControlApi();
 

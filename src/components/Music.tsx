@@ -17,7 +17,7 @@ import RepeatOneIcon from "@mui/icons-material/RepeatOne";
 import PlayDisabledIcon from "@mui/icons-material/PlayDisabled";
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 
-import ControlApi from "../lib/api";
+import { ControlApi } from "../lib/api";
 import { Typography } from "@mui/material";
 
 import { useMusicStatus } from "../lib/queries";

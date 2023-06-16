@@ -13,7 +13,7 @@ import LinearProgress from "@mui/material/LinearProgress";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import SearchIcon from "@mui/icons-material/Search";
-import ControlApi from "../lib/api";
+import { ControlApi } from "../lib/api";
 import { useIndexedSystems } from "../lib/queries";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
