@@ -30,6 +30,7 @@ import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 import Dialog from "@mui/material/Dialog";
 import Typography from "@mui/material/Typography";
 import { ControlApi } from "../../lib/api";
+import { useMisterIni } from "../../lib/ini";
 
 function SettingsPageLink(props: {
   page: SettingsPageId;
@@ -60,6 +61,8 @@ function MainPage() {
     name: "Main",
     id: 1,
   };
+
+  const misterIni = useMisterIni(1);
 
   if (inis.data && inis.data.inis.length > 0) {
     let id = 1;

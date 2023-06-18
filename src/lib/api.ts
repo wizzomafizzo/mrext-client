@@ -215,4 +215,9 @@ export class ControlApi {
   async restartRemoteService(): Promise<void> {
     await axios.post(`/settings/remote/restart`);
   }
+
+  async loadMisterIni(n: number): Promise<{ [key: string]: string }> {
+    return (await axios.get<{ [key: string]: string }>(`/settings/inis/${n}`))
+      .data;
+  }
 }

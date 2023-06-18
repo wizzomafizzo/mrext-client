@@ -5,12 +5,12 @@ import {
   SaveButton,
   ValuePicker,
 } from "./SettingsCommon";
-import { useIniSettingsStore } from "../../lib/store";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { useState } from "react";
 import Typography from "@mui/material/Typography";
+import { useIniSettingsStore } from "../../lib/ini";
 
 function HdmiAudio96k() {
   const v = useIniSettingsStore((state) => state.hdmiAudio96k);

@@ -6,8 +6,8 @@ import {
   TextOption,
   ToggleableNumberSliderOption,
 } from "./SettingsCommon";
-import { useIniSettingsStore } from "../../lib/store";
 import Typography from "@mui/material/Typography";
+import { useIniSettingsStore } from "../../lib/ini";
 
 function BootScreen() {
   const v = useIniSettingsStore((state) => state.bootScreen);
@@ -46,7 +46,7 @@ function VideoInfo() {
       label="Display video info"
       value={v}
       setValue={sv}
-      defaultValue={0}
+      defaultValue={"0"}
       min={1}
       max={10}
       step={1}
@@ -65,7 +65,7 @@ function ControllerInfo() {
       label="Display controller info"
       value={v}
       setValue={sv}
-      defaultValue={6}
+      defaultValue={"6"}
       min={1}
       max={10}
       step={1}

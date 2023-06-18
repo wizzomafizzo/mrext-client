@@ -11,7 +11,8 @@ import {
   TextOption,
   ToggleableNumberSliderOption,
 } from "./SettingsCommon";
-import { useIniSettingsStore } from "../../lib/store";
+
+import { useIniSettingsStore } from "../../lib/ini";
 
 function BtAutoDisconnect() {
   const v = useIniSettingsStore((state) => state.btAutoDisconnect);
@@ -24,7 +25,7 @@ function BtAutoDisconnect() {
       setValue={sv}
       min={1}
       max={60}
-      defaultValue={1}
+      defaultValue={"1"}
       step={1}
       suffix="minutes"
       helpText="Automatically disconnects Bluetooth controllers after a period of inactivity. Useful for controllers which do not automatically do this themselves."
@@ -57,7 +58,7 @@ function MouseThrottle() {
       setValue={sv}
       min={1}
       max={100}
-      defaultValue={10}
+      defaultValue={"10"}
       step={1}
       helpText="Divides the mouse speed by given number. Useful for very sensitive mice."
     />
@@ -134,7 +135,7 @@ function SpinnerThrottle() {
       min={-10000}
       max={10000}
       width={120}
-      defaultValue={200}
+      defaultValue={"200"}
     />
   );
 }
@@ -165,7 +166,7 @@ function GamepadDefaults() {
       setValue={sv}
       options={["Name mapping", "Positional mapping"]}
       helpText={
-        v == 0
+        v == "0"
           ? "e.g. A button in SNES core = A button on controller regardless of position on pad."
           : "e.g. A button in SNES core = East button on controller regardless of button name."
       }
@@ -184,7 +185,7 @@ function WheelForce() {
       label="Wheel centering force"
       min={0}
       max={100}
-      defaultValue={50}
+      defaultValue={"50"}
     />
   );
 }
@@ -201,7 +202,7 @@ function WheelRange() {
       label="Wheel steering angle range"
       min={-10000}
       max={10000}
-      defaultValue={200}
+      defaultValue={"200"}
       helpText="Supported ranges depends on specific wheel model. If not set, then default range (depending on driver) is used."
     />
   );

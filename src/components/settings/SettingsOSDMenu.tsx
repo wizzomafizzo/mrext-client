@@ -9,9 +9,9 @@ import {
   SimpleSelectOption,
   ValuePicker,
 } from "./SettingsCommon";
-import { useIniSettingsStore } from "../../lib/store";
 import { useState } from "react";
 import Typography from "@mui/material/Typography";
+import { useIniSettingsStore } from "../../lib/ini";
 
 function RbfHideDatecode() {
   const v = useIniSettingsStore((state) => state.rbfHideDatecode);
@@ -64,7 +64,7 @@ function OSDTimeout() {
       value={v}
       setValue={sv}
       label="OSD display timeout"
-      defaultValue={30}
+      defaultValue={"30"}
       min={1}
       max={3600}
       helpText="Delay before OSD in the menu is hidden and screen is dimmed after inactivity."
@@ -78,12 +78,12 @@ function VideoOff() {
   const sv = useIniSettingsStore((state) => state.setVideoOff);
   const pv = useIniSettingsStore((state) => state.osdTimeout);
 
-  return pv > 0 ? (
+  return Number(pv) > 0 ? (
     <NumberOption
       value={v}
       setValue={sv}
       label="Blank screen after timeout"
-      defaultValue={30}
+      defaultValue={"30"}
       min={1}
       max={3600}
       helpText="Delay before displaying a black screen after OSD display timeout."

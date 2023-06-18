@@ -22,12 +22,12 @@ import {
   ValuePicker,
   VerticalNumberSliderOption,
 } from "./SettingsCommon";
-import { useIniSettingsStore } from "../../lib/store";
 import { useState, useEffect } from "react";
 import RadioGroup from "@mui/material/RadioGroup";
 import Radio from "@mui/material/Radio";
 import FormLabel from "@mui/material/FormLabel";
 import Card from "@mui/material/Card";
+import { useIniSettingsStore } from "../../lib/ini";
 
 const videoModes = [
   ["0", "1280x720@60"],
@@ -148,27 +148,27 @@ function VSyncAdjust() {
         <FormControlLabel
           control={
             <Checkbox
-              checked={vsyncAdjust > 0}
+              checked={Number(vsyncAdjust) > 0}
               onChange={(e) => {
                 if (e.target.checked) {
-                  setVsyncAdjust(1);
+                  setVsyncAdjust("1");
                 } else {
-                  setVsyncAdjust(0);
-                  setRefreshMin(0);
-                  setRefreshMax(0);
+                  setVsyncAdjust("0");
+                  setRefreshMin("0");
+                  setRefreshMax("0");
                 }
               }}
             />
           }
           label="VSync adjust"
         />
-        {vsyncAdjust > 0 ? (
+        {Number(vsyncAdjust) > 0 ? (
           <RadioGroup>
             <FormControlLabel
               control={
                 <Radio
-                  checked={vsyncAdjust === 1}
-                  onChange={(e) => e.target.checked && setVsyncAdjust(1)}
+                  checked={vsyncAdjust === "1"}
+                  onChange={(e) => e.target.checked && setVsyncAdjust("1")}
                 />
               }
               label="Automatically adjust to match original"
@@ -176,8 +176,8 @@ function VSyncAdjust() {
             <FormControlLabel
               control={
                 <Radio
-                  checked={vsyncAdjust === 2}
-                  onChange={(e) => e.target.checked && setVsyncAdjust(2)}
+                  checked={vsyncAdjust === "2"}
+                  onChange={(e) => e.target.checked && setVsyncAdjust("2")}
                 />
               }
               label="Low latency mode (single buffer)"
@@ -191,7 +191,7 @@ function VSyncAdjust() {
         </FormHelperText>
       </FormControl>
 
-      {vsyncAdjust > 0 ? (
+      {Number(vsyncAdjust) > 0 ? (
         <NumberOption
           value={refreshMin}
           setValue={setRefreshMin}
@@ -199,11 +199,11 @@ function VSyncAdjust() {
           helpText="When enabled, VSync adjust will not be applied if the refresh rate is below this value. For example, on an NTSC monitor which doesn't support PAL."
           min={1}
           max={240}
-          defaultValue={0}
+          defaultValue={"0"}
         />
       ) : null}
 
-      {vsyncAdjust > 0 ? (
+      {Number(vsyncAdjust) > 0 ? (
         <NumberOption
           value={refreshMax}
           setValue={setRefreshMax}
@@ -211,7 +211,7 @@ function VSyncAdjust() {
           helpText="Same as above, but for the maximum. For example, on a PAL monitor which doesn't support NTSC."
           min={1}
           max={240}
-          defaultValue={0}
+          defaultValue={"0"}
         />
       ) : null}
     </Stack>
@@ -243,7 +243,7 @@ function VScaleBorder() {
       setValue={setVscaleBorder}
       min={1}
       max={399}
-      defaultValue={1}
+      defaultValue={"1"}
       step={1}
       helpText="Adds a black border to the top and bottom of the screen."
     />
@@ -441,18 +441,18 @@ function VRRMode() {
         ]}
       />
 
-      {vrrMode > 0 ? (
+      {Number(vrrMode) > 0 ? (
         <NumberOption
           label="Minimum framerate"
           value={vrrMinFramerate}
           setValue={setVrrMinFramerate}
           min={1}
           max={240}
-          defaultValue={0}
+          defaultValue={"0"}
         />
       ) : null}
 
-      {vrrMode > 0 && vrrMode !== 3 ? (
+      {Number(vrrMode) > 0 && vrrMode !== "3" ? (
         <NumberOption
           label="Maximum framerate"
           value={vrrMaxFramerate}
@@ -460,11 +460,11 @@ function VRRMode() {
           helpText="Currently only used in FreeSync."
           min={1}
           max={240}
-          defaultValue={0}
+          defaultValue={"0"}
         />
       ) : null}
 
-      {vrrMode > 0 && vrrMode !== 2 ? (
+      {Number(vrrMode) > 0 && vrrMode !== "2" ? (
         <NumberOption
           label="VESA base framerate"
           value={vrrVesaFramerate}
@@ -472,7 +472,7 @@ function VRRMode() {
           helpText="Normally set to the current video mode's output framerate."
           min={1}
           max={240}
-          defaultValue={0}
+          defaultValue={"0"}
         />
       ) : null}
     </Stack>
@@ -575,11 +575,11 @@ function ConditionalVideoMode() {
   const setVideoModePal = useIniSettingsStore((state) => state.setVideoModePal);
 
   const [showSection, setShowSection] = useState(
-    videoModeNtsc !== "" || videoModePal !== "" ? 1 : 0
+    videoModeNtsc !== "" || videoModePal !== "" ? "1" : "0"
   );
 
-  const handleSectionToggle = (v: number) => {
-    if (v === 0) {
+  const handleSectionToggle = (v: string) => {
+    if (v === "0") {
       setVideoModeNtsc("");
       setVideoModePal("");
     }
@@ -644,7 +644,7 @@ function Hdr() {
         "DCI P3 color space",
         "HLG mode",
       ]}
-      helpText={v == 1 ? "Faux-HDR, use color controls to tweak." : undefined}
+      helpText={v == "1" ? "Faux-HDR, use color controls to tweak." : undefined}
       label="HDR"
     />
   );
@@ -718,7 +718,7 @@ function VideoGainOffset() {
       throw new Error("Invalid video gain offset value");
     }
 
-    return parseFloat(vals[i]);
+    return vals[i];
   };
 
   const setOptions = () => {
@@ -841,10 +841,10 @@ function ColorControlPresets() {
         <Button
           variant="outlined"
           onClick={() => {
-            setBrightness(50);
-            setContrast(50);
-            setSaturation(100);
-            setHue(0);
+            setBrightness("50");
+            setContrast("50");
+            setSaturation("100");
+            setHue("0");
             setGainOffset("1,0,1,0,1,0");
           }}
         >
@@ -853,10 +853,10 @@ function ColorControlPresets() {
         <Button
           variant="outlined"
           onClick={() => {
-            setBrightness(50);
-            setContrast(50);
-            setSaturation(100);
-            setHue(180);
+            setBrightness("50");
+            setContrast("50");
+            setSaturation("100");
+            setHue("180");
             setGainOffset("-1,1,-1,1,-1,1");
           }}
         >
@@ -865,10 +865,10 @@ function ColorControlPresets() {
         <Button
           variant="outlined"
           onClick={() => {
-            setBrightness(50);
-            setContrast(50);
-            setSaturation(80);
-            setHue(0);
+            setBrightness("50");
+            setContrast("50");
+            setSaturation("80");
+            setHue("0");
             setGainOffset("1.1,-0.1,1.3,-0.15,0.9,0.05");
           }}
         >

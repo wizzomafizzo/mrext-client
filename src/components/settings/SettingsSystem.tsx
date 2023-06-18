@@ -8,12 +8,12 @@ import {
   TextOption,
   ValuePicker,
 } from "./SettingsCommon";
-import { useIniSettingsStore } from "../../lib/store";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import FormControl from "@mui/material/FormControl";
 import { useState } from "react";
 import Typography from "@mui/material/Typography";
+import { useIniSettingsStore } from "../../lib/ini";
 
 function FbSize() {
   const v = useIniSettingsStore((state) => state.fbSize);
@@ -96,7 +96,7 @@ function BootCoreTimeout() {
       value={v}
       setValue={sv}
       label="Auto-boot core timeout"
-      defaultValue={10}
+      defaultValue={"10"}
       min={10}
       max={30}
     />

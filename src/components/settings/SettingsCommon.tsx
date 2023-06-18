@@ -4,12 +4,8 @@ import Typography from "@mui/material/Typography";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-import {
-  useUIStateStore,
-  SettingsPageId,
-  useIniSettingsStore,
-} from "../../lib/store";
-import { useEffect, useState } from "react";
+import { useUIStateStore, SettingsPageId } from "../../lib/store";
+import { useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import List from "@mui/material/List";
 import Box from "@mui/material/Box";
@@ -26,9 +22,9 @@ import { TextField } from "@mui/material";
 import FormLabel from "@mui/material/FormLabel";
 import Slider from "@mui/material/Slider";
 import Grid from "@mui/material/Grid";
-import { newIniRequest } from "../../lib/ini";
 import Paper from "@mui/material/Paper";
 import { ControlApi } from "../../lib/api";
+import { saveMisterIni, useIniSettingsStore } from "../../lib/ini";
 
 export function PageHeader(props: { title: string; noRevert?: boolean }) {
   const setActiveSettingsPage = useUIStateStore(
@@ -77,10 +73,8 @@ export function PageHeader(props: { title: string; noRevert?: boolean }) {
 }
 
 export function SaveButton() {
-  const api = new ControlApi();
   const store = useIniSettingsStore();
   const modified = useIniSettingsStore((state) => state.modified);
-  const resetModified = useIniSettingsStore((state) => state.resetModified);
 
   return (
     <>
@@ -99,12 +93,7 @@ export function SaveButton() {
           <Grid item xs={12} sx={{ p: 1, pt: 0.5, pb: 0.5 }}>
             <Button
               variant="contained"
-              onClick={() => {
-                console.log(modified);
-                console.log(newIniRequest(store));
-                api.saveMisterIni();
-                resetModified();
-              }}
+              onClick={() => saveMisterIni(1, store)}
               disabled={modified.length === 0}
               color="success"
               fullWidth
@@ -164,8 +153,8 @@ export function ValuePicker(props: {
 }
 
 export function BoolOption(props: {
-  value: number;
-  setValue: (value: number) => void;
+  value: string;
+  setValue: (value: string) => void;
   label: string;
   helpText?: string;
   invert?: boolean;
@@ -175,16 +164,16 @@ export function BoolOption(props: {
       <FormControlLabel
         control={
           <Checkbox
-            checked={props.invert ? props.value == 0 : props.value == 1}
+            checked={props.invert ? props.value == "0" : props.value == "1"}
             onChange={(e) => {
               props.setValue(
                 props.invert
                   ? e.target.checked
-                    ? 0
-                    : 1
+                    ? "0"
+                    : "1"
                   : e.target.checked
-                  ? 1
-                  : 0
+                  ? "1"
+                  : "0"
               );
             }}
           />
@@ -216,8 +205,8 @@ export function TextOption(props: {
 }
 
 export function SimpleSelectOption(props: {
-  value: number;
-  setValue: (value: number) => void;
+  value: string;
+  setValue: (value: string) => void;
   options: string[];
   helpText?: string[] | string;
   label: string;
@@ -227,7 +216,7 @@ export function SimpleSelectOption(props: {
       <InputLabel>{props.label}</InputLabel>
       <Select
         value={props.value}
-        onChange={(e) => props.setValue(Number(e.target.value))}
+        onChange={(e) => props.setValue(e.target.value)}
         label={props.label}
       >
         {props.options.map((option, i) => (
@@ -238,7 +227,9 @@ export function SimpleSelectOption(props: {
       </Select>
       {Array.isArray(props.helpText) &&
       props.helpText.length === props.options.length ? (
-        <FormHelperText>{props.helpText[props.value]}</FormHelperText>
+        <FormHelperText>
+          {props.helpText[parseInt(props.value, 10)]}
+        </FormHelperText>
       ) : props.helpText !== undefined ? (
         <FormHelperText>{props.helpText}</FormHelperText>
       ) : null}
@@ -247,17 +238,17 @@ export function SimpleSelectOption(props: {
 }
 
 export function NumberOption(props: {
-  value: number;
-  setValue: (value: number) => void;
+  value: string;
+  setValue: (value: string) => void;
   label: string;
   helpText?: string;
   min: number;
   max: number;
-  defaultValue: number;
+  defaultValue: string;
   width?: number;
   suffix?: string;
 }) {
-  const [enabled, setEnabled] = useState(props.value !== 0);
+  const [enabled, setEnabled] = useState(props.value !== "0");
 
   return (
     <FormControl>
@@ -276,7 +267,7 @@ export function NumberOption(props: {
                   props.setValue(props.defaultValue);
                   setEnabled(true);
                 } else {
-                  props.setValue(0);
+                  props.setValue("0");
                   setEnabled(false);
                 }
               }}
@@ -309,11 +300,11 @@ export function NumberOption(props: {
               onChange={(e) => {
                 const value = Number(e.target.value);
                 if (value < props.min) {
-                  props.setValue(props.min);
+                  props.setValue(props.min.toString());
                 } else if (value > props.max) {
-                  props.setValue(props.max);
+                  props.setValue(props.max.toString());
                 } else {
-                  props.setValue(value);
+                  props.setValue(value.toString());
                 }
               }}
             />
@@ -327,8 +318,8 @@ export function NumberOption(props: {
 }
 
 export function NumberSliderOption(props: {
-  value: number;
-  setValue: (value: number) => void;
+  value: string;
+  setValue: (value: string) => void;
   label: string;
   helpText?: string;
   min: number;
@@ -340,10 +331,10 @@ export function NumberSliderOption(props: {
       <Stack spacing={1} direction="row" alignItems="center">
         <Slider
           sx={{ ml: 1.5, mr: 1.5 }}
-          value={props.value}
+          value={Number(props.value)}
           min={props.min}
           max={props.max}
-          onChange={(e, v) => props.setValue(v as number)}
+          onChange={(e, v) => props.setValue(v.toString())}
         />
         <TextField
           type="number"
@@ -358,11 +349,11 @@ export function NumberSliderOption(props: {
           onChange={(e) => {
             const v = Number(e.target.value);
             if (v < props.min) {
-              props.setValue(props.min);
+              props.setValue(props.min.toString());
             } else if (v > props.max) {
-              props.setValue(props.max);
+              props.setValue(props.max.toString());
             } else {
-              props.setValue(v);
+              props.setValue(v.toString());
             }
           }}
         />
@@ -373,13 +364,13 @@ export function NumberSliderOption(props: {
 }
 
 export function VerticalNumberSliderOption(props: {
-  value: number;
-  setValue: (value: number) => void;
+  value: string;
+  setValue: (value: string) => void;
   label: string;
   min: number;
   max: number;
   step: number;
-  commit: (value: number) => void;
+  commit: (value: string) => void;
 }) {
   return (
     <FormControl>
@@ -387,12 +378,12 @@ export function VerticalNumberSliderOption(props: {
         <FormLabel>{props.label}</FormLabel>
         <Slider
           step={props.step}
-          value={props.value}
+          value={Number(props.value)}
           min={props.min}
           max={props.max}
           sx={{ height: 100 }}
-          onChange={(e, v) => props.setValue(v as number)}
-          onChangeCommitted={(e, v) => props.commit(v as number)}
+          onChange={(e, v) => props.setValue(v.toString())}
+          onChangeCommitted={(e, v) => props.commit(v.toString())}
           orientation="vertical"
         />
         <TextField
@@ -405,15 +396,15 @@ export function VerticalNumberSliderOption(props: {
           }}
           size="small"
           sx={{ width: 90 }}
-          value={props.value.toFixed(2)}
+          value={Number(props.value).toFixed(2)}
           onChange={(e) => {
             const v = Number(e.target.value);
             if (v < props.min) {
-              props.setValue(props.min);
+              props.setValue(props.min.toString());
             } else if (v > props.max) {
-              props.setValue(props.max);
+              props.setValue(props.max.toString());
             } else {
-              props.setValue(v);
+              props.setValue(v.toString());
             }
           }}
         />
@@ -424,16 +415,16 @@ export function VerticalNumberSliderOption(props: {
 
 export function ToggleableNumberSliderOption(props: {
   label: string;
-  value: number;
-  setValue: (value: number) => void;
+  value: string;
+  setValue: (value: string) => void;
   helpText?: string;
   min: number;
   max: number;
   step: number;
-  defaultValue: number;
+  defaultValue: string;
   suffix?: string;
 }) {
-  const [enabled, setEnabled] = useState(props.value !== 0);
+  const [enabled, setEnabled] = useState(props.value !== "0");
 
   return (
     <FormControl>
@@ -446,7 +437,7 @@ export function ToggleableNumberSliderOption(props: {
                 props.setValue(props.defaultValue);
                 setEnabled(true);
               } else {
-                props.setValue(0);
+                props.setValue("0");
                 setEnabled(false);
               }
             }}
@@ -458,8 +449,8 @@ export function ToggleableNumberSliderOption(props: {
         <Stack spacing={2} direction="row" alignItems="center">
           <Slider
             sx={{ ml: 1.5, mr: 1.5 }}
-            value={props.value}
-            onChange={(e, v) => props.setValue(Number(v))}
+            value={Number(props.value)}
+            onChange={(e, v) => props.setValue(v.toString())}
             step={props.step}
             min={props.min}
             max={props.max}
@@ -477,11 +468,11 @@ export function ToggleableNumberSliderOption(props: {
             onChange={(e) => {
               const value = Number(e.target.value);
               if (value < props.min) {
-                props.setValue(props.min);
+                props.setValue(props.min.toString());
               } else if (value > props.max) {
-                props.setValue(props.max);
+                props.setValue(props.max.toString());
               } else {
-                props.setValue(value);
+                props.setValue(value.toString());
               }
             }}
           />
