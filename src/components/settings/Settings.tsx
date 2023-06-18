@@ -52,10 +52,10 @@ function SettingsPageLink(props: {
   );
 }
 
-function MainPage() {
+function IniSwitcher(props: {}) {
+  const api = new ControlApi();
   const inis = useListMisterInis();
   const [iniDialogOpen, setIniDialogOpen] = useState(false);
-  const api = new ControlApi();
 
   let activeIni = {
     name: "Main",
@@ -77,21 +77,8 @@ function MainPage() {
     activeIni.id = id;
   }
 
-  const iniButton = (
-    <ListItem sx={{ pb: 0, pt: 2 }}>
-      <Button
-        fullWidth
-        variant="contained"
-        endIcon={<SwapHorizIcon />}
-        onClick={() => setIniDialogOpen(true)}
-      >
-        Active INI: {activeIni.name}
-      </Button>
-    </ListItem>
-  );
-
   return (
-    <div>
+    <>
       <Dialog open={iniDialogOpen} onClose={() => setIniDialogOpen(false)}>
         <Box sx={{ p: 2, minWidth: 200 }}>
           <List disablePadding>
@@ -133,8 +120,25 @@ function MainPage() {
           </List>
         </Box>
       </Dialog>
+      <ListItem sx={{ pb: 0, pt: 2 }}>
+        <Button
+          fullWidth
+          variant="contained"
+          endIcon={<SwapHorizIcon />}
+          onClick={() => setIniDialogOpen(true)}
+        >
+          Active INI: {activeIni.name}
+        </Button>
+      </ListItem>
+    </>
+  );
+}
+
+function MainPage() {
+  return (
+    <div>
       <List disablePadding>
-        {iniButton}
+        <IniSwitcher />
         <SettingsPageLink
           page={SettingsPageId.Video}
           text="Video"
