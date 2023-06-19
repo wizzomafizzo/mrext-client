@@ -52,7 +52,11 @@ import {
 } from "@mui/material";
 import Menu from "./Menu";
 import useWs from "./WebSocket";
-import { useServerStateStore } from "../lib/store";
+import {
+  SettingsPageId,
+  useServerStateStore,
+  useUIStateStore,
+} from "../lib/store";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import { ControlApi } from "../lib/api";
@@ -135,6 +139,7 @@ type RouterLinkProps = React.PropsWithChildren<{
   to: string;
   text: string;
   icon: ReactNode;
+  onClick?: () => void;
 }>;
 
 function RouterLink(props: RouterLinkProps) {
@@ -161,7 +166,7 @@ function RouterLink(props: RouterLinkProps) {
     [props.to]
   );
   return (
-    <ListItemButton component={MyNavLink}>
+    <ListItemButton component={MyNavLink} onClick={props.onClick}>
       <ListItemIcon
         sx={{
           ".Mui-selected > &": {
@@ -269,6 +274,7 @@ export default function ResponsiveDrawer() {
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const ws = useWs();
+  const uiState = useUIStateStore();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -308,7 +314,12 @@ export default function ResponsiveDrawer() {
           text="Wallpaper"
           icon={<FormatPaintIcon />}
         />
-        <RouterLink to="/settings" text="Settings" icon={<SettingsIcon />} />
+        <RouterLink
+          to="/settings"
+          text="Settings"
+          icon={<SettingsIcon />}
+          onClick={() => uiState.setActiveSettingsPage(SettingsPageId.Main)}
+        />
       </List>
     </div>
   );
