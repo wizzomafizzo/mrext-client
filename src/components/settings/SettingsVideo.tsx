@@ -879,31 +879,39 @@ function ColorControlPresets() {
   );
 }
 
-export default function VideoSettings() {
+export function GeneralVideoSettings() {
   return (
     <>
-      <PageHeader title="Video" />
+      <PageHeader title="General Video" />
       <Stack spacing={2} m={2}>
         <MainVideoMode />
         <VerticalScale />
         <VRRMode />
         <VSyncAdjust />
 
-        <SectionHeader text="Filters" />
+        <SectionHeader text="Advanced" />
+        <DVIMode />
+        <GameMode />
+        <LimitHDMIColor />
+        <ConditionalVideoMode />
+        <CustomAspectRatios />
+      </Stack>
+      <SaveButton />
+    </>
+  );
+}
+
+export function VideoFiltersSettings() {
+  return (
+    <>
+      <PageHeader title="Video Filters" />
+      <Stack spacing={2} m={2}>
         <VScaleBorder />
         <VFilter />
         <VFilterScanlines />
         <VFilterVertical />
         <ShadowMask />
         <ShadowMaskMode />
-
-        <SectionHeader text="Analog video" />
-        <DirectVideo />
-        <ForcedScandoubler />
-        <Ypbpr />
-        <CompositeSync />
-        <VGAScaler />
-        <Sog />
 
         <SectionHeader text="HDMI color controls" />
         <Hdr />
@@ -917,13 +925,23 @@ export default function VideoSettings() {
           </Stack>
         </Card>
         <ColorControlPresets />
+      </Stack>
+      <SaveButton />
+    </>
+  );
+}
 
-        <SectionHeader text="Advanced" />
-        <DVIMode />
-        <GameMode />
-        <LimitHDMIColor />
-        <ConditionalVideoMode />
-        <CustomAspectRatios />
+export function AnalogVideoSettings() {
+  return (
+    <>
+      <PageHeader title="Analog Video" />
+      <Stack spacing={2} m={2}>
+        <DirectVideo />
+        <ForcedScandoubler />
+        <Ypbpr />
+        <CompositeSync />
+        <VGAScaler />
+        <Sog />
       </Stack>
       <SaveButton />
     </>

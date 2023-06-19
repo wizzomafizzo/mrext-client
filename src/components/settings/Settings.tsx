@@ -11,10 +11,16 @@ import SpeakerIcon from "@mui/icons-material/Speaker";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 import TerminalIcon from "@mui/icons-material/Terminal";
 import SettingsRemoteIcon from "@mui/icons-material/SettingsRemote";
+import FilterIcon from "@mui/icons-material/Filter";
+import SettingsInputCompositeIcon from "@mui/icons-material/SettingsInputComposite";
 
 import { SettingsPageId, useUIStateStore } from "../../lib/store";
 
-import VideoSettings from "./SettingsVideo";
+import {
+  GeneralVideoSettings,
+  VideoFiltersSettings,
+  AnalogVideoSettings,
+} from "./SettingsVideo";
 import InputDevices from "./SettingsInputDevices";
 import OSDMenuSettings from "./SettingsOSDMenu";
 import CoresSettings from "./SettingsCore";
@@ -42,7 +48,7 @@ function SettingsPageLink(props: {
   );
 
   return (
-    <ListItem disableGutters>
+    <ListItem disableGutters sx={{ p: 0, pt: 1 }}>
       <ListItemButton onClick={() => setActiveSettingsPage(props.page)}>
         <ListItemIcon>{props.icon}</ListItemIcon>
         <ListItemText primary={props.text} />
@@ -138,9 +144,19 @@ function MainPage() {
       <List disablePadding>
         <IniSwitcher />
         <SettingsPageLink
-          page={SettingsPageId.Video}
-          text="Video"
+          page={SettingsPageId.GeneralVideo}
+          text="General Video"
           icon={<TvIcon />}
+        />
+        <SettingsPageLink
+          page={SettingsPageId.VideoFilters}
+          text="Video Filters"
+          icon={<FilterIcon />}
+        />
+        <SettingsPageLink
+          page={SettingsPageId.AnalogVideo}
+          text="Analog Video"
+          icon={<SettingsInputCompositeIcon />}
         />
         <SettingsPageLink
           page={SettingsPageId.Audio}
@@ -149,12 +165,12 @@ function MainPage() {
         />
         <SettingsPageLink
           page={SettingsPageId.InputDevices}
-          text="Input devices"
+          text="Input Devices"
           icon={<SportsEsportsIcon />}
         />
         <SettingsPageLink
           page={SettingsPageId.OSDMenu}
-          text="OSD and menu"
+          text="OSD and Menu"
           icon={<WysiwygIcon />}
         />
         <SettingsPageLink
@@ -203,8 +219,8 @@ export default function Settings() {
     switch (activeSettingsPage) {
       case SettingsPageId.Main:
         return <MainPage />;
-      case SettingsPageId.Video:
-        return <VideoSettings />;
+      case SettingsPageId.GeneralVideo:
+        return <GeneralVideoSettings />;
       case SettingsPageId.Audio:
         return <AudioSettings />;
       case SettingsPageId.InputDevices:
@@ -217,6 +233,10 @@ export default function Settings() {
         return <SystemSettings />;
       case SettingsPageId.Remote:
         return <Remote />;
+      case SettingsPageId.VideoFilters:
+        return <VideoFiltersSettings />;
+      case SettingsPageId.AnalogVideo:
+        return <AnalogVideoSettings />;
     }
   })();
 

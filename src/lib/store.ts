@@ -5,12 +5,14 @@ import { SearchServiceStatus } from "./models";
 export enum SettingsPageId {
   Main,
   Cores,
-  Video,
+  GeneralVideo,
   OSDMenu,
   InputDevices,
   Remote,
   Audio,
   System,
+  VideoFilters,
+  AnalogVideo,
 }
 
 export interface UIState {
