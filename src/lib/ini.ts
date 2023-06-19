@@ -846,35 +846,41 @@ function newIniRequest(state: IniState & IniActions): {
   return changes;
 }
 
-export function saveMisterIni(n: number, state: IniState & IniActions) {
+export function saveMisterIni(id: number, state: IniState & IniActions) {
   const changes = newIniRequest(state);
   console.log(changes);
   const api = new ControlApi();
-  return api.saveMisterIni().then(() => {
-    state.resetModified();
-  });
+  return api
+    .saveMisterIni(id, changes)
+    .then(() => {
+      state.resetModified();
+    })
+    .catch((e) => {
+      console.error(e);
+    });
 }
 
-export const useMisterIni = (n: number) => {
-  const iniSettingsStore = useIniSettingsStore();
+export function loadMisterIni(id: number, state: IniState & IniActions) {
   const api = new ControlApi();
-  return useQuery({
-    queryKey: ["settings", "inis", n],
-    queryFn: () => api.loadMisterIni(n),
-    onSuccess: (data) => {
+  return api
+    .loadMisterIni(id)
+    .then((data) => {
+      console.log("Loading ini data");
       for (const mKey in data) {
         if (mKey in iniKeyMapReverse) {
           const key = iniKeyMapReverse[mKey];
-          const modified = iniSettingsStore.modified;
+          const modified = state.modified;
           if (modified.includes(key)) {
             continue;
           }
-          iniSettingsStore.setAttribute(key, data[mKey]);
+          state.setAttribute(key, data[mKey]);
           console.log(`Loaded ini key ${mKey} as ${key}, value ${data[mKey]}`);
         } else {
           console.warn(`Unknown ini key ${mKey}`);
         }
       }
-    },
-  });
-};
+    })
+    .catch((e) => {
+      console.error(e);
+    });
+}

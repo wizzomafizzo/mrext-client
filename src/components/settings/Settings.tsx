@@ -23,14 +23,14 @@ import Remote from "./SettingsRemote";
 import Box from "@mui/material/Box";
 import AudioSettings from "./SettingsAudio";
 import SystemSettings from "./SettingsSystem";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useListMisterInis } from "../../lib/queries";
 import Button from "@mui/material/Button";
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 import Dialog from "@mui/material/Dialog";
 import Typography from "@mui/material/Typography";
 import { ControlApi } from "../../lib/api";
-import { useMisterIni } from "../../lib/ini";
+import { loadMisterIni, useIniSettingsStore } from "../../lib/ini";
 
 function SettingsPageLink(props: {
   page: SettingsPageId;
@@ -61,8 +61,6 @@ function IniSwitcher(props: {}) {
     name: "Main",
     id: 1,
   };
-
-  const misterIni = useMisterIni(1);
 
   if (inis.data && inis.data.inis.length > 0) {
     let id = 1;
@@ -183,6 +181,23 @@ export default function Settings() {
   const activeSettingsPage = useUIStateStore(
     (state) => state.activeSettingsPage
   );
+
+  const iniSettingsStore = useIniSettingsStore();
+
+  useEffect(() => {
+    const api = new ControlApi();
+    api.listMisterInis().then((inis) => {
+      let id = 1;
+      if (inis.active === 0) {
+        id = 1;
+      } else {
+        id = inis.active;
+      }
+
+      // TODO: handle error
+      loadMisterIni(id, iniSettingsStore);
+    });
+  }, []);
 
   const page = (() => {
     switch (activeSettingsPage) {

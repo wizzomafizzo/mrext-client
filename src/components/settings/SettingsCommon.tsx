@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import { useUIStateStore, SettingsPageId } from "../../lib/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import List from "@mui/material/List";
 import Box from "@mui/material/Box";
@@ -23,8 +23,12 @@ import FormLabel from "@mui/material/FormLabel";
 import Slider from "@mui/material/Slider";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
+import {
+  loadMisterIni,
+  saveMisterIni,
+  useIniSettingsStore,
+} from "../../lib/ini";
 import { ControlApi } from "../../lib/api";
-import { saveMisterIni, useIniSettingsStore } from "../../lib/ini";
 
 export function PageHeader(props: { title: string; noRevert?: boolean }) {
   const setActiveSettingsPage = useUIStateStore(
@@ -32,6 +36,23 @@ export function PageHeader(props: { title: string; noRevert?: boolean }) {
   );
 
   const modified = useIniSettingsStore((state) => state.modified);
+  const iniSettingsStore = useIniSettingsStore();
+
+  const handleRevert = () => {
+    const api = new ControlApi();
+    iniSettingsStore.reset();
+    api.listMisterInis().then((inis) => {
+      let id = 1;
+      if (inis.active === 0) {
+        id = 1;
+      } else {
+        id = inis.active;
+      }
+
+      // TODO: handle error
+      loadMisterIni(id, iniSettingsStore);
+    });
+  };
 
   return (
     <>
@@ -60,7 +81,11 @@ export function PageHeader(props: { title: string; noRevert?: boolean }) {
           </Grid>
           <Grid item xs={3} sx={{ textAlign: "right" }}>
             {modified.length > 0 && !props.noRevert && (
-              <Button variant="text" color="error">
+              <Button
+                variant="text"
+                color="error"
+                onClick={() => handleRevert()}
+              >
                 Revert
               </Button>
             )}
@@ -93,7 +118,20 @@ export function SaveButton() {
           <Grid item xs={12} sx={{ p: 1, pt: 0.5, pb: 0.5 }}>
             <Button
               variant="contained"
-              onClick={() => saveMisterIni(1, store)}
+              onClick={() => {
+                const api = new ControlApi();
+                api.listMisterInis().then((inis) => {
+                  let id = 1;
+                  if (inis.active === 0) {
+                    id = 1;
+                  } else {
+                    id = inis.active;
+                  }
+
+                  // TODO: handle error
+                  saveMisterIni(id, store);
+                });
+              }}
               disabled={modified.length === 0}
               color="success"
               fullWidth
@@ -220,7 +258,7 @@ export function SimpleSelectOption(props: {
         label={props.label}
       >
         {props.options.map((option, i) => (
-          <MenuItem key={option} value={i}>
+          <MenuItem key={option} value={i.toString()}>
             {option}
           </MenuItem>
         ))}
@@ -450,6 +488,7 @@ export function ToggleableNumberSliderOption(props: {
           <Slider
             sx={{ ml: 1.5, mr: 1.5 }}
             value={Number(props.value)}
+            // onChangeCommitted={(e, v) => props.setValue(v.toString())}
             onChange={(e, v) => props.setValue(v.toString())}
             step={props.step}
             min={props.min}

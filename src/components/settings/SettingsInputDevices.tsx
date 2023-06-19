@@ -279,11 +279,6 @@ export default function InputDevices() {
     <>
       <PageHeader title="Input Devices" />
       <Stack spacing={2} m={2}>
-        <Typography sx={{ textAlign: "center" }} color="error">
-          INI settings editing is still in development. Any changes made here
-          will not be saved to your MiSTer.
-        </Typography>
-
         <BtAutoDisconnect />
         <BtResetBeforePair />
         <AutoFire />

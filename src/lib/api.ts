@@ -196,8 +196,11 @@ export class ControlApi {
   }
 
   // settings
-  async saveMisterIni(): Promise<void> {
-    await axios.post(`/settings/ini`);
+  async saveMisterIni(
+    id: number,
+    data: { [key: string]: string }
+  ): Promise<void> {
+    await axios.put(`/settings/inis/${id}`, data);
   }
 
   async listMisterInis(): Promise<ListInisPayload> {
@@ -216,8 +219,8 @@ export class ControlApi {
     await axios.post(`/settings/remote/restart`);
   }
 
-  async loadMisterIni(n: number): Promise<{ [key: string]: string }> {
-    return (await axios.get<{ [key: string]: string }>(`/settings/inis/${n}`))
+  async loadMisterIni(id: number): Promise<{ [key: string]: string }> {
+    return (await axios.get<{ [key: string]: string }>(`/settings/inis/${id}`))
       .data;
   }
 }

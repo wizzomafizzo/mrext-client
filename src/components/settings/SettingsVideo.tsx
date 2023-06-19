@@ -884,11 +884,6 @@ export default function VideoSettings() {
     <>
       <PageHeader title="Video" />
       <Stack spacing={2} m={2}>
-        <Typography sx={{ textAlign: "center", pb: 1 }} color="error">
-          INI settings editing is still in development. Any changes made here
-          will not be saved to your MiSTer.
-        </Typography>
-
         <MainVideoMode />
         <VerticalScale />
         <VRRMode />

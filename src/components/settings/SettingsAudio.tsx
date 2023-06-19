@@ -70,11 +70,6 @@ export default function AudioSettings() {
     <>
       <PageHeader title="Audio" />
       <Stack spacing={2} m={2}>
-        <Typography sx={{ textAlign: "center" }} color="error">
-          INI settings editing is still in development. Any changes made here
-          will not be saved to your MiSTer.
-        </Typography>
-
         <HdmiAudio96k />
         <AFilterDefault />
       </Stack>

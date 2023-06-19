@@ -122,11 +122,6 @@ export default function CoresSettings() {
     <>
       <PageHeader title="Cores" />
       <Stack spacing={2} m={2}>
-        <Typography sx={{ textAlign: "center" }} color="error">
-          INI settings editing is still in development. Any changes made here
-          will not be saved to your MiSTer.
-        </Typography>
-
         <VideoInfo />
         <ControllerInfo />
         <Recents />

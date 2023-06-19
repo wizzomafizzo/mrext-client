@@ -141,11 +141,6 @@ export default function OSDMenuSettings() {
     <>
       <PageHeader title="OSD and Menu" />
       <Stack spacing={2} m={2}>
-        <Typography sx={{ textAlign: "center" }} color="error">
-          INI settings editing is still in development. Any changes made here
-          will not be saved to your MiSTer.
-        </Typography>
-
         <Font />
         <OsdRotate />
         <RbfHideDatecode />
