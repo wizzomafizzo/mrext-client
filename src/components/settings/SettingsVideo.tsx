@@ -81,6 +81,10 @@ function VideoMode(props: {
     }
   };
 
+  useEffect(() => {
+    setSelected(toSelection(props.videoMode));
+  }, [props.videoMode]);
+
   return (
     <FormControl>
       <InputLabel>{props.label}</InputLabel>

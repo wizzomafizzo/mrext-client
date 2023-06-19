@@ -288,6 +288,10 @@ export function NumberOption(props: {
 }) {
   const [enabled, setEnabled] = useState(props.value !== "0");
 
+  useEffect(() => {
+    setEnabled(props.value !== "0");
+  }, [props.value]);
+
   return (
     <FormControl>
       <Stack
@@ -463,6 +467,10 @@ export function ToggleableNumberSliderOption(props: {
   suffix?: string;
 }) {
   const [enabled, setEnabled] = useState(props.value !== "0");
+
+  useEffect(() => {
+    setEnabled(props.value !== "0");
+  }, [props.value]);
 
   return (
     <FormControl>
