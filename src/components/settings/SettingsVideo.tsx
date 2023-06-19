@@ -259,9 +259,7 @@ function VFilterGeneric(props: {
   value: string;
   setValue: (value: string) => void;
 }) {
-  const [enabled, setEnabled] = useState(
-    props.value && props.value !== "" ? true : false
-  );
+  const [enabled, setEnabled] = useState(!!(props.value && props.value !== ""));
 
   return (
     <FormControl>
@@ -746,6 +744,10 @@ function VideoGainOffset() {
     setBo(readOption(5));
   }, [v]);
 
+  useEffect(() => {
+    setOptions();
+  }, [rg, ro, gg, go, bg, bo]);
+
   return (
     <>
       <FormLabel>Video gain offset</FormLabel>
@@ -764,7 +766,6 @@ function VideoGainOffset() {
           min={-2.0}
           max={2.0}
           step={0.01}
-          commit={(v) => setOptions()}
         />
         <VerticalNumberSliderOption
           value={ro}
@@ -773,7 +774,6 @@ function VideoGainOffset() {
           min={-2.0}
           max={2.0}
           step={0.01}
-          commit={(v) => setOptions()}
         />
         <VerticalNumberSliderOption
           value={gg}
@@ -782,7 +782,6 @@ function VideoGainOffset() {
           min={-2.0}
           max={2.0}
           step={0.01}
-          commit={(v) => setOptions()}
         />
       </Stack>
       <Stack
@@ -800,7 +799,6 @@ function VideoGainOffset() {
           min={-2.0}
           max={2.0}
           step={0.01}
-          commit={(v) => setOptions()}
         />
         <VerticalNumberSliderOption
           value={bg}
@@ -809,7 +807,6 @@ function VideoGainOffset() {
           min={-2.0}
           max={2.0}
           step={0.01}
-          commit={(v) => setOptions()}
         />
         <VerticalNumberSliderOption
           value={bo}
@@ -818,7 +815,6 @@ function VideoGainOffset() {
           min={-2.0}
           max={2.0}
           step={0.01}
-          commit={(v) => setOptions()}
         />
       </Stack>
     </>

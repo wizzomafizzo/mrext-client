@@ -367,16 +367,23 @@ export function NumberSliderOption(props: {
   min: number;
   max: number;
 }) {
+  const [internalValue, setInternalValue] = useState(props.value);
+
+  useEffect(() => {
+    setInternalValue(props.value);
+  }, [props.value]);
+
   return (
     <FormControl>
       <FormLabel>{props.label}</FormLabel>
       <Stack spacing={1} direction="row" alignItems="center">
         <Slider
           sx={{ ml: 1.5, mr: 1.5 }}
-          value={Number(props.value)}
+          value={Number(internalValue)}
           min={props.min}
           max={props.max}
-          onChange={(e, v) => props.setValue(v.toString())}
+          onChange={(e, v) => setInternalValue(v.toString())}
+          onChangeCommitted={(e, v) => props.setValue(v.toString())}
         />
         <TextField
           type="number"
@@ -387,7 +394,7 @@ export function NumberSliderOption(props: {
           }}
           size="small"
           sx={{ width: 120 }}
-          value={props.value}
+          value={internalValue}
           onChange={(e) => {
             const v = Number(e.target.value);
             if (v < props.min) {
@@ -412,20 +419,25 @@ export function VerticalNumberSliderOption(props: {
   min: number;
   max: number;
   step: number;
-  commit: (value: string) => void;
 }) {
+  const [internalValue, setInternalValue] = useState(props.value);
+
+  useEffect(() => {
+    setInternalValue(props.value);
+  }, [props.value]);
+
   return (
     <FormControl>
       <Stack spacing={2} alignItems="center">
         <FormLabel>{props.label}</FormLabel>
         <Slider
           step={props.step}
-          value={Number(props.value)}
+          value={Number(internalValue)}
           min={props.min}
           max={props.max}
           sx={{ height: 100 }}
-          onChange={(e, v) => props.setValue(v.toString())}
-          onChangeCommitted={(e, v) => props.commit(v.toString())}
+          onChange={(e, v) => setInternalValue(v.toString())}
+          onChangeCommitted={(e, v) => props.setValue(v.toString())}
           orientation="vertical"
         />
         <TextField
@@ -438,7 +450,7 @@ export function VerticalNumberSliderOption(props: {
           }}
           size="small"
           sx={{ width: 90 }}
-          value={Number(props.value).toFixed(2)}
+          value={Number(internalValue).toFixed(2)}
           onChange={(e) => {
             const v = Number(e.target.value);
             if (v < props.min) {
@@ -467,9 +479,11 @@ export function ToggleableNumberSliderOption(props: {
   suffix?: string;
 }) {
   const [enabled, setEnabled] = useState(props.value !== "0");
+  const [internalValue, setInternalValue] = useState(props.value);
 
   useEffect(() => {
     setEnabled(props.value !== "0");
+    setInternalValue(props.value);
   }, [props.value]);
 
   return (
@@ -495,9 +509,9 @@ export function ToggleableNumberSliderOption(props: {
         <Stack spacing={2} direction="row" alignItems="center">
           <Slider
             sx={{ ml: 1.5, mr: 1.5 }}
-            value={Number(props.value)}
-            // onChangeCommitted={(e, v) => props.setValue(v.toString())}
-            onChange={(e, v) => props.setValue(v.toString())}
+            value={Number(internalValue)}
+            onChangeCommitted={(e, v) => props.setValue(v.toString())}
+            onChange={(e, v) => setInternalValue(v.toString())}
             step={props.step}
             min={props.min}
             max={props.max}
@@ -511,7 +525,7 @@ export function ToggleableNumberSliderOption(props: {
             }}
             size="small"
             sx={{ width: "110px" }}
-            value={props.value}
+            value={internalValue}
             onChange={(e) => {
               const value = Number(e.target.value);
               if (value < props.min) {
