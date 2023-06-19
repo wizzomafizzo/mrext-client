@@ -210,7 +210,11 @@ function PlayingButton() {
 
   return (
     <>
-      <IconButton ref={anchorRef} sx={{ ml: 3 }} onClick={() => setOpen(!open)}>
+      <IconButton
+        ref={anchorRef}
+        sx={{ ml: 3, color: "primary.contrastText" }}
+        onClick={() => setOpen(!open)}
+      >
         {icon}
       </IconButton>
       <Popper
