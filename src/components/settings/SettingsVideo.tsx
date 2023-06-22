@@ -879,6 +879,21 @@ function ColorControlPresets() {
   );
 }
 
+function PresetDefault() {
+  const presetDefault = useIniSettingsStore((state) => state.presetDefault);
+  const setPresetDefault = useIniSettingsStore(
+    (state) => state.setPresetDefault
+  );
+
+  return (
+    <VFilterGeneric
+      label="Default video preset"
+      value={presetDefault}
+      setValue={setPresetDefault}
+    />
+  );
+}
+
 export function GeneralVideoSettings() {
   return (
     <>
@@ -906,12 +921,13 @@ export function VideoFiltersSettings() {
     <>
       <PageHeader title="Video Filters" />
       <Stack spacing={2} m={2}>
-        <VScaleBorder />
+        <PresetDefault />
         <VFilter />
         <VFilterScanlines />
         <VFilterVertical />
         <ShadowMask />
         <ShadowMaskMode />
+        <VScaleBorder />
 
         <SectionHeader text="HDMI color controls" />
         <Hdr />

@@ -60,7 +60,7 @@ const iniKeyMap: { [key: string]: string } = {
   vfilterScanlinesDefault: "vfilter_scanlines_default",
   shmaskDefault: "shmask_default",
   shmaskModeDefault: "shmask_mode_default",
-  // : "preset_default",
+  presetDefault: "preset_default",
   logFileEntry: "log_file_entry",
   btAutoDisconnect: "bt_auto_disconnect",
   btResetBeforePair: "bt_reset_before_pair",
@@ -120,6 +120,7 @@ interface IniActions {
   setVrrMinFramerate: (v: string) => void;
   setVrrMaxFramerate: (v: string) => void;
   setVrrVesaFramerate: (v: string) => void;
+  setPresetDefault: (v: string) => void;
   // analog options
   setDirectVideo: (v: string) => void;
   setForcedScandoubler: (v: string) => void;
@@ -216,6 +217,7 @@ interface IniState {
   vrrMinFramerate: string;
   vrrMaxFramerate: string;
   vrrVesaFramerate: string;
+  presetDefault: string;
   // analog options
   directVideo: string;
   forcedScandoubler: string;
@@ -331,6 +333,7 @@ const initialState: IniState = {
   videoSaturation: "100",
   videoHue: "0",
   videoGainOffset: "1, 0, 1, 0, 1, 0",
+  presetDefault: "",
 
   // cores
   bootScreen: "1",
@@ -575,6 +578,11 @@ export const useIniSettingsStore = create<IniStore>()((set) => ({
     set((state) => ({
       videoGainOffset: v,
       modified: distinct([...state.modified, "videoGainOffset"]),
+    })),
+  setPresetDefault: (v: string) =>
+    set((state) => ({
+      presetDefault: v,
+      modified: distinct([...state.modified, "presetDefault"]),
     })),
 
   // cores
