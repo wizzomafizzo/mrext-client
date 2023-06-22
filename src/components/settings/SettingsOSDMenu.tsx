@@ -10,8 +10,21 @@ import {
   ValuePicker,
 } from "./SettingsCommon";
 import { useState } from "react";
-import Typography from "@mui/material/Typography";
 import { useIniSettingsStore } from "../../lib/ini";
+
+function LogFileEntry() {
+  const v = useIniSettingsStore((state) => state.logFileEntry);
+  const sv = useIniSettingsStore((state) => state.setLogFileEntry);
+
+  return (
+    <BoolOption
+      label="Log current file entry"
+      value={v}
+      setValue={sv}
+      helpText="Log the currently selected item in menu to a file. Useful for scripts."
+    />
+  );
+}
 
 function RbfHideDatecode() {
   const v = useIniSettingsStore((state) => state.rbfHideDatecode);
@@ -148,6 +161,7 @@ export default function OSDMenuSettings() {
         <OSDTimeout />
         <VideoOff />
         <Logo />
+        <LogFileEntry />
         <MenuPal />
       </Stack>
       <SaveButton />

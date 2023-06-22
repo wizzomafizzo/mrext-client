@@ -58,7 +58,7 @@ function SettingsPageLink(props: {
   );
 }
 
-function IniSwitcher(props: {}) {
+function IniSwitcher() {
   const api = new ControlApi();
   const inis = useListMisterInis();
   const [iniDialogOpen, setIniDialogOpen] = useState(false);
@@ -69,7 +69,7 @@ function IniSwitcher(props: {}) {
   };
 
   if (inis.data && inis.data.inis.length > 0) {
-    let id = 1;
+    let id: number;
 
     if (inis.data.active === 0) {
       id = 1;
@@ -203,7 +203,7 @@ export default function Settings() {
   useEffect(() => {
     const api = new ControlApi();
     api.listMisterInis().then((inis) => {
-      let id = 1;
+      let id: number;
       if (inis.active === 0) {
         id = 1;
       } else {

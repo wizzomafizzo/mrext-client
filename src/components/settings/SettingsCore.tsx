@@ -89,20 +89,6 @@ function SharedFolder() {
   );
 }
 
-function LogFileEntry() {
-  const v = useIniSettingsStore((state) => state.logFileEntry);
-  const sv = useIniSettingsStore((state) => state.setLogFileEntry);
-
-  return (
-    <BoolOption
-      label="Log current file entry"
-      value={v}
-      setValue={sv}
-      helpText="Log the currently selected item in menu to a file. Useful for scripts."
-    />
-  );
-}
-
 function KeyMenuAsRgui() {
   const v = useIniSettingsStore((state) => state.keyMenuAsRgui);
   const sv = useIniSettingsStore((state) => state.setKeyMenuAsRgui);
@@ -125,7 +111,6 @@ export default function CoresSettings() {
         <VideoInfo />
         <ControllerInfo />
         <Recents />
-        <LogFileEntry />
         <BootScreen />
         <KeyMenuAsRgui />
         <SharedFolder />
