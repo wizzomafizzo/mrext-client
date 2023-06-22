@@ -144,13 +144,12 @@ function SpinnerAxis() {
   const v = useIniSettingsStore((state) => state.spinnerAxis);
   const sv = useIniSettingsStore((state) => state.setSpinnerAxis);
 
-  // TODO: this would be good as radio buttons
   return (
     <SimpleSelectOption
       label="Spinner axis"
       value={v}
       setValue={sv}
-      options={["X axis", "Y axis"]}
+      options={["X axis", "Y axis", "Wheel"]}
     />
   );
 }
