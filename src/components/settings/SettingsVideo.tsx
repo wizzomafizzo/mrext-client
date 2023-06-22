@@ -938,7 +938,6 @@ export function AnalogVideoSettings() {
       <Stack spacing={2} m={2}>
         <DirectVideo />
         <ForcedScandoubler />
-        <Ypbpr />
         <CompositeSync />
         <VGAScaler />
         <Sog />
