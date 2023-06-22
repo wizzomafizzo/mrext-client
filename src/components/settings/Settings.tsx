@@ -210,8 +210,7 @@ export default function Settings() {
         id = inis.active;
       }
 
-      // TODO: handle error
-      loadMisterIni(id, iniSettingsStore);
+      loadMisterIni(id, iniSettingsStore).catch((err) => console.error(err));
     });
   }, []);
 

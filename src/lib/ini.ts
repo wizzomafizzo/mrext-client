@@ -195,8 +195,6 @@ interface IniActions {
 }
 
 interface IniState {
-  modified: string[];
-
   // video
   videoMode: string;
   videoModeNtsc: string;
@@ -292,9 +290,12 @@ interface IniState {
   logo: string;
 }
 
-const initialState: IniState = {
-  modified: [],
+type IniStore = IniState &
+  IniActions & {
+    modified: string[];
+  };
 
+const initialState: IniState = {
   // video
   videoMode: "",
   videoModeNtsc: "",
@@ -391,11 +392,13 @@ const initialState: IniState = {
 
 const distinct = (arr: string[]) => [...new Set(arr)];
 
-export const useIniSettingsStore = create<IniState & IniActions>()((set) => ({
+export const useIniSettingsStore = create<IniStore>()((set) => ({
   ...initialState,
 
+  modified: [],
+
   setAttribute: (key: string, value: string) =>
-    set((state) => ({
+    set(() => ({
       [key]: value,
     })),
 
@@ -829,7 +832,7 @@ interface Indexable {
   [key: string]: any;
 }
 
-function newIniRequest(state: IniState & IniActions): {
+function newIniRequest(state: IniStore): {
   [key: string]: string;
 } {
   const changes: { [key: string]: string } = {};
@@ -846,7 +849,7 @@ function newIniRequest(state: IniState & IniActions): {
   return changes;
 }
 
-export function saveMisterIni(id: number, state: IniState & IniActions) {
+export function saveMisterIni(id: number, state: IniStore) {
   const changes = newIniRequest(state);
   console.log(changes);
   const api = new ControlApi();
@@ -860,7 +863,7 @@ export function saveMisterIni(id: number, state: IniState & IniActions) {
     });
 }
 
-export function loadMisterIni(id: number, state: IniState & IniActions) {
+export function loadMisterIni(id: number, state: IniStore) {
   const api = new ControlApi();
   return api
     .loadMisterIni(id)
@@ -869,8 +872,8 @@ export function loadMisterIni(id: number, state: IniState & IniActions) {
       for (const mKey in data) {
         if (mKey in iniKeyMapReverse) {
           const key = iniKeyMapReverse[mKey];
-          const modified = state.modified;
-          if (modified.includes(key)) {
+          if (state.modified.includes(key)) {
+            console.log(`Skipping ini key ${mKey} as ${key} is modified`);
             continue;
           }
           state.setAttribute(key, data[mKey]);

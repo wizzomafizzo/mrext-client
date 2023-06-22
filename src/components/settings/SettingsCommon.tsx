@@ -40,17 +40,19 @@ export function PageHeader(props: { title: string; noRevert?: boolean }) {
 
   const handleRevert = () => {
     const api = new ControlApi();
+    // TODO: this is the problem
     iniSettingsStore.reset();
     api.listMisterInis().then((inis) => {
-      let id = 1;
+      let id: number;
       if (inis.active === 0) {
         id = 1;
       } else {
         id = inis.active;
       }
 
-      // TODO: handle error
-      loadMisterIni(id, iniSettingsStore);
+      loadMisterIni(id, iniSettingsStore).catch((err) => {
+        console.error(err);
+      });
     });
   };
 
@@ -121,15 +123,14 @@ export function SaveButton() {
               onClick={() => {
                 const api = new ControlApi();
                 api.listMisterInis().then((inis) => {
-                  let id = 1;
+                  let id: number;
                   if (inis.active === 0) {
                     id = 1;
                   } else {
                     id = inis.active;
                   }
 
-                  // TODO: handle error
-                  saveMisterIni(id, store);
+                  saveMisterIni(id, store).catch((err) => console.error(err));
                 });
               }}
               disabled={modified.length === 0}
