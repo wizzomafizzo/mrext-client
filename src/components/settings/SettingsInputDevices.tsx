@@ -93,6 +93,10 @@ function PlayerControllers() {
   const sv3 = useIniSettingsStore((state) => state.setPlayer3Controller);
   const v4 = useIniSettingsStore((state) => state.player4Controller);
   const sv4 = useIniSettingsStore((state) => state.setPlayer4Controller);
+  const v5 = useIniSettingsStore((state) => state.player5Controller);
+  const sv5 = useIniSettingsStore((state) => state.setPlayer5Controller);
+  const v6 = useIniSettingsStore((state) => state.player6Controller);
+  const sv6 = useIniSettingsStore((state) => state.setPlayer6Controller);
 
   return (
     <>
@@ -100,6 +104,8 @@ function PlayerControllers() {
       <TextOption value={v2} setValue={sv2} label="Player 2 controller" />
       <TextOption value={v3} setValue={sv3} label="Player 3 controller" />
       <TextOption value={v4} setValue={sv4} label="Player 4 controller" />
+      <TextOption value={v5} setValue={sv5} label="Player 5 controller" />
+      <TextOption value={v6} setValue={sv6} label="Player 6 controller" />
       <FormHelperText>Assign a specific USB device to a player.</FormHelperText>
     </>
   );

@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
 import { ControlApi } from "./api";
 import { create } from "zustand";
 
@@ -78,8 +77,8 @@ const iniKeyMap: { [key: string]: string } = {
   player2Controller: "player_2_controller",
   player3Controller: "player_3_controller",
   player4Controller: "player_4_controller",
-  // : "player_5_controller",
-  // : "player_6_controller",
+  player5Controller: "player_5_controller",
+  player6Controller: "player_6_controller",
   disableAutoFire: "disable_autofire",
   videoBrightness: "video_brightness",
   videoContrast: "video_contrast",
@@ -155,6 +154,8 @@ interface IniActions {
   setPlayer2Controller: (v: string) => void;
   setPlayer3Controller: (v: string) => void;
   setPlayer4Controller: (v: string) => void;
+  setPlayer5Controller: (v: string) => void;
+  setPlayer6Controller: (v: string) => void;
   setSniperMode: (v: string) => void;
   setSpinnerThrottle: (v: string) => void;
   setSpinnerAxis: (v: string) => void;
@@ -252,6 +253,8 @@ interface IniState {
   player2Controller: string;
   player3Controller: string;
   player4Controller: string;
+  player5Controller: string;
+  player6Controller: string;
   sniperMode: string;
   spinnerThrottle: string;
   spinnerAxis: string;
@@ -353,6 +356,8 @@ const initialState: IniState = {
   player2Controller: "",
   player3Controller: "",
   player4Controller: "",
+  player5Controller: "",
+  player6Controller: "",
   sniperMode: "0",
   spinnerThrottle: "0",
   spinnerAxis: "0",
@@ -662,6 +667,16 @@ export const useIniSettingsStore = create<IniStore>()((set) => ({
     set((state) => ({
       player4Controller: v,
       modified: distinct([...state.modified, "player4Controller"]),
+    })),
+  setPlayer5Controller: (v: string) =>
+    set((state) => ({
+      player5Controller: v,
+      modified: distinct([...state.modified, "player5Controller"]),
+    })),
+  setPlayer6Controller: (v: string) =>
+    set((state) => ({
+      player6Controller: v,
+      modified: distinct([...state.modified, "player6Controller"]),
     })),
   setSniperMode: (v: string) =>
     set((state) => ({
