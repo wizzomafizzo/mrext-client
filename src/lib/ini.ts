@@ -88,7 +88,7 @@ const iniKeyMap: { [key: string]: string } = {
   hdr: "hdr",
   hdrMaxNits: "hdr_max_nits",
   hdrAvgNits: "hdr_avg_nits",
-  // : "vga_mode",
+  vgaMode: "vga_mode",
   // : "ntsc_mode",
   // : "controller_unique_mapping",
 };
@@ -120,7 +120,6 @@ interface IniActions {
   setVrrMaxFramerate: (v: string) => void;
   setVrrVesaFramerate: (v: string) => void;
   setPresetDefault: (v: string) => void;
-  // analog options
   setDirectVideo: (v: string) => void;
   setForcedScandoubler: (v: string) => void;
   setYpbpr: (v: string) => void;
@@ -137,6 +136,7 @@ interface IniActions {
   setVideoGainOffset: (v: string) => void;
   setHdrMaxNits: (v: string) => void;
   setHdrAvgNits: (v: string) => void;
+  setVgaMode: (v: string) => void;
 
   // cores
   setBootScreen: (v: string) => void;
@@ -221,7 +221,6 @@ interface IniState {
   vrrMaxFramerate: string;
   vrrVesaFramerate: string;
   presetDefault: string;
-  // analog options
   directVideo: string;
   forcedScandoubler: string;
   ypbpr: string;
@@ -238,6 +237,7 @@ interface IniState {
   videoGainOffset: string;
   hdrMaxNits: string;
   hdrAvgNits: string;
+  vgaMode: string;
 
   // cores
   bootScreen: string;
@@ -343,6 +343,7 @@ const initialState: IniState = {
   presetDefault: "",
   hdrMaxNits: "1000",
   hdrAvgNits: "250",
+  vgaMode: "",
 
   // cores
   bootScreen: "1",
@@ -604,6 +605,11 @@ export const useIniSettingsStore = create<IniStore>()((set) => ({
     set((state) => ({
       hdrAvgNits: v,
       modified: distinct([...state.modified, "hdrAvgNits"]),
+    })),
+  setVgaMode: (v: string) =>
+    set((state) => ({
+      vgaMode: v,
+      modified: distinct([...state.modified, "vgaMode"]),
     })),
 
   // cores

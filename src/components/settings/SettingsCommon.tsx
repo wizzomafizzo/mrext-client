@@ -243,29 +243,39 @@ export function TextOption(props: {
   );
 }
 
-export function SimpleSelectOption(props: {
+export function SelectOption(props: {
   value: string;
   setValue: (value: string) => void;
-  options: string[];
+  optionLabels: string[];
+  optionValues: string[];
   helpText?: string[] | string;
   label: string;
 }) {
+  const value = props.value === "" ? "__none__" : props.value;
+
   return (
     <FormControl>
       <InputLabel>{props.label}</InputLabel>
       <Select
-        value={props.value}
-        onChange={(e) => props.setValue(e.target.value)}
+        value={value}
+        onChange={(e) => {
+          if (e.target.value === "__none__") {
+            props.setValue("");
+          } else {
+            props.setValue(e.target.value);
+          }
+        }}
         label={props.label}
+        defaultValue={props.optionValues[0]}
       >
-        {props.options.map((option, i) => (
-          <MenuItem key={option} value={i.toString()}>
-            {option}
+        {props.optionValues.map((option, i) => (
+          <MenuItem key={option} value={option === "" ? "__none__" : option}>
+            {props.optionLabels[i]}
           </MenuItem>
         ))}
       </Select>
       {Array.isArray(props.helpText) &&
-      props.helpText.length === props.options.length ? (
+      props.helpText.length === props.optionValues.length ? (
         <FormHelperText>
           {props.helpText[parseInt(props.value, 10)]}
         </FormHelperText>
@@ -273,6 +283,26 @@ export function SimpleSelectOption(props: {
         <FormHelperText>{props.helpText}</FormHelperText>
       ) : null}
     </FormControl>
+  );
+}
+
+export function SimpleSelectOption(props: {
+  value: string;
+  setValue: (value: string) => void;
+  options: string[];
+  helpText?: string[] | string;
+  label: string;
+}) {
+  const vals = props.options.map((option, i) => i.toString());
+  return (
+    <SelectOption
+      value={props.value}
+      setValue={props.setValue}
+      optionLabels={props.options}
+      optionValues={vals}
+      helpText={props.helpText}
+      label={props.label}
+    />
   );
 }
 

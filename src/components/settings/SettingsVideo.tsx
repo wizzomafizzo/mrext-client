@@ -16,6 +16,7 @@ import {
   PageHeader,
   SaveButton,
   SectionHeader,
+  SelectOption,
   SimpleSelectOption,
   TextOption,
   ToggleableNumberSliderOption,
@@ -929,6 +930,21 @@ function ColorControlPresets() {
   );
 }
 
+function VgaMode() {
+  const vgaMode = useIniSettingsStore((state) => state.vgaMode);
+  const setVgaMode = useIniSettingsStore((state) => state.setVgaMode);
+
+  return (
+    <SelectOption
+      value={vgaMode}
+      setValue={setVgaMode}
+      optionLabels={["Disabled", "RGB", "YPbPr", "S-Video", "Composite (CVBS)"]}
+      optionValues={["", "rgb", "ypbpr", "svideo", "cvbs"]}
+      label="VGA mode"
+    />
+  );
+}
+
 function PresetDefault() {
   const presetDefault = useIniSettingsStore((state) => state.presetDefault);
   const setPresetDefault = useIniSettingsStore(
@@ -1004,6 +1020,7 @@ export function AnalogVideoSettings() {
     <>
       <PageHeader title="Analog Video" />
       <Stack spacing={2} m={2}>
+        <VgaMode />
         <DirectVideo />
         <ForcedScandoubler />
         <CompositeSync />
