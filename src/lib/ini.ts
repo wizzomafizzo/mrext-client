@@ -410,6 +410,28 @@ const initialState: IniState = {
 
 const distinct = (arr: string[]) => [...new Set(arr)];
 
+function m(
+  state: IniStore,
+  key: string,
+  value: string
+): IniStore | Partial<IniStore> {
+  console.log("update", key, "=", value);
+
+  if ((state as Indexable)[key] === value) {
+    console.log("no change");
+    return {};
+  }
+
+  const partial = {
+    [key]: value,
+    modified: distinct([...state.modified, key]),
+  };
+
+  console.log("partial", partial);
+
+  return partial;
+}
+
 export const useIniSettingsStore = create<IniStore>()((set) => ({
   ...initialState,
 
@@ -423,457 +445,108 @@ export const useIniSettingsStore = create<IniStore>()((set) => ({
   reset: () => set(initialState),
   resetModified: () => set({ modified: [] }),
 
-  // video
-  setVideoMode: (v: string) =>
-    set((state) => ({
-      videoMode: v,
-      modified: distinct([...state.modified, "videoMode"]),
-    })),
-  setVideoModeNtsc: (v: string) =>
-    set((state) => ({
-      videoModeNtsc: v,
-      modified: distinct([...state.modified, "setVideoModeNtsc"]),
-    })),
-  setVideoModePal: (v: string) =>
-    set((state) => ({
-      videoModePal: v,
-      modified: distinct([...state.modified, "videoModePal"]),
-    })),
-  setVerticalScaleMode: (v: string) =>
-    set((state) => ({
-      verticalScaleMode: v,
-      modified: distinct([...state.modified, "verticalScaleMode"]),
-    })),
-  setVsyncAdjust: (v: string) =>
-    set((state) => ({
-      vsyncAdjust: v,
-      modified: distinct([...state.modified, "vsyncAdjust"]),
-    })),
-  setRefreshMin: (v: string) =>
-    set((state) => ({
-      refreshMin: v,
-      modified: distinct([...state.modified, "refreshMin"]),
-    })),
-  setRefreshMax: (v: string) =>
-    set((state) => ({
-      refreshMax: v,
-      modified: distinct([...state.modified, "refreshMax"]),
-    })),
-  setDviMode: (v: string) =>
-    set((state) => ({
-      dviMode: v,
-      modified: distinct([...state.modified, "dviMode"]),
-    })),
-  setVscaleBorder: (v: string) =>
-    set((state) => ({
-      vscaleBorder: v,
-      modified: distinct([...state.modified, "vscaleBorder"]),
-    })),
-  setVfilterDefault: (v: string) =>
-    set((state) => ({
-      vfilterDefault: v,
-      modified: distinct([...state.modified, "vfilterDefault"]),
-    })),
+  setVideoMode: (v: string) => set((s) => m(s, "videoMode", v)),
+  setVideoModeNtsc: (v: string) => set((s) => m(s, "videoModeNtsc", v)),
+  setVideoModePal: (v: string) => set((s) => m(s, "videoModePal", v)),
+  setVerticalScaleMode: (v: string) => set((s) => m(s, "verticalScaleMode", v)),
+  setVsyncAdjust: (v: string) => set((s) => m(s, "vsyncAdjust", v)),
+  setRefreshMin: (v: string) => set((s) => m(s, "refreshMin", v)),
+  setRefreshMax: (v: string) => set((s) => m(s, "refreshMax", v)),
+  setDviMode: (v: string) => set((s) => m(s, "dviMode", v)),
+  setVscaleBorder: (v: string) => set((s) => m(s, "vscaleBorder", v)),
+  setVfilterDefault: (v: string) => set((s) => m(s, "vfilterDefault", v)),
   setVfilterVerticalDefault: (v: string) =>
-    set((state) => ({
-      vfilterVerticalDefault: v,
-      modified: distinct([...state.modified, "vfilterVerticalDefault"]),
-    })),
+    set((s) => m(s, "vfilterVerticalDefault", v)),
   setVfilterScanlinesDefault: (v: string) =>
-    set((state) => ({
-      vfilterScanlinesDefault: v,
-      modified: distinct([...state.modified, "vfilterScanlinesDefault"]),
-    })),
-  setShmaskDefault: (v: string) =>
-    set((state) => ({
-      shmaskDefault: v,
-      modified: distinct([...state.modified, "shmaskDefault"]),
-    })),
-  setShmaskModeDefault: (v: string) =>
-    set((state) => ({
-      shmaskModeDefault: v,
-      modified: distinct([...state.modified, "shmaskModeDefault"]),
-    })),
-  setHdmiGameMode: (v: string) =>
-    set((state) => ({
-      hdmiGameMode: v,
-      modified: distinct([...state.modified, "hdmiGameMode"]),
-    })),
-  setHdmiLimited: (v: string) =>
-    set((state) => ({
-      hdmiLimited: v,
-      modified: distinct([...state.modified, "hdmiLimited"]),
-    })),
-  setVrrMode: (v: string) =>
-    set((state) => ({
-      vrrMode: v,
-      modified: distinct([...state.modified, "vrrMode"]),
-    })),
-  setVrrMinFramerate: (v: string) =>
-    set((state) => ({
-      vrrMinFramerate: v,
-      modified: distinct([...state.modified, "vrrMinFramerate"]),
-    })),
-  setVrrMaxFramerate: (v: string) =>
-    set((state) => ({
-      vrrMaxFramerate: v,
-      modified: distinct([...state.modified, "vrrMaxFramerate"]),
-    })),
-  setVrrVesaFramerate: (v: string) =>
-    set((state) => ({
-      vrrVesaFramerate: v,
-      modified: distinct([...state.modified, "vrrVesaFramerate"]),
-    })),
-  setDirectVideo: (v: string) =>
-    set((state) => ({
-      directVideo: v,
-      modified: distinct([...state.modified, "directVideo"]),
-    })),
-  setForcedScandoubler: (v: string) =>
-    set((state) => ({
-      forcedScandoubler: v,
-      modified: distinct([...state.modified, "forcedScandoubler"]),
-    })),
-  setYpbpr: (v: string) =>
-    set((state) => ({
-      ypbpr: v,
-      modified: distinct([...state.modified, "ypbpr"]),
-    })),
-  setCompositeSync: (v: string) =>
-    set((state) => ({
-      compositeSync: v,
-      modified: distinct([...state.modified, "compositeSync"]),
-    })),
-  setVgaScaler: (v: string) =>
-    set((state) => ({
-      vgaScaler: v,
-      modified: distinct([...state.modified, "vgaScaler"]),
-    })),
-  setVgaSog: (v: string) =>
-    set((state) => ({
-      vgaSog: v,
-      modified: distinct([...state.modified, "vgaSog"]),
-    })),
+    set((s) => m(s, "vfilterScanlinesDefault", v)),
+  setShmaskDefault: (v: string) => set((s) => m(s, "shmaskDefault", v)),
+  setShmaskModeDefault: (v: string) => set((s) => m(s, "shmaskModeDefault", v)),
+  setHdmiGameMode: (v: string) => set((s) => m(s, "hdmiGameMode", v)),
+  setHdmiLimited: (v: string) => set((s) => m(s, "hdmiLimited", v)),
+  setVrrMode: (v: string) => set((s) => m(s, "vrrMode", v)),
+  setVrrMinFramerate: (v: string) => set((s) => m(s, "vrrMinFramerate", v)),
+  setVrrMaxFramerate: (v: string) => set((s) => m(s, "vrrMaxFramerate", v)),
+  setVrrVesaFramerate: (v: string) => set((s) => m(s, "vrrVesaFramerate", v)),
+  setDirectVideo: (v: string) => set((s) => m(s, "directVideo", v)),
+  setForcedScandoubler: (v: string) => set((s) => m(s, "forcedScandoubler", v)),
+  setYpbpr: (v: string) => set((s) => m(s, "ypbpr", v)),
+  setCompositeSync: (v: string) => set((s) => m(s, "compositeSync", v)),
+  setVgaScaler: (v: string) => set((s) => m(s, "vgaScaler", v)),
+  setVgaSog: (v: string) => set((s) => m(s, "vgaSog", v)),
   setCustomAspectRatio1: (v: string) =>
-    set((state) => ({
-      customAspectRatio1: v,
-      modified: distinct([...state.modified, "customAspectRatio1"]),
-    })),
+    set((s) => m(s, "customAspectRatio1", v)),
   setCustomAspectRatio2: (v: string) =>
-    set((state) => ({
-      customAspectRatio2: v,
-      modified: distinct([...state.modified, "customAspectRatio2"]),
-    })),
-  setHdr: (v: string) =>
-    set((state) => ({
-      hdr: v,
-      modified: [...state.modified, "hdr"],
-    })),
-  setVideoBrightness: (v: string) =>
-    set((state) => ({
-      videoBrightness: v,
-      modified: distinct([...state.modified, "videoBrightness"]),
-    })),
-  setVideoContrast: (v: string) =>
-    set((state) => ({
-      videoContrast: v,
-      modified: distinct([...state.modified, "videoContrast"]),
-    })),
-  setVideoSaturation: (v: string) =>
-    set((state) => ({
-      videoSaturation: v,
-      modified: distinct([...state.modified, "videoSaturation"]),
-    })),
-  setVideoHue: (v: string) =>
-    set((state) => ({
-      videoHue: v,
-      modified: distinct([...state.modified, "videoHue"]),
-    })),
-  setVideoGainOffset: (v: string) =>
-    set((state) => ({
-      videoGainOffset: v,
-      modified: distinct([...state.modified, "videoGainOffset"]),
-    })),
-  setPresetDefault: (v: string) =>
-    set((state) => ({
-      presetDefault: v,
-      modified: distinct([...state.modified, "presetDefault"]),
-    })),
-  setHdrMaxNits: (v: string) =>
-    set((state) => ({
-      hdrMaxNits: v,
-      modified: distinct([...state.modified, "hdrMaxNits"]),
-    })),
-  setHdrAvgNits: (v: string) =>
-    set((state) => ({
-      hdrAvgNits: v,
-      modified: distinct([...state.modified, "hdrAvgNits"]),
-    })),
-  setVgaMode: (v: string) =>
-    set((state) => ({
-      vgaMode: v,
-      modified: distinct([...state.modified, "vgaMode"]),
-    })),
-  setNtscMode: (v: string) =>
-    set((state) => ({
-      ntscMode: v,
-      modified: distinct([...state.modified, "ntscMode"]),
-    })),
+    set((s) => m(s, "customAspectRatio2", v)),
+  setHdr: (v: string) => set((s) => m(s, "hdr", v)),
+  setVideoBrightness: (v: string) => set((s) => m(s, "videoBrightness", v)),
+  setVideoContrast: (v: string) => set((s) => m(s, "videoContrast", v)),
+  setVideoSaturation: (v: string) => set((s) => m(s, "videoSaturation", v)),
+  setVideoHue: (v: string) => set((s) => m(s, "videoHue", v)),
+  setVideoGainOffset: (v: string) => set((s) => m(s, "videoGainOffset", v)),
+  setPresetDefault: (v: string) => set((s) => m(s, "presetDefault", v)),
+  setHdrMaxNits: (v: string) => set((s) => m(s, "hdrMaxNits", v)),
+  setHdrAvgNits: (v: string) => set((s) => m(s, "hdrAvgNits", v)),
+  setVgaMode: (v: string) => set((s) => m(s, "vgaMode", v)),
+  setNtscMode: (v: string) => set((s) => m(s, "ntscMode", v)),
 
   // cores
-  setBootScreen: (v: string) =>
-    set((state) => ({
-      bootScreen: v,
-      modified: distinct([...state.modified, "bootScreen"]),
-    })),
-  setRecents: (v: string) =>
-    set((state) => ({
-      recents: v,
-      modified: distinct([...state.modified, "recents"]),
-    })),
-  setVideoInfo: (v: string) =>
-    set((state) => ({
-      videoInfo: v,
-      modified: distinct([...state.modified, "videoInfo"]),
-    })),
-  setControllerInfo: (v: string) =>
-    set((state) => ({
-      controllerInfo: v,
-      modified: distinct([...state.modified, "controllerInfo"]),
-    })),
-  setSharedFolder: (v: string) =>
-    set((state) => ({
-      sharedFolder: v,
-      modified: distinct([...state.modified, "sharedFolder"]),
-    })),
-  setLogFileEntry: (v: string) =>
-    set((state) => ({
-      logFileEntry: v,
-      modified: distinct([...state.modified, "logFileEntry"]),
-    })),
-  setKeyMenuAsRgui: (v: string) =>
-    set((state) => ({
-      keyMenuAsRgui: v,
-      modified: distinct([...state.modified, "keyMenuAsRgui"]),
-    })),
+  setBootScreen: (v: string) => set((s) => m(s, "bootScreen", v)),
+  setRecents: (v: string) => set((s) => m(s, "recents", v)),
+  setVideoInfo: (v: string) => set((s) => m(s, "videoInfo", v)),
+  setControllerInfo: (v: string) => set((s) => m(s, "controllerInfo", v)),
+  setSharedFolder: (v: string) => set((s) => m(s, "sharedFolder", v)),
+  setLogFileEntry: (v: string) => set((s) => m(s, "logFileEntry", v)),
+  setKeyMenuAsRgui: (v: string) => set((s) => m(s, "keyMenuAsRgui", v)),
 
   // input devices
-  setBtAutoDisconnect: (v: string) =>
-    set((state) => ({
-      btAutoDisconnect: v,
-      modified: distinct([...state.modified, "btAutoDisconnect"]),
-    })),
-  setBtResetBeforePair: (v: string) =>
-    set((state) => ({
-      btResetBeforePair: v,
-      modified: distinct([...state.modified, "btResetBeforePair"]),
-    })),
-  setMouseThrottle: (v: string) =>
-    set((state) => ({
-      mouseThrottle: v,
-      modified: distinct([...state.modified, "mouseThrottle"]),
-    })),
-  setResetCombo: (v: string) =>
-    set((state) => ({
-      resetCombo: v,
-      modified: distinct([...state.modified, "resetCombo"]),
-    })),
-  setPlayer1Controller: (v: string) =>
-    set((state) => ({
-      player1Controller: v,
-      modified: distinct([...state.modified, "player1Controller"]),
-    })),
-  setPlayer2Controller: (v: string) =>
-    set((state) => ({
-      player2Controller: v,
-      modified: distinct([...state.modified, "player2Controller"]),
-    })),
-  setPlayer3Controller: (v: string) =>
-    set((state) => ({
-      player3Controller: v,
-      modified: distinct([...state.modified, "player3Controller"]),
-    })),
-  setPlayer4Controller: (v: string) =>
-    set((state) => ({
-      player4Controller: v,
-      modified: distinct([...state.modified, "player4Controller"]),
-    })),
-  setPlayer5Controller: (v: string) =>
-    set((state) => ({
-      player5Controller: v,
-      modified: distinct([...state.modified, "player5Controller"]),
-    })),
-  setPlayer6Controller: (v: string) =>
-    set((state) => ({
-      player6Controller: v,
-      modified: distinct([...state.modified, "player6Controller"]),
-    })),
-  setSniperMode: (v: string) =>
-    set((state) => ({
-      sniperMode: v,
-      modified: distinct([...state.modified, "sniperMode"]),
-    })),
-  setSpinnerThrottle: (v: string) =>
-    set((state) => ({
-      spinnerThrottle: v,
-      modified: distinct([...state.modified, "spinnerThrottle"]),
-    })),
-  setSpinnerAxis: (v: string) =>
-    set((state) => ({
-      spinnerAxis: v,
-      modified: distinct([...state.modified, "spinnerAxis"]),
-    })),
-  setGamepadDefaults: (v: string) =>
-    set((state) => ({
-      gamepadDefaults: v,
-      modified: distinct([...state.modified, "gamepadDefaults"]),
-    })),
-  setDisableAutoFire: (v: string) =>
-    set((state) => ({
-      disableAutoFire: v,
-      modified: distinct([...state.modified, "disableAutoFire"]),
-    })),
-  setWheelForce: (v: string) =>
-    set((state) => ({
-      wheelForce: v,
-      modified: distinct([...state.modified, "wheelForce"]),
-    })),
-  setWheelRange: (v: string) =>
-    set((state) => ({
-      wheelRange: v,
-      modified: distinct([...state.modified, "wheelRange"]),
-    })),
-  setSpinnerVid: (v: string) =>
-    set((state) => ({
-      spinnerVid: v,
-      modified: distinct([...state.modified, "spinnerVid"]),
-    })),
-  setSpinnerPid: (v: string) =>
-    set((state) => ({
-      spinnerPid: v,
-      modified: distinct([...state.modified, "spinnerPid"]),
-    })),
-  setKeyrahMode: (v: string) =>
-    set((state) => ({
-      keyrahMode: v,
-      modified: distinct([...state.modified, "keyrahMode"]),
-    })),
-  setJammaVid: (v: string) =>
-    set((state) => ({
-      jammaVid: v,
-      modified: distinct([...state.modified, "jammaVid"]),
-    })),
-  setJammaPid: (v: string) =>
-    set((state) => ({
-      jammaPid: v,
-      modified: distinct([...state.modified, "jammaPid"]),
-    })),
-  setNoMergeVid: (v: string) =>
-    set((state) => ({
-      noMergeVid: v,
-      modified: distinct([...state.modified, "noMergeVid"]),
-    })),
-  setNoMergePid: (v: string) =>
-    set((state) => ({
-      noMergePid: v,
-      modified: distinct([...state.modified, "noMergePid"]),
-    })),
-  setNoMergeVidPid: (v: string) =>
-    set((state) => ({
-      noMergeVidPid: v,
-      modified: distinct([...state.modified, "noMergeVidPid"]),
-    })),
-  setRumble: (v: string) =>
-    set((state) => ({
-      rumble: v,
-      modified: distinct([...state.modified, "rumble"]),
-    })),
-  setKeyboardNoMouse: (v: string) =>
-    set((state) => ({
-      keyboardNoMouse: v,
-      modified: distinct([...state.modified, "keyboardNoMouse"]),
-    })),
+  setBtAutoDisconnect: (v: string) => set((s) => m(s, "btAutoDisconnect", v)),
+  setBtResetBeforePair: (v: string) => set((s) => m(s, "btResetBeforePair", v)),
+  setMouseThrottle: (v: string) => set((s) => m(s, "mouseThrottle", v)),
+  setResetCombo: (v: string) => set((s) => m(s, "resetCombo", v)),
+  setPlayer1Controller: (v: string) => set((s) => m(s, "player1Controller", v)),
+  setPlayer2Controller: (v: string) => set((s) => m(s, "player2Controller", v)),
+  setPlayer3Controller: (v: string) => set((s) => m(s, "player3Controller", v)),
+  setPlayer4Controller: (v: string) => set((s) => m(s, "player4Controller", v)),
+  setPlayer5Controller: (v: string) => set((s) => m(s, "player5Controller", v)),
+  setPlayer6Controller: (v: string) => set((s) => m(s, "player6Controller", v)),
+  setSniperMode: (v: string) => set((s) => m(s, "sniperMode", v)),
+  setSpinnerThrottle: (v: string) => set((s) => m(s, "spinnerThrottle", v)),
+  setSpinnerAxis: (v: string) => set((s) => m(s, "spinnerAxis", v)),
+  setGamepadDefaults: (v: string) => set((s) => m(s, "gamepadDefaults", v)),
+  setDisableAutoFire: (v: string) => set((s) => m(s, "disableAutoFire", v)),
+  setWheelForce: (v: string) => set((s) => m(s, "wheelForce", v)),
+  setWheelRange: (v: string) => set((s) => m(s, "wheelRange", v)),
+  setSpinnerVid: (v: string) => set((s) => m(s, "spinnerVid", v)),
+  setSpinnerPid: (v: string) => set((s) => m(s, "spinnerPid", v)),
+  setKeyrahMode: (v: string) => set((s) => m(s, "keyrahMode", v)),
+  setJammaVid: (v: string) => set((s) => m(s, "jammaVid", v)),
+  setJammaPid: (v: string) => set((s) => m(s, "jammaPid", v)),
+  setNoMergeVid: (v: string) => set((s) => m(s, "noMergeVid", v)),
+  setNoMergePid: (v: string) => set((s) => m(s, "noMergePid", v)),
+  setNoMergeVidPid: (v: string) => set((s) => m(s, "noMergeVidPid", v)),
+  setRumble: (v: string) => set((s) => m(s, "rumble", v)),
+  setKeyboardNoMouse: (v: string) => set((s) => m(s, "keyboardNoMouse", v)),
 
   // audio
-  setHdmiAudio96k: (v: string) =>
-    set((state) => ({
-      hdmiAudio96k: v,
-      modified: distinct([...state.modified, "hdmiAudio96k"]),
-    })),
-  setAFilterDefault: (v: string) =>
-    set((state) => ({
-      aFilterDefault: v,
-      modified: distinct([...state.modified, "aFilterDefault"]),
-    })),
+  setHdmiAudio96k: (v: string) => set((s) => m(s, "hdmiAudio96k", v)),
+  setAFilterDefault: (v: string) => set((s) => m(s, "aFilterDefault", v)),
 
   // system
-  setFbSize: (v: string) =>
-    set((state) => ({
-      fbSize: v,
-      modified: distinct([...state.modified, "fbSize"]),
-    })),
-  setFbTerminal: (v: string) =>
-    set((state) => ({
-      fbTerminal: v,
-      modified: distinct([...state.modified, "fbTerminal"]),
-    })),
-  setBootCore: (v: string) =>
-    set((state) => ({
-      bootCore: v,
-      modified: distinct([...state.modified, "bootCore"]),
-    })),
-  setBootCoreTimeout: (v: string) =>
-    set((state) => ({
-      bootCoreTimeout: v,
-      modified: distinct([...state.modified, "bootCoreTimeout"]),
-    })),
-  setWaitMount: (v: string) =>
-    set((state) => ({
-      waitMount: v,
-      modified: distinct([...state.modified, "waitMount"]),
-    })),
+  setFbSize: (v: string) => set((s) => m(s, "fbSize", v)),
+  setFbTerminal: (v: string) => set((s) => m(s, "fbTerminal", v)),
+  setBootCore: (v: string) => set((s) => m(s, "bootCore", v)),
+  setBootCoreTimeout: (v: string) => set((s) => m(s, "bootCoreTimeout", v)),
+  setWaitMount: (v: string) => set((s) => m(s, "waitMount", v)),
 
   // osd/menu
-  setRbfHideDatecode: (v: string) =>
-    set((state) => ({
-      rbfHideDatecode: v,
-      modified: distinct([...state.modified, "rbfHideDatecode"]),
-    })),
-  setOsdRotate: (v: string) =>
-    set((state) => ({
-      osdRotate: v,
-      modified: distinct([...state.modified, "osdRotate"]),
-    })),
-  setBrowseExpand: (v: string) =>
-    set((state) => ({
-      browseExpand: v,
-      modified: distinct([...state.modified, "browseExpand"]),
-    })),
-  setOsdTimeout: (v: string) =>
-    set((state) => ({
-      osdTimeout: v,
-      modified: distinct([...state.modified, "osdTimeout"]),
-    })),
-  setVideoOff: (v: string) =>
-    set((state) => ({
-      videoOff: v,
-      modified: distinct([...state.modified, "videoOff"]),
-    })),
-  setMenuPal: (v: string) =>
-    set((state) => ({
-      menuPal: v,
-      modified: distinct([...state.modified, "menuPal"]),
-    })),
-  setFont: (v: string) =>
-    set((state) => ({
-      font: v,
-      modified: distinct([...state.modified, "font"]),
-    })),
-  setLogo: (v: string) =>
-    set((state) => ({
-      logo: v,
-      modified: distinct([...state.modified, "logo"]),
-    })),
+  setRbfHideDatecode: (v: string) => set((s) => m(s, "rbfHideDatecode", v)),
+  setOsdRotate: (v: string) => set((s) => m(s, "osdRotate", v)),
+  setBrowseExpand: (v: string) => set((s) => m(s, "browseExpand", v)),
+  setOsdTimeout: (v: string) => set((s) => m(s, "osdTimeout", v)),
+  setVideoOff: (v: string) => set((s) => m(s, "videoOff", v)),
+  setMenuPal: (v: string) => set((s) => m(s, "menuPal", v)),
+  setFont: (v: string) => set((s) => m(s, "font", v)),
+  setLogo: (v: string) => set((s) => m(s, "logo", v)),
 }));
 
 const flip = (data: { [key: string]: string }) =>
