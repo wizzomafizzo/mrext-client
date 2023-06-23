@@ -86,8 +86,8 @@ const iniKeyMap: { [key: string]: string } = {
   videoHue: "video_hue",
   videoGainOffset: "video_gain_offset",
   hdr: "hdr",
-  // : "hdr_max_nits",
-  // : "hdr_avg_nits",
+  hdrMaxNits: "hdr_max_nits",
+  hdrAvgNits: "hdr_avg_nits",
   // : "vga_mode",
   // : "ntsc_mode",
   // : "controller_unique_mapping",
@@ -135,6 +135,8 @@ interface IniActions {
   setVideoSaturation: (v: string) => void;
   setVideoHue: (v: string) => void;
   setVideoGainOffset: (v: string) => void;
+  setHdrMaxNits: (v: string) => void;
+  setHdrAvgNits: (v: string) => void;
 
   // cores
   setBootScreen: (v: string) => void;
@@ -234,6 +236,8 @@ interface IniState {
   videoSaturation: string;
   videoHue: string;
   videoGainOffset: string;
+  hdrMaxNits: string;
+  hdrAvgNits: string;
 
   // cores
   bootScreen: string;
@@ -337,6 +341,8 @@ const initialState: IniState = {
   videoHue: "0",
   videoGainOffset: "1, 0, 1, 0, 1, 0",
   presetDefault: "",
+  hdrMaxNits: "1000",
+  hdrAvgNits: "250",
 
   // cores
   bootScreen: "1",
@@ -588,6 +594,16 @@ export const useIniSettingsStore = create<IniStore>()((set) => ({
     set((state) => ({
       presetDefault: v,
       modified: distinct([...state.modified, "presetDefault"]),
+    })),
+  setHdrMaxNits: (v: string) =>
+    set((state) => ({
+      hdrMaxNits: v,
+      modified: distinct([...state.modified, "hdrMaxNits"]),
+    })),
+  setHdrAvgNits: (v: string) =>
+    set((state) => ({
+      hdrAvgNits: v,
+      modified: distinct([...state.modified, "hdrAvgNits"]),
     })),
 
   // cores

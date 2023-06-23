@@ -99,6 +99,7 @@ function BootCoreTimeout() {
       defaultValue={"10"}
       min={10}
       max={30}
+      disabledValue={"0"}
     />
   ) : null;
 }

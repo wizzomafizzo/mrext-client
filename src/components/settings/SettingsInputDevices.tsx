@@ -1,6 +1,5 @@
 import FormHelperText from "@mui/material/FormHelperText";
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
 import {
   BoolOption,
   NumberOption,
@@ -142,6 +141,7 @@ function SpinnerThrottle() {
       max={10000}
       width={120}
       defaultValue={"200"}
+      disabledValue={""}
     />
   );
 }
@@ -191,6 +191,7 @@ function WheelForce() {
       min={0}
       max={100}
       defaultValue={"50"}
+      disabledValue={""}
     />
   );
 }
@@ -208,6 +209,7 @@ function WheelRange() {
       min={-10000}
       max={10000}
       defaultValue={"200"}
+      disabledValue={""}
       helpText="Supported ranges depends on specific wheel model. If not set, then default range (depending on driver) is used."
     />
   );

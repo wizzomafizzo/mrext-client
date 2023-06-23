@@ -284,13 +284,14 @@ export function NumberOption(props: {
   min: number;
   max: number;
   defaultValue: string;
+  disabledValue: string;
   width?: number;
   suffix?: string;
 }) {
-  const [enabled, setEnabled] = useState(props.value !== "0");
+  const [enabled, setEnabled] = useState(props.value !== props.disabledValue);
 
   useEffect(() => {
-    setEnabled(props.value !== "0");
+    setEnabled(props.value !== props.disabledValue);
   }, [props.value]);
 
   return (
@@ -310,7 +311,7 @@ export function NumberOption(props: {
                   props.setValue(props.defaultValue);
                   setEnabled(true);
                 } else {
-                  props.setValue("0");
+                  props.setValue(props.disabledValue);
                   setEnabled(false);
                 }
               }}

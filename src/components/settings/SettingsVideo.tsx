@@ -204,6 +204,7 @@ function VSyncAdjust() {
           min={1}
           max={240}
           defaultValue={"0"}
+          disabledValue={"0"}
         />
       ) : null}
 
@@ -216,6 +217,7 @@ function VSyncAdjust() {
           min={1}
           max={240}
           defaultValue={"0"}
+          disabledValue={"0"}
         />
       ) : null}
     </Stack>
@@ -451,6 +453,7 @@ function VRRMode() {
           min={1}
           max={240}
           defaultValue={"0"}
+          disabledValue={"0"}
         />
       ) : null}
 
@@ -463,6 +466,7 @@ function VRRMode() {
           min={1}
           max={240}
           defaultValue={"0"}
+          disabledValue={"0"}
         />
       ) : null}
 
@@ -475,6 +479,7 @@ function VRRMode() {
           min={1}
           max={240}
           defaultValue={"0"}
+          disabledValue={"0"}
         />
       ) : null}
     </Stack>
@@ -652,6 +657,50 @@ function Hdr() {
   );
 }
 
+function HdrMaxNits() {
+  const v = useIniSettingsStore((state) => state.hdrMaxNits);
+  const sv = useIniSettingsStore((state) => state.setHdrMaxNits);
+  const hdr = useIniSettingsStore((state) => state.hdr);
+
+  if (hdr === "0") {
+    return null;
+  }
+
+  return (
+    <NumberOption
+      value={v}
+      setValue={sv}
+      label="HDR maximum nits"
+      min={100}
+      max={10000}
+      defaultValue={"1000"}
+      disabledValue={""}
+    />
+  );
+}
+
+function HdrAvgNits() {
+  const v = useIniSettingsStore((state) => state.hdrAvgNits);
+  const sv = useIniSettingsStore((state) => state.setHdrAvgNits);
+  const hdr = useIniSettingsStore((state) => state.hdr);
+
+  if (hdr === "0") {
+    return null;
+  }
+
+  return (
+    <NumberOption
+      value={v}
+      setValue={sv}
+      label="HDR average nits"
+      min={100}
+      max={10000}
+      defaultValue={"250"}
+      disabledValue={""}
+    />
+  );
+}
+
 function VideoBrightness() {
   const v = useIniSettingsStore((state) => state.videoBrightness);
   const sv = useIniSettingsStore((state) => state.setVideoBrightness);
@@ -707,6 +756,7 @@ function VideoHue() {
 }
 
 function VideoGainOffset() {
+  // TODO: on page load this is writing a modified state to the store
   const v = useIniSettingsStore((state) => state.videoGainOffset);
   const sv = useIniSettingsStore((state) => state.setVideoGainOffset);
 
@@ -931,6 +981,8 @@ export function VideoFiltersSettings() {
 
         <SectionHeader text="HDMI color controls" />
         <Hdr />
+        <HdrMaxNits />
+        <HdrAvgNits />
         <Card>
           <Stack m={1}>
             <VideoBrightness />
