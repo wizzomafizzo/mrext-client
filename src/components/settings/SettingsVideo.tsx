@@ -945,6 +945,31 @@ function VgaMode() {
   );
 }
 
+function NtscMode() {
+  const vgaMode = useIniSettingsStore((state) => state.vgaMode);
+  const ntscMode = useIniSettingsStore((state) => state.ntscMode);
+  const setNtscMode = useIniSettingsStore((state) => state.setNtscMode);
+
+  useEffect(() => {
+    if (vgaMode !== "cvbs" && vgaMode !== "svideo") {
+      setNtscMode("0");
+    }
+  }, [vgaMode]);
+
+  if (vgaMode !== "cvbs" && vgaMode !== "svideo") {
+    return null;
+  }
+
+  return (
+    <SimpleSelectOption
+      value={ntscMode}
+      setValue={setNtscMode}
+      options={["Normal NTSC", "PAL-60", "PAL-M"]}
+      label="NTSC mode"
+    />
+  );
+}
+
 function PresetDefault() {
   const presetDefault = useIniSettingsStore((state) => state.presetDefault);
   const setPresetDefault = useIniSettingsStore(
@@ -1021,6 +1046,7 @@ export function AnalogVideoSettings() {
       <PageHeader title="Analog Video" />
       <Stack spacing={2} m={2}>
         <VgaMode />
+        <NtscMode />
         <DirectVideo />
         <ForcedScandoubler />
         <CompositeSync />

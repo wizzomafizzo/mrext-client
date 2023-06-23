@@ -89,7 +89,7 @@ const iniKeyMap: { [key: string]: string } = {
   hdrMaxNits: "hdr_max_nits",
   hdrAvgNits: "hdr_avg_nits",
   vgaMode: "vga_mode",
-  // : "ntsc_mode",
+  ntscMode: "ntsc_mode",
   // : "controller_unique_mapping",
 };
 
@@ -137,6 +137,7 @@ interface IniActions {
   setHdrMaxNits: (v: string) => void;
   setHdrAvgNits: (v: string) => void;
   setVgaMode: (v: string) => void;
+  setNtscMode: (v: string) => void;
 
   // cores
   setBootScreen: (v: string) => void;
@@ -238,6 +239,7 @@ interface IniState {
   hdrMaxNits: string;
   hdrAvgNits: string;
   vgaMode: string;
+  ntscMode: string;
 
   // cores
   bootScreen: string;
@@ -344,6 +346,7 @@ const initialState: IniState = {
   hdrMaxNits: "1000",
   hdrAvgNits: "250",
   vgaMode: "",
+  ntscMode: "0",
 
   // cores
   bootScreen: "1",
@@ -610,6 +613,11 @@ export const useIniSettingsStore = create<IniStore>()((set) => ({
     set((state) => ({
       vgaMode: v,
       modified: distinct([...state.modified, "vgaMode"]),
+    })),
+  setNtscMode: (v: string) =>
+    set((state) => ({
+      ntscMode: v,
+      modified: distinct([...state.modified, "ntscMode"]),
     })),
 
   // cores
