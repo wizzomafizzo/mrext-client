@@ -98,6 +98,7 @@ interface IniActions {
   reset: () => void;
   resetModified: () => void;
   setOriginal: (ini: IniState) => void;
+  revertChanges: () => void;
 
   // video
   setVideoMode: (v: string) => void;
@@ -371,12 +372,12 @@ const initialState: IniState = {
   player5Controller: "",
   player6Controller: "",
   sniperMode: "0",
-  spinnerThrottle: "0",
+  spinnerThrottle: "",
   spinnerAxis: "0",
   gamepadDefaults: "0",
   disableAutoFire: "0",
   wheelForce: "50",
-  wheelRange: "0",
+  wheelRange: "",
   spinnerVid: "",
   spinnerPid: "",
   keyrahMode: "",
@@ -449,7 +450,7 @@ export const useIniSettingsStore = create<IniStore>()((set) => ({
   resetModified: () => set({ modified: [] }),
 
   setOriginal: (ini: IniState) => set({ original: ini }),
-  // revertChanges: () => set((s) => ({ ...s, ...s.original })),
+  revertChanges: () => set((s) => ({ ...s, ...s.original })),
 
   setVideoMode: (v: string) => set((s) => m(s, "videoMode", v)),
   setVideoModeNtsc: (v: string) => set((s) => m(s, "videoModeNtsc", v)),

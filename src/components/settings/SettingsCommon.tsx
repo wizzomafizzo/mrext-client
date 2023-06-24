@@ -43,17 +43,13 @@ export function PageHeader(props: { title: string; noRevert?: boolean }) {
   const setActiveSettingsPage = useUIStateStore(
     (state) => state.setActiveSettingsPage
   );
-
   const modified = useIniSettingsStore((state) => state.modified);
-  const iniSettingsStore = useIniSettingsStore();
+  const revertChanges = useIniSettingsStore((state) => state.revertChanges);
+  const resetModified = useIniSettingsStore((state) => state.resetModified);
 
   const handleRevert = () => {
-    const api = new ControlApi();
-    api.listMisterInis().then((inis) => {
-      loadMisterIni(activeIniId(inis), iniSettingsStore, true).catch((err) => {
-        console.error(err);
-      });
-    });
+    resetModified();
+    revertChanges();
   };
 
   return (
