@@ -76,7 +76,7 @@ function OSDTimeout() {
       setValue={sv}
       label="OSD display timeout"
       defaultValue={"30"}
-      disabledValue={""}
+      disabledValue={"0"}
       min={1}
       max={3600}
       helpText="Delay before OSD in the menu is hidden and screen is dimmed after inactivity."
@@ -96,7 +96,7 @@ function VideoOff() {
       setValue={sv}
       label="Blank screen after timeout"
       defaultValue={"30"}
-      disabledValue={""}
+      disabledValue={"0"}
       min={1}
       max={3600}
       helpText="Delay before displaying a black screen after OSD display timeout."

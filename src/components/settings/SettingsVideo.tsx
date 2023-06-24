@@ -218,7 +218,7 @@ function VSyncAdjust() {
           helpText="When enabled, VSync adjust will not be applied if the refresh rate is below this value. For example, on an NTSC monitor which doesn't support PAL."
           min={1}
           max={240}
-          defaultValue={"0"}
+          defaultValue={"50"}
           disabledValue={"0"}
         />
       ) : null}
@@ -231,7 +231,7 @@ function VSyncAdjust() {
           helpText="Same as above, but for the maximum. For example, on a PAL monitor which doesn't support NTSC."
           min={1}
           max={240}
-          defaultValue={"0"}
+          defaultValue={"50"}
           disabledValue={"0"}
         />
       ) : null}
@@ -477,7 +477,7 @@ function VRRMode() {
           setValue={setVrrMinFramerate}
           min={1}
           max={240}
-          defaultValue={"0"}
+          defaultValue={"50"}
           disabledValue={"0"}
           helpText="Use a specified minimum frame rate for variable refresh rate if you notice incompatibility."
         />
@@ -490,7 +490,7 @@ function VRRMode() {
           setValue={setVrrMaxFramerate}
           min={1}
           max={240}
-          defaultValue={"0"}
+          defaultValue={"60"}
           disabledValue={"0"}
           helpText="Currently only used in FreeSync. Use a specified maximum frame rate for variable refresh rate if you notice incompatibility. 75Hz covers most cores."
         />

@@ -140,7 +140,7 @@ function SpinnerThrottle() {
       min={-10000}
       max={10000}
       width={120}
-      defaultValue={"200"}
+      defaultValue={"100"}
       disabledValue={""}
     />
   );
