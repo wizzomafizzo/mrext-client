@@ -29,6 +29,7 @@ import Radio from "@mui/material/Radio";
 import FormLabel from "@mui/material/FormLabel";
 import Card from "@mui/material/Card";
 import { useIniSettingsStore } from "../../lib/ini";
+import TextField from "@mui/material/TextField";
 
 const videoModes = [
   ["0", "1280x720 60Hz"],
@@ -69,6 +70,9 @@ function VideoMode(props: {
   };
 
   const [selected, setSelected] = useState(toSelection(props.videoMode));
+  const [customInput, setCustomInput] = useState(
+    toSelection(props.videoMode) === "custom" ? props.videoMode : ""
+  );
 
   const handleSelection = (v: string) => {
     setSelected(v);
@@ -102,6 +106,16 @@ function VideoMode(props: {
         ))}
         <MenuItem value="custom">Custom</MenuItem>
       </Select>
+      {selected === "custom" ? (
+        <TextField
+          sx={{ mt: 1 }}
+          label="Custom value"
+          value={customInput}
+          onChange={(e) => setCustomInput(e.target.value)}
+          onBlur={() => props.setVideoMode(customInput)}
+          inputProps={{ maxLength: 1023 }}
+        />
+      ) : null}
     </FormControl>
   );
 }
