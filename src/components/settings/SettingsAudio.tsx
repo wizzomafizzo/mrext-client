@@ -3,6 +3,7 @@ import {
   BoolOption,
   PageHeader,
   SaveButton,
+  TextOption,
   ValuePicker,
 } from "./SettingsCommon";
 import FormControl from "@mui/material/FormControl";
@@ -29,40 +30,42 @@ function HdmiAudio96k() {
 function AFilterDefault() {
   const v = useIniSettingsStore((state) => state.aFilterDefault);
   const sv = useIniSettingsStore((state) => state.setAFilterDefault);
-  const [enabled, setEnabled] = useState(v && v !== "" ? true : false);
+  // const [enabled, setEnabled] = useState(v && v !== "" ? true : false);
+  //
+  // return (
+  //   <FormControl>
+  //     <FormControlLabel
+  //       control={
+  //         <Checkbox
+  //           checked={enabled}
+  //           onChange={(e) => {
+  //             setEnabled(e.target.checked);
+  //             if (!e.target.checked) {
+  //               sv("");
+  //             }
+  //           }}
+  //         />
+  //       }
+  //       label="Default audio filter"
+  //     />
+  //     {enabled ? (
+  //       <ValuePicker
+  //         value={v}
+  //         setValue={sv}
+  //         options={[
+  //           "Interpolation (Medium).txt",
+  //           "No Interpolation.txt",
+  //           "Scanlines (Medium).txt",
+  //           "Scanlines (Strong).txt",
+  //           "Scanlines (Weak).txt",
+  //         ]}
+  //         formatOption={(option) => option.replace(/\.[^/.]+$/, "")}
+  //       />
+  //     ) : null}
+  //   </FormControl>
+  // );
 
-  return (
-    <FormControl>
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={enabled}
-            onChange={(e) => {
-              setEnabled(e.target.checked);
-              if (!e.target.checked) {
-                sv("");
-              }
-            }}
-          />
-        }
-        label="Default audio filter"
-      />
-      {enabled ? (
-        <ValuePicker
-          value={v}
-          setValue={sv}
-          options={[
-            "Interpolation (Medium).txt",
-            "No Interpolation.txt",
-            "Scanlines (Medium).txt",
-            "Scanlines (Strong).txt",
-            "Scanlines (Weak).txt",
-          ]}
-          formatOption={(option) => option.replace(/\.[^/.]+$/, "")}
-        />
-      ) : null}
-    </FormControl>
-  );
+  return <TextOption value={v} setValue={sv} label="Default audio filter" />;
 }
 
 export default function AudioSettings() {

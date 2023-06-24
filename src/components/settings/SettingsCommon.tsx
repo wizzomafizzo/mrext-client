@@ -1,11 +1,9 @@
+import { useEffect, useState } from "react";
+
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-
-import { useUIStateStore, SettingsPageId } from "../../lib/store";
-import { useEffect, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import List from "@mui/material/List";
 import Box from "@mui/material/Box";
@@ -18,11 +16,13 @@ import FormHelperText from "@mui/material/FormHelperText";
 import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import { TextField } from "@mui/material";
+import TextField from "@mui/material/TextField";
 import FormLabel from "@mui/material/FormLabel";
 import Slider from "@mui/material/Slider";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
+
+import { useUIStateStore, SettingsPageId } from "../../lib/store";
 import {
   loadMisterIni,
   saveMisterIni,

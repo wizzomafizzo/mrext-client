@@ -262,39 +262,46 @@ function VFilterGeneric(props: {
   value: string;
   setValue: (value: string) => void;
 }) {
-  const [enabled, setEnabled] = useState(!!(props.value && props.value !== ""));
+  // const [enabled, setEnabled] = useState(!!(props.value && props.value !== ""));
+  // return (
+  //   <FormControl>
+  //     <FormControlLabel
+  //       control={
+  //         <Checkbox
+  //           checked={enabled}
+  //           onChange={(e) => {
+  //             setEnabled(e.target.checked);
+  //             if (!e.target.checked) {
+  //               props.setValue("");
+  //             }
+  //           }}
+  //         />
+  //       }
+  //       label={props.label}
+  //     />
+  //     {enabled ? (
+  //       <ValuePicker
+  //         value={props.value}
+  //         setValue={props.setValue}
+  //         options={[
+  //           "Interpolation (Medium).txt",
+  //           "No Interpolation.txt",
+  //           "Scanlines (Medium).txt",
+  //           "Scanlines (Strong).txt",
+  //           "Scanlines (Weak).txt",
+  //         ]}
+  //         formatOption={(option) => option.replace(/\.[^/.]+$/, "")}
+  //       />
+  //     ) : null}
+  //   </FormControl>
+  // );
 
   return (
-    <FormControl>
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={enabled}
-            onChange={(e) => {
-              setEnabled(e.target.checked);
-              if (!e.target.checked) {
-                props.setValue("");
-              }
-            }}
-          />
-        }
-        label={props.label}
-      />
-      {enabled ? (
-        <ValuePicker
-          value={props.value}
-          setValue={props.setValue}
-          options={[
-            "Interpolation (Medium).txt",
-            "No Interpolation.txt",
-            "Scanlines (Medium).txt",
-            "Scanlines (Strong).txt",
-            "Scanlines (Weak).txt",
-          ]}
-          formatOption={(option) => option.replace(/\.[^/.]+$/, "")}
-        />
-      ) : null}
-    </FormControl>
+    <TextOption
+      value={props.value}
+      setValue={props.setValue}
+      label={props.label}
+    />
   );
 }
 

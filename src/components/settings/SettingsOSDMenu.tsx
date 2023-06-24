@@ -7,6 +7,7 @@ import {
   PageHeader,
   SaveButton,
   SimpleSelectOption,
+  TextOption,
   ValuePicker,
 } from "./SettingsCommon";
 import { useState } from "react";
@@ -117,25 +118,26 @@ function MenuPal() {
 function Font() {
   const v = useIniSettingsStore((state) => state.font);
   const sv = useIniSettingsStore((state) => state.setFont);
-  const [enabled, setEnabled] = useState(v !== "");
-
-  return (
-    <FormControl>
-      <FormLabel>Menu font</FormLabel>
-      <ValuePicker
-        value={v}
-        setValue={sv}
-        options={[
-          "Interpolation (Medium).txt",
-          "No Interpolation.txt",
-          "Scanlines (Medium).txt",
-          "Scanlines (Strong).txt",
-          "Scanlines (Weak).txt",
-        ]}
-        formatOption={(option) => option.replace(/\.[^/.]+$/, "")}
-      />
-    </FormControl>
-  );
+  // const [enabled, setEnabled] = useState(v !== "");
+  //
+  // return (
+  //   <FormControl>
+  //     <FormLabel>Menu font</FormLabel>
+  //     <ValuePicker
+  //       value={v}
+  //       setValue={sv}
+  //       options={[
+  //         "Interpolation (Medium).txt",
+  //         "No Interpolation.txt",
+  //         "Scanlines (Medium).txt",
+  //         "Scanlines (Strong).txt",
+  //         "Scanlines (Weak).txt",
+  //       ]}
+  //       formatOption={(option) => option.replace(/\.[^/.]+$/, "")}
+  //     />
+  //   </FormControl>
+  // );
+  return <TextOption value={v} setValue={sv} label="Menu font" />;
 }
 
 function Logo() {

@@ -47,43 +47,45 @@ function FbTerminal() {
 function BootCore() {
   const v = useIniSettingsStore((state) => state.bootCore);
   const sv = useIniSettingsStore((state) => state.setBootCore);
-  const [enabled, setEnabled] = useState(v && v !== "" ? true : false);
+  // const [enabled, setEnabled] = useState(v && v !== "" ? true : false);
+  //
+  // // TODO: this style of value picker won't work because autoboot is a special option
+  // //       maybe a base version that accepts options with an explicit label
+  //
+  // return (
+  //   <FormControl>
+  //     <FormControlLabel
+  //       control={
+  //         <Checkbox
+  //           checked={enabled}
+  //           onChange={(e) => {
+  //             setEnabled(e.target.checked);
+  //             if (!e.target.checked) {
+  //               sv("");
+  //             }
+  //           }}
+  //         />
+  //       }
+  //       label="Auto-boot core"
+  //     />
+  //     {enabled ? (
+  //       <ValuePicker
+  //         value={v}
+  //         setValue={sv}
+  //         options={[
+  //           "Interpolation (Medium).txt",
+  //           "No Interpolation.txt",
+  //           "Scanlines (Medium).txt",
+  //           "Scanlines (Strong).txt",
+  //           "Scanlines (Weak).txt",
+  //         ]}
+  //         formatOption={(option) => option.replace(/\.[^/.]+$/, "")}
+  //       />
+  //     ) : null}
+  //   </FormControl>
+  // );
 
-  // TODO: this style of value picker won't work because autoboot is a special option
-  //       maybe a base version that accepts options with an explicit label
-
-  return (
-    <FormControl>
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={enabled}
-            onChange={(e) => {
-              setEnabled(e.target.checked);
-              if (!e.target.checked) {
-                sv("");
-              }
-            }}
-          />
-        }
-        label="Auto-boot core"
-      />
-      {enabled ? (
-        <ValuePicker
-          value={v}
-          setValue={sv}
-          options={[
-            "Interpolation (Medium).txt",
-            "No Interpolation.txt",
-            "Scanlines (Medium).txt",
-            "Scanlines (Strong).txt",
-            "Scanlines (Weak).txt",
-          ]}
-          formatOption={(option) => option.replace(/\.[^/.]+$/, "")}
-        />
-      ) : null}
-    </FormControl>
-  );
+  return <TextOption value={v} setValue={sv} label="Auto-boot core" />;
 }
 
 function BootCoreTimeout() {
