@@ -33,6 +33,7 @@ function RbfHideDatecode() {
       setValue={sv}
       label="Show core release dates"
       helpText="Display core's release date next to its menu entry. Press F2 to toggle temporarily."
+      invert
     />
   );
 }
@@ -160,7 +161,7 @@ export default function OSDMenuSettings() {
   return (
     <>
       <PageHeader title="OSD and Menu" />
-      <Stack spacing={2} m={2}>
+      <Stack spacing={3} m={2}>
         <Font />
         <OsdRotate />
         <RbfHideDatecode />

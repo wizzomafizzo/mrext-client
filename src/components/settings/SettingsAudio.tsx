@@ -72,7 +72,7 @@ export default function AudioSettings() {
   return (
     <>
       <PageHeader title="Audio" />
-      <Stack spacing={2} m={2}>
+      <Stack spacing={3} m={2}>
         <HdmiAudio96k />
         <AFilterDefault />
       </Stack>

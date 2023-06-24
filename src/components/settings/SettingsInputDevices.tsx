@@ -285,7 +285,7 @@ export default function InputDevices() {
   return (
     <>
       <PageHeader title="Input Devices" />
-      <Stack spacing={2} m={2}>
+      <Stack spacing={3} m={2}>
         <BtAutoDisconnect />
         <BtResetBeforePair />
         <AutoFire />

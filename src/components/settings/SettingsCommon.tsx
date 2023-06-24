@@ -237,6 +237,7 @@ export function TextOption(props: {
         value={props.value}
         onChange={(e) => props.setValue(e.target.value)}
         label={props.label}
+        inputProps={{ maxLength: 1023 }}
       />
       {props.helpText && <FormHelperText>{props.helpText}</FormHelperText>}
     </FormControl>
@@ -583,7 +584,7 @@ export function ToggleableNumberSliderOption(props: {
 
 export function SectionHeader(props: { text: string }) {
   return (
-    <Typography variant="h6" sx={{ pt: 3 }}>
+    <Typography variant="h6" sx={{ pt: 2 }}>
       {props.text}
     </Typography>
   );

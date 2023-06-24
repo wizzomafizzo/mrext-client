@@ -1047,7 +1047,7 @@ export function GeneralVideoSettings() {
   return (
     <>
       <PageHeader title="General Video" />
-      <Stack spacing={2} m={2}>
+      <Stack spacing={3} m={2}>
         <MainVideoMode />
         <VerticalScale />
         <VRRMode />
@@ -1069,7 +1069,7 @@ export function VideoFiltersSettings() {
   return (
     <>
       <PageHeader title="Video Filters" />
-      <Stack spacing={2} m={2}>
+      <Stack spacing={3} m={2}>
         <PresetDefault />
         <VFilter />
         <VFilterScanlines />
@@ -1102,7 +1102,7 @@ export function AnalogVideoSettings() {
   return (
     <>
       <PageHeader title="Analog Video" />
-      <Stack spacing={2} m={2}>
+      <Stack spacing={3} m={2}>
         <VgaMode />
         <NtscMode />
         <DirectVideo />

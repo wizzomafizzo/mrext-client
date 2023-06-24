@@ -123,7 +123,7 @@ export default function SystemSettings() {
   return (
     <>
       <PageHeader title="System" />
-      <Stack spacing={2} m={2}>
+      <Stack spacing={3} m={2}>
         <FbSize />
         <FbTerminal />
         <BootCore />

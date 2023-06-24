@@ -38,7 +38,7 @@ export default function Remote() {
   return (
     <>
       <PageHeader title="Remote" noRevert />
-      <Stack spacing={2} m={2}>
+      <Stack spacing={3} m={2}>
         <FormControl>
           <InputLabel>Theme</InputLabel>
           <Select

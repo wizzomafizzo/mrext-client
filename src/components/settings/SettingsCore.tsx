@@ -107,7 +107,7 @@ export default function CoresSettings() {
   return (
     <>
       <PageHeader title="Cores" />
-      <Stack spacing={2} m={2}>
+      <Stack spacing={3} m={2}>
         <VideoInfo />
         <ControllerInfo />
         <Recents />
