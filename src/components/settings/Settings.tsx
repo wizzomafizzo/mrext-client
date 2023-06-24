@@ -62,6 +62,7 @@ function IniSwitcher() {
   const api = new ControlApi();
   const inis = useListMisterInis();
   const [iniDialogOpen, setIniDialogOpen] = useState(false);
+  const iniSettings = useIniSettingsStore();
 
   let activeIni = {
     name: "Main",
@@ -112,7 +113,10 @@ function IniSwitcher() {
                     onClick={() => {
                       setIniDialogOpen(false);
                       api.setMisterIni({ ini: i + 1 }).then(() => {
-                        inis.refetch();
+                        inis.refetch().catch((e) => console.error(e));
+                        loadMisterIni(i + 1, iniSettings, true).catch((e) =>
+                          console.error(e)
+                        );
                       });
                     }}
                   >
