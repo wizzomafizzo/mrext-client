@@ -59,8 +59,20 @@ export default function Remote() {
         <FormControl>
           <Button
             variant="outlined"
+            href={getApiEndpoint() + "/settings/remote/log"}
+            target="_blank"
+          >
+            Download log file
+          </Button>
+        </FormControl>
+
+        <FormControl>
+          <Button
+            variant="outlined"
             onClick={() => {
-              api.restartRemoteService();
+              api.restartRemoteService().catch((e) => {
+                console.error(e);
+              });
             }}
           >
             Restart remote service
