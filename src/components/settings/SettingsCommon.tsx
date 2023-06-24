@@ -119,14 +119,9 @@ export function SaveButton() {
               onClick={() => {
                 const api = new ControlApi();
                 api.listMisterInis().then((inis) => {
-                  let id: number;
-                  if (inis.active === 0) {
-                    id = 1;
-                  } else {
-                    id = inis.active;
-                  }
-
-                  saveMisterIni(id, store).catch((err) => console.error(err));
+                  saveMisterIni(activeIniId(inis), store).catch((err) =>
+                    console.error(err)
+                  );
                 });
               }}
               disabled={modified.length === 0}

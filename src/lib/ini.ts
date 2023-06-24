@@ -594,14 +594,19 @@ export function saveMisterIni(id: number, state: IniStore) {
   const changes = newIniRequest(state);
   console.log(changes);
   const api = new ControlApi();
-  return api
-    .saveMisterIni(id, changes)
-    .then(() => {
-      state.resetModified();
-    })
-    .catch((e) => {
-      console.error(e);
-    });
+  return api.saveMisterIni(id, changes).then(() => {
+    state.resetModified();
+    const newState = { ...state.original };
+    for (const key in changes) {
+      if (key in iniKeyMapReverse) {
+        const mKey = iniKeyMapReverse[key];
+        (newState as Indexable)[mKey] = changes[key];
+      } else {
+        console.warn(`Unknown ini key ${key}`);
+      }
+    }
+    state.setOriginal(newState);
+  });
 }
 
 export function loadMisterIni(id: number, state: IniStore, reset = false) {
