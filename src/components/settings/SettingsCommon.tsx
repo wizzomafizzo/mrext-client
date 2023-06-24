@@ -29,6 +29,15 @@ import {
   useIniSettingsStore,
 } from "../../lib/ini";
 import { ControlApi } from "../../lib/api";
+import { ListInisPayload } from "../../lib/models";
+
+export function activeIniId(inis: ListInisPayload): number {
+  if (inis.active === 0) {
+    return 1;
+  } else {
+    return inis.active;
+  }
+}
 
 export function PageHeader(props: { title: string; noRevert?: boolean }) {
   const setActiveSettingsPage = useUIStateStore(
@@ -40,17 +49,8 @@ export function PageHeader(props: { title: string; noRevert?: boolean }) {
 
   const handleRevert = () => {
     const api = new ControlApi();
-    // TODO: this is the problem
-    iniSettingsStore.reset();
     api.listMisterInis().then((inis) => {
-      let id: number;
-      if (inis.active === 0) {
-        id = 1;
-      } else {
-        id = inis.active;
-      }
-
-      loadMisterIni(id, iniSettingsStore).catch((err) => {
+      loadMisterIni(activeIniId(inis), iniSettingsStore, true).catch((err) => {
         console.error(err);
       });
     });

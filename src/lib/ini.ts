@@ -97,6 +97,7 @@ interface IniActions {
   setAttribute: (key: string, value: string) => void;
   reset: () => void;
   resetModified: () => void;
+  setOriginal: (ini: IniState) => void;
 
   // video
   setVideoMode: (v: string) => void;
@@ -303,6 +304,7 @@ interface IniState {
 
 type IniStore = IniState &
   IniActions & {
+    original: IniState;
     modified: string[];
   };
 
@@ -435,6 +437,7 @@ function m(
 export const useIniSettingsStore = create<IniStore>()((set) => ({
   ...initialState,
 
+  original: initialState,
   modified: [],
 
   setAttribute: (key: string, value: string) =>
@@ -444,6 +447,9 @@ export const useIniSettingsStore = create<IniStore>()((set) => ({
 
   reset: () => set(initialState),
   resetModified: () => set({ modified: [] }),
+
+  setOriginal: (ini: IniState) => set({ original: ini }),
+  // revertChanges: () => set((s) => ({ ...s, ...s.original })),
 
   setVideoMode: (v: string) => set((s) => m(s, "videoMode", v)),
   setVideoModeNtsc: (v: string) => set((s) => m(s, "videoModeNtsc", v)),
@@ -589,23 +595,42 @@ export function saveMisterIni(id: number, state: IniStore) {
     });
 }
 
-export function loadMisterIni(id: number, state: IniStore) {
+export function loadMisterIni(id: number, state: IniStore, reset = false) {
   const api = new ControlApi();
   return api
     .loadMisterIni(id)
     .then((data) => {
-      console.log("Loading ini data");
-      for (const mKey in data) {
-        if (mKey in iniKeyMapReverse) {
-          const key = iniKeyMapReverse[mKey];
+      console.log("Loading MiSTer.ini data...");
+      const newState = { ...initialState };
+
+      for (const key in data) {
+        if (key in iniKeyMapReverse) {
+          const mKey = iniKeyMapReverse[key];
+          (newState as Indexable)[mKey] = data[key];
+        } else {
+          console.warn(`Unknown ini key ${key}`);
+        }
+      }
+
+      state.setOriginal(newState);
+
+      if (reset) {
+        state.resetModified();
+      }
+
+      for (const key in data) {
+        if (key in iniKeyMapReverse) {
+          const mKey = iniKeyMapReverse[key];
+
           if (state.modified.includes(key)) {
             console.log(`Skipping ini key ${mKey} as ${key} is modified`);
             continue;
           }
-          state.setAttribute(key, data[mKey]);
-          console.log(`Loaded ini key ${mKey} as ${key}, value ${data[mKey]}`);
+
+          console.log(`Setting ini key ${mKey} to ${data[key]}`);
+          state.setAttribute(mKey, data[key]);
         } else {
-          console.warn(`Unknown ini key ${mKey}`);
+          console.warn(`Unknown ini key ${key}`);
         }
       }
     })
