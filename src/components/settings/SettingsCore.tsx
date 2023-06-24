@@ -29,7 +29,7 @@ function Recents() {
 
   return (
     <BoolOption
-      label="Log recently launched files"
+      label="Log recently launched games"
       value={v}
       setValue={sv}
       helpText="Enables the Recent Cores menu and allows scripts to track launched games. While it shouldn't be an issue with modern SD cards, be aware this does increase the number of writes."

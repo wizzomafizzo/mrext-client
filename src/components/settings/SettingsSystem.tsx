@@ -30,7 +30,7 @@ function FbSize() {
         "1/4 of resolution",
       ]}
       label={"Framebuffer size"}
-      helpText="Set the final resolution of the Linux-based GUI displayed outside cores. It's common to see graphical glitches when running the framebuffer at a high resolution."
+      helpText="Set the final resolution of the Linux console displayed outside cores."
     />
   );
 }
@@ -40,7 +40,12 @@ function FbTerminal() {
   const sv = useIniSettingsStore((state) => state.setFbTerminal);
 
   return (
-    <BoolOption value={v} setValue={sv} label={"Enable Linux framebuffer"} />
+    <BoolOption
+      value={v}
+      setValue={sv}
+      label={"Enable Linux framebuffer"}
+      helpText="Linux console used for scripts and ARM ports."
+    />
   );
 }
 

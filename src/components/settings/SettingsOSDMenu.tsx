@@ -1,5 +1,3 @@
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
 import Stack from "@mui/material/Stack";
 import {
   BoolOption,
@@ -8,9 +6,7 @@ import {
   SaveButton,
   SimpleSelectOption,
   TextOption,
-  ValuePicker,
 } from "./SettingsCommon";
-import { useState } from "react";
 import { useIniSettingsStore } from "../../lib/ini";
 
 function LogFileEntry() {
@@ -36,7 +32,7 @@ function RbfHideDatecode() {
       value={v}
       setValue={sv}
       label="Show core release dates"
-      helpText="Display core's release date next to its menu entry."
+      helpText="Display core's release date next to its menu entry. Press F2 to toggle temporarily."
     />
   );
 }
@@ -112,7 +108,14 @@ function MenuPal() {
   const v = useIniSettingsStore((state) => state.menuPal);
   const sv = useIniSettingsStore((state) => state.setMenuPal);
 
-  return <BoolOption value={v} setValue={sv} label="PAL mode for menu" />;
+  return (
+    <BoolOption
+      value={v}
+      setValue={sv}
+      label="PAL mode for menu"
+      helpText="Default is NTSC mode."
+    />
+  );
 }
 
 function Font() {

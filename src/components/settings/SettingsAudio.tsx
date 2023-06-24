@@ -22,7 +22,7 @@ function HdmiAudio96k() {
       value={v}
       setValue={sv}
       label="Enable 96khz/16bit HDMI audio"
-      helpText="Default is 48khz/16bit."
+      helpText="Better quality but not compatible with all HDMI devices. Default is 48khz/16bit."
     />
   );
 }

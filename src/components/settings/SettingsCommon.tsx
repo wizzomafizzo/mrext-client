@@ -277,7 +277,11 @@ export function SelectOption(props: {
       {Array.isArray(props.helpText) &&
       props.helpText.length === props.optionValues.length ? (
         <FormHelperText>
-          {props.helpText[parseInt(props.value, 10)]}
+          {
+            props.helpText[
+              props.optionValues.indexOf(value === "__none__" ? "" : value)
+            ]
+          }
         </FormHelperText>
       ) : props.helpText !== undefined ? (
         <FormHelperText>{props.helpText}</FormHelperText>

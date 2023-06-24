@@ -31,21 +31,21 @@ import Card from "@mui/material/Card";
 import { useIniSettingsStore } from "../../lib/ini";
 
 const videoModes = [
-  ["0", "1280x720@60"],
-  ["1", "1024x768@60"],
-  ["2", "720x480@60"],
-  ["3", "720x576@50"],
-  ["4", "1280x1024@60"],
-  ["5", "800x600@60"],
-  ["6", "640x480@60"],
-  ["7", "1280x720@50"],
-  ["8", "1920x1080@60"],
-  ["9", "1920x1080@50"],
-  ["10", "1366x768@60"],
-  ["11", "1024x600@60"],
-  ["12", "1920x1440@60"],
-  ["13", "2048x1536@60"],
-  ["14", "2560x1440@60"],
+  ["0", "1280x720 60Hz"],
+  ["1", "1024x768 60Hz"],
+  ["2", "720x480 60Hz"],
+  ["3", "720x576 50Hz"],
+  ["4", "1280x1024 60Hz"],
+  ["5", "800x600 60Hz"],
+  ["6", "640x480 60Hz"],
+  ["7", "1280x720 50Hz"],
+  ["8", "1920x1080 60Hz"],
+  ["9", "1920x1080 50Hz"],
+  ["10", "1366x768 60Hz"],
+  ["11", "1024x600 60Hz"],
+  ["12", "1920x1440 60Hz"],
+  ["13", "2048x1536 60Hz"],
+  ["14", "2560x1440 60Hz"],
 ];
 
 function VideoMode(props: {
@@ -116,7 +116,7 @@ function VerticalScale() {
 
   return (
     <SimpleSelectOption
-      label="Vertical scale mode"
+      label="Video scaling mode"
       value={verticalScaleMode}
       setValue={setVerticalScaleMode}
       options={[
@@ -128,11 +128,11 @@ function VerticalScale() {
         "Maintain display aspect ratio",
       ]}
       helpText={[
-        "",
-        "",
-        "",
-        "",
-        "Integer resolution scaling.",
+        "Some possible shimmering during vertical scrolling, not optimal for scanlines.",
+        "No shimmering during vertical scrolling, optimal for scanlines.",
+        "Some possible shimmering during vertical scrolling, good scanlines.",
+        "Some possible shimmering during vertical scrolling, good scanlines.",
+        "Integer resolution scaling. Good for 4K displays.",
         "Integer resolution scaling.",
       ]}
     />
@@ -165,7 +165,7 @@ function VSyncAdjust() {
               }}
             />
           }
-          label="VSync adjust"
+          label="Video scaling sync frequency"
         />
         {Number(vsyncAdjust) > 0 ? (
           <RadioGroup>
@@ -190,6 +190,20 @@ function VSyncAdjust() {
           </RadioGroup>
         ) : null}
         <FormHelperText>
+          {Number(vsyncAdjust) === 1 ? (
+            <span>
+              Some display incompatibilities, no stuttering, 1-2 frames of lag.
+              <br />
+              <br />
+            </span>
+          ) : null}
+          {Number(vsyncAdjust) === 2 ? (
+            <span>
+              Some display incompatibilities, no stuttering, virtually no lag.
+              <br />
+              <br />
+            </span>
+          ) : null}
           Makes video butter smooth like on an original emulated system, but
           requires a display that supports variable pixel clock. Use a 60Hz HDMI
           video mode as a base, including on 50Hz systems.
@@ -374,6 +388,7 @@ function GameMode() {
       label="Game mode on HDMI output"
       value={gameMode}
       setValue={setGameMode}
+      helpText="Potentially less compatible, but may improve optimization on some displays."
     />
   );
 }
@@ -400,6 +415,8 @@ function LimitHDMIColor() {
     (state) => state.setHdmiLimited
   );
 
+  // TODO: disable third option if direct_video isn't set
+
   return (
     <SimpleSelectOption
       label="Limit HDMI color range"
@@ -409,7 +426,7 @@ function LimitHDMIColor() {
       helpText={[
         "",
         "Use limited (16-235) color range over HDMI.",
-        "Use limited (16-255) color range over HDMI, for VGA converters.",
+        "For VGA adapters. Use limited (16-255) color range over HDMI.",
       ]}
     />
   );
@@ -455,35 +472,36 @@ function VRRMode() {
 
       {Number(vrrMode) > 0 ? (
         <NumberOption
-          label="Minimum framerate"
+          label="Minimum frame rate"
           value={vrrMinFramerate}
           setValue={setVrrMinFramerate}
           min={1}
           max={240}
           defaultValue={"0"}
           disabledValue={"0"}
+          helpText="Use a specified minimum frame rate for variable refresh rate if you notice incompatibility."
         />
       ) : null}
 
       {Number(vrrMode) > 0 && vrrMode !== "3" ? (
         <NumberOption
-          label="Maximum framerate"
+          label="Maximum frame rate"
           value={vrrMaxFramerate}
           setValue={setVrrMaxFramerate}
-          helpText="Currently only used in FreeSync."
           min={1}
           max={240}
           defaultValue={"0"}
           disabledValue={"0"}
+          helpText="Currently only used in FreeSync. Use a specified maximum frame rate for variable refresh rate if you notice incompatibility. 75Hz covers most cores."
         />
       ) : null}
 
       {Number(vrrMode) > 0 && vrrMode !== "2" ? (
         <NumberOption
-          label="VESA base framerate"
+          label="VESA base frame rate"
           value={vrrVesaFramerate}
           setValue={setVrrVesaFramerate}
-          helpText="Normally set to the current video mode's output framerate."
+          helpText="Normally set to the current video mode's output framerate. Use a specified frame rate for Vesa HDMI Forum variable refresh rate if you notice incompatibility."
           min={1}
           max={240}
           defaultValue={"0"}
@@ -500,10 +518,10 @@ function DirectVideo() {
 
   return (
     <BoolOption
-      label="Direct video"
+      label="Direct video for HDMI-VGA adapters"
       value={v}
       setValue={sv}
-      helpText="Use only with VGA converters. Enables core video timing over HDMI."
+      helpText="Use only with VGA adapters. Enables core video timing over HDMI to output zero-lag non-scaled analog RGB."
     />
   );
 }
@@ -517,7 +535,11 @@ function ForcedScandoubler() {
       label="Force scandoubler on VGA output"
       value={v}
       setValue={sv}
-      helpText="Depends on core."
+      helpText={
+        v === "1"
+          ? "30KHz analog video out for 15KHz cores, depending on core. Good for VGA monitors which don't support 15KHz."
+          : "Default is 15KHz analog video out for 15KHz cores. Works on CRT TV sets, but may have problems with PC monitors."
+      }
     />
   );
 }
@@ -535,10 +557,14 @@ function CompositeSync() {
 
   return (
     <BoolOption
-      label="Composite sync on VGA output"
+      label="Composite sync on HSync signal"
       value={v}
       setValue={sv}
-      helpText="On HSync signal."
+      helpText={
+        v === "1"
+          ? "Composite sync (RGBS). Used for most other displays including RGB CRTs, PVMs, BVMS, and upscaler devices."
+          : "Defaults to separate sync (RGBHV). Used for VGA monitors."
+      }
     />
   );
 }
@@ -548,7 +574,12 @@ function VGAScaler() {
   const sv = useIniSettingsStore((state) => state.setVgaScaler);
 
   return (
-    <BoolOption label="Connect VGA to scaler output" value={v} setValue={sv} />
+    <BoolOption
+      label="Connect VGA to scaler output"
+      value={v}
+      setValue={sv}
+      helpText="Connects analog video output to the scaler output, changing the resolution."
+    />
   );
 }
 
@@ -574,7 +605,7 @@ function MainVideoMode() {
     <VideoMode
       videoMode={videoMode}
       setVideoMode={setVideoMode}
-      label="Video mode"
+      label="Video resolution and frequency"
       defaultLabel="Auto"
     />
   );
@@ -590,7 +621,7 @@ function ConditionalVideoMode() {
   const setVideoModePal = useIniSettingsStore((state) => state.setVideoModePal);
 
   const [showSection, setShowSection] = useState(
-    videoModeNtsc !== "" || videoModePal !== "" ? "1" : "0"
+    !(videoModeNtsc === "" && videoModePal === "")
   );
 
   const handleSectionToggle = (v: string) => {
@@ -598,13 +629,13 @@ function ConditionalVideoMode() {
       setVideoModeNtsc("");
       setVideoModePal("");
     }
-    setShowSection(v);
+    setShowSection(v === "1");
   };
 
   return (
     <>
       <BoolOption
-        value={showSection}
+        value={showSection ? "1" : "0"}
         setValue={handleSectionToggle}
         label="Specific video modes for NTSC and PAL"
         helpText="Only active if both NTSC and PAL video modes are set."
@@ -941,13 +972,28 @@ function VgaMode() {
   const vgaMode = useIniSettingsStore((state) => state.vgaMode);
   const setVgaMode = useIniSettingsStore((state) => state.setVgaMode);
 
+  // TODO: disable/enable composite sync when appropriate?
+
   return (
     <SelectOption
       value={vgaMode}
       setValue={setVgaMode}
-      optionLabels={["Disabled", "RGB", "YPbPr", "S-Video", "Composite (CVBS)"]}
+      optionLabels={[
+        "Disabled",
+        "RGBS/RGsB/RGBHV",
+        "YPbPr/Component",
+        "S-Video/Composite",
+        "CVBS",
+      ]}
       optionValues={["", "rgb", "ypbpr", "svideo", "cvbs"]}
-      label="VGA mode"
+      label="VGA output mode"
+      helpText={[
+        "Sets VGA output to use RGB, YPbPr, S-Video, or CVBS signals.",
+        "For use with RGBS, RGsB, and RGBHV displays such as PVM/BVM, Computer CRTs and upscaler devices. For RGBS and RGsB you should enable composite sync, but not RGBHV.",
+        "For use with devices that allow YPbPr inputs via VGA to Component cable. Composite sync must be disabled.",
+        "For use with an external Active YC encoder on displays that have S-Video/Composite inputs. Composite sync must be enabled.",
+        "For use only with some external RGB to PAL/NTSC encoders, such as SCART adapters. Don't use for composite.",
+      ]}
     />
   );
 }
@@ -971,8 +1017,13 @@ function NtscMode() {
     <SimpleSelectOption
       value={ntscMode}
       setValue={setNtscMode}
-      options={["Normal NTSC", "PAL-60", "PAL-M"]}
+      options={["Default", "PAL-60", "PAL-M"]}
       label="NTSC mode"
+      helpText={[
+        "NTSC video standard. Will work on most displays.",
+        "For use with some converters and VCR/DVD devices in Europe.",
+        "Brazilian video standard for use with Brazilian CRT.",
+      ]}
     />
   );
 }
