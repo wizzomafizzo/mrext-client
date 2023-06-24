@@ -425,6 +425,14 @@ function m(
     return {};
   }
 
+  if ((state.original as Indexable)[key] === value) {
+    console.log("reverted");
+    return {
+      [key]: value,
+      modified: state.modified.filter((m) => m !== key),
+    };
+  }
+
   const partial = {
     [key]: value,
     modified: distinct([...state.modified, key]),
