@@ -26,6 +26,7 @@ import DvrIcon from "@mui/icons-material/Dvr";
 import SignalWifiBadIcon from "@mui/icons-material/SignalWifiBad";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
+import LanIcon from "@mui/icons-material/Lan";
 
 import {
   Navigate,
@@ -60,6 +61,9 @@ import {
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import { ControlApi } from "../lib/api";
+import { useQuery } from "@tanstack/react-query";
+import ListItem from "@mui/material/ListItem";
+import moment from "moment";
 
 const drawerWidth = 240;
 
@@ -273,8 +277,13 @@ export default function ResponsiveDrawer() {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
+  const api = new ControlApi();
   const ws = useWs();
   const uiState = useUIStateStore();
+  const sysInfo = useQuery({
+    queryKey: ["sysInfo"],
+    queryFn: api.sysInfo,
+  });
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -283,8 +292,17 @@ export default function ResponsiveDrawer() {
   const drawer = (
     <div onClick={() => setMobileOpen(false)}>
       <Toolbar sx={{ justifyContent: "center" }}>
-        <img alt="MiSTer Kun Logo" src="/misterkun.svg" height={48} />
-        <img alt="MiSTer FPGA Logo" src="/misterlogo.svg" height={48} />
+        <Stack>
+          <Stack direction="row">
+            <img alt="MiSTer Kun Logo" src="/misterkun.svg" height={43} />
+            <img alt="MiSTer FPGA Logo" src="/misterlogo.svg" height={43} />
+          </Stack>
+          {sysInfo.data ? (
+            <Typography fontSize="x-small" textAlign="center">
+              {sysInfo.data.hostname} v{sysInfo.data.version}
+            </Typography>
+          ) : null}
+        </Stack>
       </Toolbar>
       <List>
         {/*<RouterLink to="/" text="Dashboard" icon={<DashboardIcon />} />*/}
@@ -321,6 +339,39 @@ export default function ResponsiveDrawer() {
           onClick={() => uiState.setActiveSettingsPage(SettingsPageId.Main)}
         />
       </List>
+      <Divider />
+      {sysInfo.data ? (
+        <List dense sx={{ pb: 0.6 }}>
+          <ListItem>
+            <ListItemText
+              primary="Last system update"
+              secondary={moment(sysInfo.data.updated).fromNow()}
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemText
+              primary={
+                sysInfo.data.ips.length > 1 ? "IP addresses" : "IP address"
+              }
+              secondary={sysInfo.data.ips.join(", ")}
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemText
+              primary="Hostname"
+              secondary={
+                sysInfo.data.hostname +
+                (sysInfo.data.dns !== "" ? " (" + sysInfo.data.dns + ")" : "")
+              }
+            />
+          </ListItem>
+        </List>
+      ) : null}
+      <Box sx={{ p: 1, pt: 0 }}>
+        <Button sx={{ width: 1 }} variant="outlined" startIcon={<LanIcon />}>
+          Browse MiSTers
+        </Button>
+      </Box>
     </div>
   );
 

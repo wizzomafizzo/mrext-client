@@ -11,6 +11,8 @@ import {
   CreateLauncherRequest,
   KeyboardCodes,
   ListInisPayload,
+  SysInfoResponse,
+  PeersResponse,
 } from "./models";
 
 const API_ENDPOINT_KEY = "apiEndpoint";
@@ -173,7 +175,7 @@ export class ControlApi {
   }
 
   async sendRawKeyboard(key: number) {
-    await axios.post(`/controls/keyboard_raw/${key}`);
+    await axios.post(`/controls/keyboard-raw/${key}`);
   }
 
   // menu
@@ -222,5 +224,13 @@ export class ControlApi {
   async loadMisterIni(id: number): Promise<{ [key: string]: string }> {
     return (await axios.get<{ [key: string]: string }>(`/settings/inis/${id}`))
       .data;
+  }
+
+  async sysInfo(): Promise<SysInfoResponse> {
+    return (await axios.get<SysInfoResponse>(`/sysinfo`)).data;
+  }
+
+  async getPeers(): Promise<PeersResponse> {
+    return (await axios.get<PeersResponse>(`/settings/remote/peers`)).data;
   }
 }

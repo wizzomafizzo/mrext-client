@@ -117,3 +117,19 @@ export interface ListInisPayload {
   active: number;
   inis: IniResponse[];
 }
+
+export interface SysInfoResponse {
+  ips: string[];
+  hostname: string;
+  dns: string;
+  version: string;
+  updated: string;
+}
+
+export interface PeersResponse {
+  peers: {
+    hostname: string;
+    version: string;
+    ips: string;
+  }[];
+}
