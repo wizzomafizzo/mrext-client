@@ -91,6 +91,8 @@ const iniKeyMap: { [key: string]: string } = {
   vgaMode: "vga_mode",
   ntscMode: "ntsc_mode",
   // : "controller_unique_mapping",
+  hostname: "__hostname",
+  ethernetMacAddress: "__ethernetMacAddress",
 };
 
 interface IniActions {
@@ -189,6 +191,8 @@ interface IniActions {
   setBootCore: (v: string) => void;
   setBootCoreTimeout: (v: string) => void;
   setWaitMount: (v: string) => void;
+  setHostname: (v: string) => void;
+  setEthernetMacAddress: (v: string) => void;
 
   // osd/menu
   setRbfHideDatecode: (v: string) => void;
@@ -291,6 +295,8 @@ interface IniState {
   bootCore: string;
   bootCoreTimeout: string;
   waitMount: string;
+  hostname: string;
+  ethernetMacAddress: string;
 
   // osd/menu
   rbfHideDatecode: string;
@@ -399,6 +405,8 @@ const initialState: IniState = {
   bootCore: "",
   bootCoreTimeout: "0",
   waitMount: "",
+  hostname: "MiSTer",
+  ethernetMacAddress: "",
 
   // osd/menu
   rbfHideDatecode: "0",
@@ -552,6 +560,9 @@ export const useIniSettingsStore = create<IniStore>()((set) => ({
   setBootCore: (v: string) => set((s) => m(s, "bootCore", v)),
   setBootCoreTimeout: (v: string) => set((s) => m(s, "bootCoreTimeout", v)),
   setWaitMount: (v: string) => set((s) => m(s, "waitMount", v)),
+  setHostname: (v: string) => set((s) => m(s, "hostname", v)),
+  setEthernetMacAddress: (v: string) =>
+    set((s) => m(s, "ethernetMacAddress", v)),
 
   // osd/menu
   setRbfHideDatecode: (v: string) => set((s) => m(s, "rbfHideDatecode", v)),

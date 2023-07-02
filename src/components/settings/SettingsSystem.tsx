@@ -6,14 +6,12 @@ import {
   SaveButton,
   SimpleSelectOption,
   TextOption,
-  ValuePicker,
 } from "./SettingsCommon";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import FormControl from "@mui/material/FormControl";
-import { useState } from "react";
-import Typography from "@mui/material/Typography";
 import { useIniSettingsStore } from "../../lib/ini";
+import TextField from "@mui/material/TextField";
+import FormHelperText from "@mui/material/FormHelperText";
+import FormControl from "@mui/material/FormControl";
+import Button from "@mui/material/Button";
 
 function FbSize() {
   const v = useIniSettingsStore((state) => state.fbSize);
@@ -30,7 +28,7 @@ function FbSize() {
         "1/4 of resolution",
       ]}
       label={"Framebuffer size"}
-      helpText="Set the final resolution of the Linux console displayed outside cores."
+      helpText="Set the final resolution of the Linux console displayed outside cores. A high framebuffer resolution can result in minor graphical glitches."
     />
   );
 }
@@ -44,7 +42,7 @@ function FbTerminal() {
       value={v}
       setValue={sv}
       label={"Enable Linux framebuffer"}
-      helpText="Linux console used for scripts and ARM ports."
+      helpText="Linux console used for scripts, ARM ports and the menu wallpaper."
     />
   );
 }
@@ -119,13 +117,67 @@ function WaitMount() {
   return <TextOption value={v} setValue={sv} label="Wait for mount" />;
 }
 
+function Hostname() {
+  const v = useIniSettingsStore((state) => state.hostname);
+  const sv = useIniSettingsStore((state) => state.setHostname);
+
+  return (
+    <TextOption
+      value={v}
+      setValue={sv}
+      label="Hostname"
+      helpText="The name MiSTer will identify itself with on your network. MiSTer must be rebooted before this change takes effect."
+    />
+  );
+}
+
+function MACAddress() {
+  const v = useIniSettingsStore((state) => state.ethernetMacAddress);
+  const sv = useIniSettingsStore((state) => state.setEthernetMacAddress);
+
+  return (
+    <FormControl>
+      <Stack direction="row">
+        <TextField
+          value={v}
+          onChange={(e) => sv(e.target.value)}
+          label="Ethernet MAC address"
+          inputProps={{ maxLength: 17 }}
+        />
+        <Button
+          sx={{ ml: 1 }}
+          variant="outlined"
+          onClick={() =>
+            sv(
+              "XX:XX:XX:XX:XX:XX".replace(/X/g, () => {
+                return "0123456789ABCDEF".charAt(
+                  Math.floor(Math.random() * 16)
+                );
+              })
+            )
+          }
+        >
+          Generate
+        </Button>
+      </Stack>
+      <FormHelperText>
+        By default, all MiSTers have the same Ethernet MAC address, which will
+        cause critical issues when there is more than one wired on the same
+        network. MiSTer must be rebooted before this change takes effect.
+      </FormHelperText>
+    </FormControl>
+  );
+}
+
 export default function SystemSettings() {
   return (
     <>
       <PageHeader title="System" />
       <Stack spacing={3} m={2}>
-        <FbSize />
+        <Hostname />
+        <MACAddress />
         <FbTerminal />
+        <FbSize />
         <BootCore />
         <BootCoreTimeout />
         <WaitMount />
