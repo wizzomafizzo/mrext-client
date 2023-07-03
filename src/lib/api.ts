@@ -233,4 +233,8 @@ export class ControlApi {
   async getPeers(): Promise<PeersResponse> {
     return (await axios.get<PeersResponse>(`/settings/remote/peers`)).data;
   }
+
+  async reboot(): Promise<void> {
+    await axios.post(`/settings/system/reboot`);
+  }
 }

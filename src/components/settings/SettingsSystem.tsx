@@ -12,6 +12,12 @@ import TextField from "@mui/material/TextField";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import Button from "@mui/material/Button";
+import { ControlApi } from "../../lib/api";
+import React from "react";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogActions from "@mui/material/DialogActions";
 
 function FbSize() {
   const v = useIniSettingsStore((state) => state.fbSize);
@@ -126,7 +132,7 @@ function Hostname() {
       value={v}
       setValue={sv}
       label="Hostname"
-      helpText="The name MiSTer will identify itself with on your network. MiSTer must be rebooted before this change takes effect."
+      helpText="The name MiSTer will identify itself with on your network. MiSTer must be power cycled before this change takes effect."
     />
   );
 }
@@ -163,9 +169,43 @@ function MACAddress() {
       <FormHelperText>
         By default, all MiSTers have the same Ethernet MAC address, which will
         cause critical issues when there is more than one wired on the same
-        network. MiSTer must be rebooted before this change takes effect.
+        network. MiSTer must be power cycled before this change takes effect.
       </FormHelperText>
     </FormControl>
+  );
+}
+
+function Reboot() {
+  const api = new ControlApi();
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  return (
+    <>
+      <Button variant="outlined" onClick={handleOpen}>
+        Reboot MiSTer
+      </Button>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to reboot MiSTer? This will immediately quit
+            any running cores.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button
+            onClick={() => {
+              api.reboot().then((r) => handleClose());
+            }}
+            autoFocus
+          >
+            Reboot
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
 
@@ -181,6 +221,7 @@ export default function SystemSettings() {
         <BootCore />
         <BootCoreTimeout />
         <WaitMount />
+        <Reboot />
       </Stack>
       <SaveButton />
     </>

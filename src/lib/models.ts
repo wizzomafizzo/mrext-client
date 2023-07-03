@@ -130,6 +130,6 @@ export interface PeersResponse {
   peers: {
     hostname: string;
     version: string;
-    ips: string;
+    ip: string;
   }[];
 }

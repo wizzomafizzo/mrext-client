@@ -35,6 +35,7 @@ import {
   Route,
   Routes,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
 
 import Screenshots from "./Screenshots";
@@ -64,6 +65,7 @@ import { ControlApi } from "../lib/api";
 import { useQuery } from "@tanstack/react-query";
 import ListItem from "@mui/material/ListItem";
 import moment from "moment";
+import { Network } from "./Network";
 
 const drawerWidth = 240;
 
@@ -128,6 +130,12 @@ const pages: Page[] = [
     titleText: "Menu",
     buttonText: "Menu",
     icon: <DvrIcon />,
+  },
+  {
+    path: "/network",
+    titleText: "Network",
+    buttonText: "Network",
+    icon: <LanIcon />,
   },
 ];
 
@@ -276,13 +284,17 @@ function PlayingButton() {
 export default function ResponsiveDrawer() {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
+  const navigate = useNavigate();
   const api = new ControlApi();
   const ws = useWs();
   const uiState = useUIStateStore();
   const sysInfo = useQuery({
     queryKey: ["sysInfo"],
     queryFn: api.sysInfo,
+  });
+  const peers = useQuery({
+    queryKey: ["settings", "remote", "peers"],
+    queryFn: api.getPeers,
   });
 
   const handleDrawerToggle = () => {
@@ -367,11 +379,21 @@ export default function ResponsiveDrawer() {
           </ListItem>
         </List>
       ) : null}
-      <Box sx={{ p: 1, pt: 0 }}>
-        <Button sx={{ width: 1 }} variant="outlined" startIcon={<LanIcon />}>
-          Browse MiSTers
-        </Button>
-      </Box>
+      {peers.data && peers.data.peers.length > 1 ? (
+        <Box sx={{ p: 1, pt: 0 }}>
+          <Button
+            sx={{ width: 1 }}
+            variant="outlined"
+            startIcon={<LanIcon />}
+            onClick={() => {
+              navigate("/network");
+              setMobileOpen(false);
+            }}
+          >
+            Browse MiSTers
+          </Button>
+        </Box>
+      ) : null}
     </div>
   );
 
@@ -480,6 +502,7 @@ export default function ResponsiveDrawer() {
           <Route path="/wallpaper" element={<Wallpaper />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/menu" element={<Menu />} />
+          <Route path="/network" element={<Network />} />
         </Routes>
       </Box>
     </Box>
