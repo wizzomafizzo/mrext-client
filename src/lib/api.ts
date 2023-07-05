@@ -237,4 +237,9 @@ export class ControlApi {
   async reboot(): Promise<void> {
     await axios.post(`/settings/system/reboot`);
   }
+
+  async generateMac(): Promise<{ mac: string }> {
+    return (await axios.get<{ mac: string }>(`/settings/system/generate-mac`))
+      .data;
+  }
 }

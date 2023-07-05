@@ -140,6 +140,7 @@ function Hostname() {
 function MACAddress() {
   const v = useIniSettingsStore((state) => state.ethernetMacAddress);
   const sv = useIniSettingsStore((state) => state.setEthernetMacAddress);
+  const api = new ControlApi();
 
   return (
     <FormControl>
@@ -154,13 +155,9 @@ function MACAddress() {
           sx={{ ml: 1 }}
           variant="outlined"
           onClick={() =>
-            sv(
-              "XX:XX:XX:XX:XX:XX".replace(/X/g, () => {
-                return "0123456789ABCDEF".charAt(
-                  Math.floor(Math.random() * 16)
-                );
-              })
-            )
+            api
+              .generateMac()
+              .then((data) => sv(data.mac ? data.mac.toUpperCase() : ""))
           }
         >
           Generate
