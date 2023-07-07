@@ -357,7 +357,11 @@ export default function ResponsiveDrawer() {
           <ListItem>
             <ListItemText
               primary="Last system update"
-              secondary={moment(sysInfo.data.updated).fromNow()}
+              secondary={
+                sysInfo.data.updated === ""
+                  ? "Never"
+                  : moment(sysInfo.data.updated).fromNow()
+              }
             />
           </ListItem>
           <ListItem>
