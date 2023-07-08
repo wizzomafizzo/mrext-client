@@ -386,7 +386,7 @@ export default function ResponsiveDrawer() {
         />
       </List>
       <Divider />
-      {sysInfo.data ? (
+      {sysInfo.data && sysInfo.data.ips ? (
         <List dense sx={{ pb: 0.6 }}>
           <ListItem>
             <ListItemText
@@ -417,7 +417,7 @@ export default function ResponsiveDrawer() {
           </ListItem>
         </List>
       ) : null}
-      {peers.data && peers.data.peers.length > 1 ? (
+      {peers.data && peers.data.peers && peers.data.peers.length > 1 ? (
         <Box sx={{ p: 1, pt: 0 }}>
           <Button
             sx={{ width: 1 }}
