@@ -134,6 +134,7 @@ function IniSwitcher() {
           variant="contained"
           endIcon={<SwapHorizIcon />}
           onClick={() => setIniDialogOpen(true)}
+          disabled={!inis.data || inis.data.inis.length < 2}
         >
           Active INI: {activeIni.name}
         </Button>
