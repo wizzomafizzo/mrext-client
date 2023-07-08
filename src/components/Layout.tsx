@@ -152,6 +152,7 @@ type RouterLinkProps = React.PropsWithChildren<{
   text: string;
   icon: ReactNode;
   onClick?: () => void;
+  closeDrawer: () => void;
 }>;
 
 function RouterLink(props: RouterLinkProps) {
@@ -178,7 +179,15 @@ function RouterLink(props: RouterLinkProps) {
     [props.to]
   );
   return (
-    <ListItemButton component={MyNavLink} onClick={props.onClick}>
+    <ListItemButton
+      component={MyNavLink}
+      onClick={() => {
+        if (props.onClick) {
+          props.onClick();
+        }
+        props.closeDrawer();
+      }}
+    >
       <ListItemIcon
         sx={{
           ".Mui-selected > &": {
@@ -291,6 +300,7 @@ export default function ResponsiveDrawer() {
   const sysInfo = useQuery({
     queryKey: ["sysInfo"],
     queryFn: api.sysInfo,
+    refetchInterval: 60000,
   });
   const peers = useQuery({
     queryKey: ["settings", "remote", "peers"],
@@ -302,7 +312,7 @@ export default function ResponsiveDrawer() {
   };
 
   const drawer = (
-    <div onClick={() => setMobileOpen(false)}>
+    <div>
       <Toolbar sx={{ justifyContent: "center" }}>
         <Stack>
           <Stack direction="row">
@@ -317,38 +327,62 @@ export default function ResponsiveDrawer() {
         </Stack>
       </Toolbar>
       <List>
-        {/*<RouterLink to="/" text="Dashboard" icon={<DashboardIcon />} />*/}
-        <RouterLink to="/control" text="Control" icon={<GamepadIcon />} />
-        <RouterLink to="menu" text="Menu" icon={<DvrIcon />} />
+        {/*<RouterLink to="/" text="Dashboard" icon={<DashboardIcon />} closeDrawer={handleDrawerToggle} />*/}
+        <RouterLink
+          to="/control"
+          text="Control"
+          icon={<GamepadIcon />}
+          closeDrawer={handleDrawerToggle}
+        />
+        <RouterLink
+          to="menu"
+          text="Menu"
+          icon={<DvrIcon />}
+          closeDrawer={handleDrawerToggle}
+        />
       </List>
       <Divider />
       <List>
-        <RouterLink to="/search" text="Search" icon={<SearchIcon />} />
+        <RouterLink
+          to="/search"
+          text="Search"
+          icon={<SearchIcon />}
+          closeDrawer={handleDrawerToggle}
+        />
         <RouterLink
           to="/systems"
           text="Systems"
           icon={<VideogameAssetIcon />}
+          closeDrawer={handleDrawerToggle}
         />
         <RouterLink
           to="/screenshots"
           text="Screenshots"
           icon={<PhotoCameraBackIcon />}
+          closeDrawer={handleDrawerToggle}
         />
       </List>
       <Divider />
       <List>
-        <RouterLink to="/music" text="Music" icon={<MusicNoteIcon />} />
+        <RouterLink
+          to="/music"
+          text="Music"
+          icon={<MusicNoteIcon />}
+          closeDrawer={handleDrawerToggle}
+        />
 
         <RouterLink
           to="/wallpaper"
           text="Wallpaper"
           icon={<FormatPaintIcon />}
+          closeDrawer={handleDrawerToggle}
         />
         <RouterLink
           to="/settings"
           text="Settings"
           icon={<SettingsIcon />}
           onClick={() => uiState.setActiveSettingsPage(SettingsPageId.Main)}
+          closeDrawer={handleDrawerToggle}
         />
       </List>
       <Divider />
