@@ -181,7 +181,11 @@ export class ControlApi {
   // menu
 
   async listMenuFolder(path: string): Promise<ViewMenu> {
-    return (await axios.get<ViewMenu>(`/menu/view/${path}`)).data;
+    return (
+      await axios.post<ViewMenu>(`/menu/view`, {
+        path,
+      })
+    ).data;
   }
 
   // launch

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useListMenuFolder } from "../lib/queries";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
@@ -23,13 +23,31 @@ import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
 import CheckBoxOutlineBlankOutlinedIcon from "@mui/icons-material/CheckBoxOutlineBlankOutlined";
 import CheckBoxOutlinedIcon from "@mui/icons-material/CheckBoxOutlined";
-import { formatCurrentPath } from "./Shortcuts";
+import {
+  formatCurrentPath,
+  MenuFolderPicker,
+  MenuFolderPickerDialog,
+} from "./Shortcuts";
 import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import Popper from "@mui/material/Popper";
 import Grow from "@mui/material/Grow";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import MenuList from "@mui/material/MenuList";
+import SortIcon from "@mui/icons-material/Sort";
+import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
+import ListItem from "@mui/material/ListItem";
+import Dialog from "@mui/material/Dialog";
+import { DialogTitle } from "@mui/material";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import FormControl from "@mui/material/FormControl";
+import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
+import DriveFileMoveIcon from "@mui/icons-material/DriveFileMove";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import Checkbox from "@mui/material/Checkbox";
 
 enum Sort {
   NameAsc,
@@ -38,16 +56,264 @@ enum Sort {
   DateDesc,
 }
 
-export default function Menu() {
-  const api = new ControlApi();
+enum EditMode {
+  None,
+  Rename,
+  Move,
+  Delete,
+}
 
-  const [currentPath, setCurrentPath] = useState<string>("");
-  const [sort, setSort] = useState<Sort>(Sort.NameAsc);
+const BadFileChars = ["/", "\\", ":", "*", "?", '"', "<", ">", "|"];
 
-  const listMenuFolder = useListMenuFolder(currentPath);
+const isValidFilename = (
+  name: string,
+  parentContents: MEMenuItem[] | undefined
+): boolean => {
+  if (name === "") {
+    return false;
+  }
 
+  for (let i = 0; i < BadFileChars.length; i++) {
+    if (name.includes(BadFileChars[i])) {
+      return false;
+    }
+  }
+
+  return !parentContents?.find(
+    (item: MEMenuItem) => item.name.toLowerCase() === name.toLowerCase()
+  );
+};
+
+function RenameFile(props: {
+  item: MEMenuItem;
+  parentContents: MEMenuItem[];
+  close: () => void;
+}) {
+  const [name, setName] = useState<string>(props.item.name);
+
+  return (
+    <>
+      <DialogContent>
+        <FormControl sx={{ pt: 1 }}>
+          <TextField
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            label="Name"
+            inputProps={{ maxLength: 255 }}
+            autoFocus
+            helperText={
+              props.item.namesTxt
+                ? "This name is set via the names.txt file."
+                : ""
+            }
+          />
+        </FormControl>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={props.close}>Cancel</Button>
+        <Button
+          onClick={() => {
+            console.log(props.item.parent + "/" + name);
+            props.close();
+          }}
+          disabled={!isValidFilename(name, props.parentContents)}
+          variant="contained"
+        >
+          Rename
+        </Button>
+      </DialogActions>
+    </>
+  );
+}
+
+function DeleteFile(props: { item: MEMenuItem; close: () => void }) {
+  const [deleteFolder, setDeleteFolder] = useState<boolean>(
+    props.item.type !== "folder"
+  );
+
+  return (
+    <>
+      <DialogContent>
+        <Typography>
+          Are you sure you want to permanently delete
+          <Box component="span" fontWeight="fontWeightMedium">
+            {" "}
+            {props.item.name}
+          </Box>
+          ? This cannot be undone.
+        </Typography>
+        {props.item.type === "folder" && (
+          <FormControl sx={{ pt: 1 }}>
+            <Stack direction="row" alignItems="center" spacing={1}>
+              <Checkbox
+                checked={deleteFolder}
+                onChange={(e) => setDeleteFolder(e.target.checked)}
+              />
+              <Typography>
+                Also delete all files and folders inside this folder.
+              </Typography>
+            </Stack>
+          </FormControl>
+        )}
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={props.close}>Cancel</Button>
+        <Button
+          onClick={() => {
+            console.log(props.item.parent + "/" + props.item.name);
+            props.close();
+          }}
+          variant="contained"
+          color="error"
+          disabled={!deleteFolder}
+        >
+          Delete
+        </Button>
+      </DialogActions>
+    </>
+  );
+}
+
+function EditFile(props: {
+  item: MEMenuItem;
+  parentContents: MEMenuItem[];
+  refresh: () => void;
+}) {
+  const [open, setOpen] = useState<boolean>(false);
+  const [editMode, setEditMode] = useState<EditMode>(EditMode.None);
+
+  useEffect(() => {
+    open && setEditMode(EditMode.None);
+  }, [open]);
+
+  const handleClose = () => {
+    setOpen(false);
+    props.refresh();
+  };
+
+  const editSection = () => {
+    switch (editMode) {
+      case EditMode.Rename:
+        return (
+          <RenameFile
+            item={props.item}
+            parentContents={props.parentContents}
+            close={handleClose}
+          />
+        );
+      case EditMode.Move:
+        return (
+          <MenuFolderPicker
+            path={props.item.parent}
+            setPath={(path) => console.log(path)}
+            close={handleClose}
+            defaultPath={props.item.parent}
+            verb={"Move to"}
+          />
+        );
+      case EditMode.Delete:
+        return <DeleteFile item={props.item} close={handleClose} />;
+      default:
+        return (
+          <>
+            <DialogTitle>{props.item.name}</DialogTitle>
+            <DialogContent>
+              <Stack spacing={1}>
+                <Button
+                  variant="contained"
+                  startIcon={<DriveFileRenameOutlineIcon />}
+                  onClick={() => setEditMode(EditMode.Rename)}
+                >
+                  Rename
+                </Button>
+                <Button
+                  variant="contained"
+                  startIcon={<DriveFileMoveIcon />}
+                  onClick={() => setEditMode(EditMode.Move)}
+                >
+                  Move
+                </Button>
+                <Button
+                  variant="contained"
+                  startIcon={<DeleteForeverIcon />}
+                  onClick={() => setEditMode(EditMode.Delete)}
+                  color="error"
+                >
+                  Delete
+                </Button>
+              </Stack>
+            </DialogContent>
+          </>
+        );
+    }
+  };
+
+  return (
+    <>
+      <IconButton sx={{ mr: -1 }} onClick={() => setOpen(true)}>
+        <MoreVertIcon />
+      </IconButton>
+      <Dialog open={open} onClose={handleClose}>
+        {editSection()}
+      </Dialog>
+    </>
+  );
+}
+
+function CreateFolder(props: {
+  path: string;
+  contents: MEMenuItem[] | undefined;
+  refresh: () => void;
+}) {
+  const [open, setOpen] = useState<boolean>(false);
+  const [name, setName] = useState<string>("");
+
+  const handleClose = () => {
+    setOpen(false);
+    setName("");
+  };
+
+  return (
+    <>
+      <IconButton onClick={() => setOpen(true)}>
+        <CreateNewFolderIcon />
+      </IconButton>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Create new folder</DialogTitle>
+        <DialogContent>
+          <FormControl sx={{ pt: 1 }}>
+            <TextField
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              label="Folder name"
+              inputProps={{ maxLength: 255 }}
+              autoFocus
+            />
+          </FormControl>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button
+            onClick={() => {
+              console.log(props.path + "/_" + name);
+              handleClose();
+              props.refresh();
+            }}
+            variant="contained"
+            disabled={!isValidFilename(name, props.contents)}
+          >
+            Create
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
+}
+
+function SortFiles(props: { sort: Sort; setSort: (sort: Sort) => void }) {
   const [sortOpen, setSortOpen] = useState<boolean>(false);
   const sortAnchorRef = React.useRef<HTMLButtonElement>(null);
+
   const handleSortClose = (event: Event) => {
     if (
       sortAnchorRef.current &&
@@ -58,6 +324,123 @@ export default function Menu() {
 
     setSortOpen(false);
   };
+
+  return (
+    <>
+      <IconButton ref={sortAnchorRef} onClick={() => setSortOpen(!sortOpen)}>
+        <SortIcon />
+      </IconButton>
+      <Popper
+        sx={{
+          zIndex: 2,
+        }}
+        open={sortOpen}
+        anchorEl={sortAnchorRef.current}
+        role={undefined}
+        transition
+        disablePortal
+      >
+        {({ TransitionProps, placement }) => (
+          <Grow
+            {...TransitionProps}
+            style={{
+              transformOrigin:
+                placement === "bottom" ? "center top" : "center bottom",
+            }}
+          >
+            <Paper sx={{ m: 1, mt: 0 }}>
+              <ClickAwayListener onClickAway={handleSortClose}>
+                <MenuList dense>
+                  {/*<MenuItem*/}
+                  {/*  onClick={(e) => {*/}
+                  {/*    setSortOpen(false);*/}
+                  {/*  }}*/}
+                  {/*>*/}
+                  {/*  <ListItemIcon>*/}
+                  {/*    <CheckBoxOutlineBlankOutlinedIcon />*/}
+                  {/*  </ListItemIcon>*/}
+                  {/*  <ListItemText>Show hidden files</ListItemText>*/}
+                  {/*</MenuItem>*/}
+                  <Typography sx={{ pl: 1, fontWeight: 500 }}>
+                    Sort by
+                  </Typography>
+                  <MenuItem
+                    onClick={(e) => {
+                      props.setSort(Sort.NameAsc);
+                      setSortOpen(false);
+                    }}
+                  >
+                    <ListItemIcon>
+                      {props.sort === Sort.NameAsc ? (
+                        <RadioButtonCheckedIcon />
+                      ) : (
+                        <RadioButtonUncheckedIcon />
+                      )}
+                    </ListItemIcon>
+                    <ListItemText>Name (ascending)</ListItemText>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={(e) => {
+                      props.setSort(Sort.NameDesc);
+                      setSortOpen(false);
+                    }}
+                  >
+                    <ListItemIcon>
+                      {props.sort === Sort.NameDesc ? (
+                        <RadioButtonCheckedIcon />
+                      ) : (
+                        <RadioButtonUncheckedIcon />
+                      )}
+                    </ListItemIcon>
+                    <ListItemText>Name (descending)</ListItemText>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={(e) => {
+                      props.setSort(Sort.DateAsc);
+                      setSortOpen(false);
+                    }}
+                  >
+                    <ListItemIcon>
+                      {props.sort === Sort.DateAsc ? (
+                        <RadioButtonCheckedIcon />
+                      ) : (
+                        <RadioButtonUncheckedIcon />
+                      )}
+                    </ListItemIcon>
+                    <ListItemText>Modified (ascending)</ListItemText>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={(e) => {
+                      props.setSort(Sort.DateDesc);
+                      setSortOpen(false);
+                    }}
+                  >
+                    <ListItemIcon>
+                      {props.sort === Sort.DateDesc ? (
+                        <RadioButtonCheckedIcon />
+                      ) : (
+                        <RadioButtonUncheckedIcon />
+                      )}
+                    </ListItemIcon>
+                    <ListItemText>Modified (descending)</ListItemText>
+                  </MenuItem>
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
+    </>
+  );
+}
+
+export function Menu() {
+  const api = new ControlApi();
+
+  const [currentPath, setCurrentPath] = useState<string>("");
+  const [sort, setSort] = useState<Sort>(Sort.NameAsc);
+
+  const listMenuFolder = useListMenuFolder(currentPath);
 
   const icon = (item: MEMenuItem) => {
     switch (item.type) {
@@ -133,12 +516,12 @@ export default function Menu() {
           <Typography variant="h6" sx={{ fontSize: "1rem", flexGrow: 1 }}>
             {formatCurrentPath(currentPath)}
           </Typography>
-          <IconButton
-            ref={sortAnchorRef}
-            onClick={() => setSortOpen(!sortOpen)}
-          >
-            <MoreVertIcon />
-          </IconButton>
+          <SortFiles sort={sort} setSort={setSort} />
+          <CreateFolder
+            path={currentPath}
+            contents={listMenuFolder.data?.items}
+            refresh={() => listMenuFolder.refetch()}
+          />
         </Stack>
       </Paper>
       <Box sx={{ height: "55px" }}></Box>
@@ -162,132 +545,45 @@ export default function Menu() {
               </ListItemButton>
             ) : null}
             {sortItems(listMenuFolder.data?.items).map((item) => (
-              <ListItemButton
+              <ListItem
+                disablePadding
                 key={item.path}
-                onClick={() => {
-                  if (item.next) {
-                    setCurrentPath(item.next);
-                    resetScroll();
-                  } else {
-                    api.launchFile(item.path);
-                  }
-                }}
+                secondaryAction={
+                  <EditFile
+                    item={item}
+                    refresh={listMenuFolder.refetch}
+                    parentContents={
+                      listMenuFolder.data ? listMenuFolder.data.items : []
+                    }
+                  />
+                }
               >
-                <ListItemIcon>{icon(item)}</ListItemIcon>
-                <ListItemText
-                  primary={item.namesTxt ? item.namesTxt : item.name}
-                  secondary={
-                    item.version
-                      ? moment(item.version).format("YYYY-MM-DD")
-                      : null
-                  }
-                />
-              </ListItemButton>
+                <ListItemButton
+                  onClick={() => {
+                    if (item.next) {
+                      setCurrentPath(item.next);
+                      resetScroll();
+                    } else {
+                      api.launchFile(item.path);
+                    }
+                  }}
+                >
+                  <ListItemIcon>{icon(item)}</ListItemIcon>
+                  <ListItemText
+                    primary={item.namesTxt ? item.namesTxt : item.name}
+                    secondary={
+                      item.version
+                        ? moment(item.version).format("YYYY-MM-DD")
+                        : null
+                    }
+                  />
+                </ListItemButton>
+              </ListItem>
             ))}
           </List>
         ) : null}
         <ScrollToTopFab />
       </Box>
-      <Popper
-        sx={{
-          zIndex: 2,
-        }}
-        open={sortOpen}
-        anchorEl={sortAnchorRef.current}
-        role={undefined}
-        transition
-        disablePortal
-      >
-        {({ TransitionProps, placement }) => (
-          <Grow
-            {...TransitionProps}
-            style={{
-              transformOrigin:
-                placement === "bottom" ? "center top" : "center bottom",
-            }}
-          >
-            <Paper sx={{ m: 1, mt: 0 }}>
-              <ClickAwayListener onClickAway={handleSortClose}>
-                <MenuList dense>
-                  {/*<MenuItem*/}
-                  {/*  onClick={(e) => {*/}
-                  {/*    setSortOpen(false);*/}
-                  {/*  }}*/}
-                  {/*>*/}
-                  {/*  <ListItemIcon>*/}
-                  {/*    <CheckBoxOutlineBlankOutlinedIcon />*/}
-                  {/*  </ListItemIcon>*/}
-                  {/*  <ListItemText>Show hidden files</ListItemText>*/}
-                  {/*</MenuItem>*/}
-                  <Typography sx={{ pl: 1, fontWeight: 500 }}>
-                    Sort by
-                  </Typography>
-                  <MenuItem
-                    onClick={(e) => {
-                      setSort(Sort.NameAsc);
-                      setSortOpen(false);
-                    }}
-                  >
-                    <ListItemIcon>
-                      {sort === Sort.NameAsc ? (
-                        <RadioButtonCheckedIcon />
-                      ) : (
-                        <RadioButtonUncheckedIcon />
-                      )}
-                    </ListItemIcon>
-                    <ListItemText>Name (ascending)</ListItemText>
-                  </MenuItem>
-                  <MenuItem
-                    onClick={(e) => {
-                      setSort(Sort.NameDesc);
-                      setSortOpen(false);
-                    }}
-                  >
-                    <ListItemIcon>
-                      {sort === Sort.NameDesc ? (
-                        <RadioButtonCheckedIcon />
-                      ) : (
-                        <RadioButtonUncheckedIcon />
-                      )}
-                    </ListItemIcon>
-                    <ListItemText>Name (descending)</ListItemText>
-                  </MenuItem>
-                  <MenuItem
-                    onClick={(e) => {
-                      setSort(Sort.DateAsc);
-                      setSortOpen(false);
-                    }}
-                  >
-                    <ListItemIcon>
-                      {sort === Sort.DateAsc ? (
-                        <RadioButtonCheckedIcon />
-                      ) : (
-                        <RadioButtonUncheckedIcon />
-                      )}
-                    </ListItemIcon>
-                    <ListItemText>Modified (ascending)</ListItemText>
-                  </MenuItem>
-                  <MenuItem
-                    onClick={(e) => {
-                      setSort(Sort.DateDesc);
-                      setSortOpen(false);
-                    }}
-                  >
-                    <ListItemIcon>
-                      {sort === Sort.DateDesc ? (
-                        <RadioButtonCheckedIcon />
-                      ) : (
-                        <RadioButtonUncheckedIcon />
-                      )}
-                    </ListItemIcon>
-                    <ListItemText>Modified (descending)</ListItemText>
-                  </MenuItem>
-                </MenuList>
-              </ClickAwayListener>
-            </Paper>
-          </Grow>
-        )}
-      </Popper>
     </>
   );
 }

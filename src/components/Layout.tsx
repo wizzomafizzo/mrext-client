@@ -52,7 +52,7 @@ import {
   Popper,
   SwipeableDrawer,
 } from "@mui/material";
-import Menu from "./Menu";
+import { Menu } from "./Menu";
 import useWs from "./WebSocket";
 import {
   SettingsPageId,

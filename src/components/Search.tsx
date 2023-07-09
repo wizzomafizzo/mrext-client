@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useMutation } from "@tanstack/react-query";
 
 import Button from "@mui/material/Button";
@@ -34,7 +34,6 @@ import MenuList from "@mui/material/MenuList";
 import Dialog from "@mui/material/Dialog";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import ShortcutIcon from "@mui/icons-material/Shortcut";
-import { useNavigate } from "react-router-dom";
 import { SingleShortcut } from "./Shortcuts";
 
 function SearchResultsList(props: {

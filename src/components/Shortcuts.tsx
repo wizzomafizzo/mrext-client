@@ -40,14 +40,18 @@ export const formatCurrentPath = (path: string) => {
 export function MenuFolderPicker(props: {
   path: string;
   setPath: (path: string) => void;
-  open: boolean;
-  setOpen: (open: boolean) => void;
+  defaultPath?: string;
+  close: () => void;
+  verb?: string;
 }) {
-  const uiState = useUIStateStore();
   const [currentPath, setCurrentPath] = useState<string>(
-    uiState.lastFavoriteFolder
+    props.defaultPath ? props.defaultPath : props.path
   );
   const listMenuFolder = useListMenuFolder(currentPath);
+
+  const setCurrent = (path: string) => {
+    setCurrentPath(path);
+  };
 
   const results = (
     <List
@@ -60,7 +64,7 @@ export function MenuFolderPicker(props: {
         <ListItemButton
           onClick={() => {
             const path = listMenuFolder.data.up ? listMenuFolder.data.up : "";
-            setCurrentPath(path);
+            setCurrent(path);
           }}
         >
           <ListItemIcon>
@@ -76,7 +80,7 @@ export function MenuFolderPicker(props: {
             key={item.path}
             onClick={() => {
               if (item.next) {
-                setCurrentPath(item.next);
+                setCurrent(item.next);
               }
             }}
           >
@@ -90,41 +94,58 @@ export function MenuFolderPicker(props: {
   );
 
   return (
-    <Dialog open={props.open} onClose={() => props.setOpen(false)}>
-      <Stack
+    <Stack
+      sx={{
+        minHeight: "400px",
+        minWidth: "300px",
+      }}
+    >
+      <Paper
         sx={{
-          minHeight: "400px",
-          minWidth: "300px",
+          p: 1,
+          borderRadius: 0,
         }}
       >
-        <Paper
-          sx={{
-            p: 1,
-            borderRadius: 0,
+        <Stack direction="row" sx={{ pl: 1, alignItems: "center" }}>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+            {formatCurrentPath(currentPath)}
+          </Typography>
+          <Button onClick={props.close}>Cancel</Button>
+        </Stack>
+        <Button
+          variant="contained"
+          fullWidth
+          sx={{ mt: 1, mb: 1 }}
+          onClick={() => {
+            props.setPath(currentPath);
+            props.close();
           }}
+          disabled={listMenuFolder.isLoading || props.path === currentPath}
         >
-          <Stack direction="row" sx={{ pl: 1, alignItems: "center" }}>
-            <Typography variant="h6" sx={{ flexGrow: 1 }}>
-              {formatCurrentPath(currentPath)}
-            </Typography>
-            <Button onClick={() => props.setOpen(false)}>Cancel</Button>
-          </Stack>
-          <Button
-            variant="outlined"
-            fullWidth
-            sx={{ mt: 1, mb: 1 }}
-            onClick={() => {
-              props.setPath(currentPath);
-              uiState.setLastFavoriteFolder(currentPath);
-              props.setOpen(false);
-            }}
-          >
-            Select {formatCurrentPath(currentPath)}
-          </Button>
-        </Paper>
-        {listMenuFolder.isLoading ? <LinearProgress /> : null}
-        {results}
-      </Stack>
+          {props.verb ? props.verb : "Select"} {formatCurrentPath(currentPath)}
+        </Button>
+      </Paper>
+      {listMenuFolder.isLoading ? <LinearProgress /> : null}
+      {results}
+    </Stack>
+  );
+}
+
+export function MenuFolderPickerDialog(props: {
+  path: string;
+  setPath: (path: string) => void;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  defaultPath?: string;
+}) {
+  return (
+    <Dialog open={props.open} onClose={() => props.setOpen(false)}>
+      <MenuFolderPicker
+        path={props.path}
+        setPath={props.setPath}
+        defaultPath={props.defaultPath}
+        close={() => props.setOpen(false)}
+      />
     </Dialog>
   );
 }
@@ -143,6 +164,7 @@ export function SingleShortcut(props: { path: string; back: () => void }) {
 
   const [mglName, setMglName] = useState<string>(name);
 
+  // TODO: this behaviour is inconsistent with the rename file option
   const cleanName = (name: string) => {
     return name.replaceAll(/[<>:"/\\|?*]*/g, "");
   };
@@ -197,11 +219,15 @@ export function SingleShortcut(props: { path: string; back: () => void }) {
           <Button onClick={() => props.back()}>Cancel</Button>
         </Stack>
       </Box>
-      <MenuFolderPicker
+      <MenuFolderPickerDialog
         path={selectedFolder}
-        setPath={setSelectedFolder}
+        setPath={(path) => {
+          setSelectedFolder(path);
+          uiState.setLastFavoriteFolder(path);
+        }}
         open={folderPickerOpen}
         setOpen={setFolderPickerOpen}
+        defaultPath={uiState.lastFavoriteFolder}
       />
     </Stack>
   );

@@ -23,11 +23,7 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 
 import { useUIStateStore, SettingsPageId } from "../../lib/store";
-import {
-  loadMisterIni,
-  saveMisterIni,
-  useIniSettingsStore,
-} from "../../lib/ini";
+import { saveMisterIni, useIniSettingsStore } from "../../lib/ini";
 import { ControlApi } from "../../lib/api";
 import { ListInisPayload } from "../../lib/models";
 
