@@ -89,6 +89,7 @@ function RenameFile(props: {
   parentContents: MEMenuItem[];
   close: () => void;
 }) {
+  const api = new ControlApi();
   const [name, setName] = useState<string>(props.item.name);
 
   return (
@@ -113,8 +114,25 @@ function RenameFile(props: {
         <Button onClick={props.close}>Cancel</Button>
         <Button
           onClick={() => {
-            console.log(props.item.parent + "/" + name);
-            props.close();
+            let oldName = props.item.filename;
+            let newName = name + props.item.extension;
+            if (props.item.type === "folder") {
+              newName = "_" + newName;
+            }
+
+            api
+              .renameMenuFile({
+                folder: props.item.parent,
+                oldName: oldName,
+                newName: newName,
+              })
+              .catch((err) => {
+                console.log(err);
+              })
+              .then(() => {
+                setName("");
+                props.close();
+              });
           }}
           disabled={!isValidFilename(name, props.parentContents)}
           variant="contained"
@@ -220,21 +238,21 @@ function EditFile(props: {
             <DialogContent>
               <Stack spacing={1}>
                 <Button
-                  variant="contained"
+                  variant="outlined"
                   startIcon={<DriveFileRenameOutlineIcon />}
                   onClick={() => setEditMode(EditMode.Rename)}
                 >
                   Rename
                 </Button>
                 <Button
-                  variant="contained"
+                  variant="outlined"
                   startIcon={<DriveFileMoveIcon />}
                   onClick={() => setEditMode(EditMode.Move)}
                 >
                   Move
                 </Button>
                 <Button
-                  variant="contained"
+                  variant="outlined"
                   startIcon={<DeleteForeverIcon />}
                   onClick={() => setEditMode(EditMode.Delete)}
                   color="error"
@@ -265,6 +283,7 @@ function CreateFolder(props: {
   contents: MEMenuItem[] | undefined;
   refresh: () => void;
 }) {
+  const api = new ControlApi();
   const [open, setOpen] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
 
@@ -295,9 +314,19 @@ function CreateFolder(props: {
           <Button onClick={handleClose}>Cancel</Button>
           <Button
             onClick={() => {
-              console.log(props.path + "/_" + name);
-              handleClose();
-              props.refresh();
+              api
+                .createMenuFile({
+                  type: "folder",
+                  folder: props.path,
+                  name: name,
+                })
+                .catch((e) => {
+                  console.log(e);
+                })
+                .then(() => {
+                  handleClose();
+                  props.refresh();
+                });
             }}
             variant="contained"
             disabled={!isValidFilename(name, props.contents)}

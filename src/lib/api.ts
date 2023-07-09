@@ -246,4 +246,16 @@ export class ControlApi {
     return (await axios.get<{ mac: string }>(`/settings/system/generate-mac`))
       .data;
   }
+
+  async createMenuFile(data: { type: string; folder: string; name: string }) {
+    await axios.post(`/menu/files/create`, data);
+  }
+
+  async renameMenuFile(data: {
+    folder: string;
+    oldName: string;
+    newName: string;
+  }) {
+    await axios.post(`/menu/files/rename`, data);
+  }
 }

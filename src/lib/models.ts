@@ -67,6 +67,8 @@ export interface MenuItem {
   namesTxt?: string;
   path: string;
   parent: string;
+  filename: string;
+  extension: string;
   next?: string;
   type: "folder" | "rbf" | "mra" | "mgl";
   modified: string;
