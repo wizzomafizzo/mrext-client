@@ -122,9 +122,8 @@ function RenameFile(props: {
 
             api
               .renameMenuFile({
-                folder: props.item.parent,
-                oldName: oldName,
-                newName: newName,
+                fromPath: props.item.parent + "/" + oldName,
+                toPath: props.item.parent + "/" + newName,
               })
               .catch((err) => {
                 console.log(err);
@@ -197,6 +196,7 @@ function EditFile(props: {
   parentContents: MEMenuItem[];
   refresh: () => void;
 }) {
+  const api = new ControlApi();
   const [open, setOpen] = useState<boolean>(false);
   const [editMode, setEditMode] = useState<EditMode>(EditMode.None);
 
@@ -223,8 +223,20 @@ function EditFile(props: {
         return (
           <MenuFolderPicker
             path={props.item.parent}
-            setPath={(path) => console.log(path)}
-            close={handleClose}
+            setPath={(path) => {
+              api
+                .renameMenuFile({
+                  fromPath: props.item.path,
+                  toPath: path + "/" + props.item.filename,
+                })
+                .catch((err) => {
+                  console.log(err);
+                })
+                .then(() => {
+                  props.refresh();
+                });
+            }}
+            close={() => setOpen(false)}
             defaultPath={props.item.parent}
             verb={"Move to"}
           />

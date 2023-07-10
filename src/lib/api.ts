@@ -251,11 +251,7 @@ export class ControlApi {
     await axios.post(`/menu/files/create`, data);
   }
 
-  async renameMenuFile(data: {
-    folder: string;
-    oldName: string;
-    newName: string;
-  }) {
+  async renameMenuFile(data: { fromPath: string; toPath: string }) {
     await axios.post(`/menu/files/rename`, data);
   }
 }
