@@ -254,4 +254,8 @@ export class ControlApi {
   async renameMenuFile(data: { fromPath: string; toPath: string }) {
     await axios.post(`/menu/files/rename`, data);
   }
+
+  async deleteMenuFile(data: { path: string }) {
+    await axios.post(`/menu/files/delete`, data);
+  }
 }

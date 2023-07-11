@@ -21,13 +21,7 @@ import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
-import CheckBoxOutlineBlankOutlinedIcon from "@mui/icons-material/CheckBoxOutlineBlankOutlined";
-import CheckBoxOutlinedIcon from "@mui/icons-material/CheckBoxOutlined";
-import {
-  formatCurrentPath,
-  MenuFolderPicker,
-  MenuFolderPickerDialog,
-} from "./Shortcuts";
+import { formatCurrentPath, MenuFolderPicker } from "./Shortcuts";
 import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import Popper from "@mui/material/Popper";
@@ -48,6 +42,7 @@ import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutli
 import DriveFileMoveIcon from "@mui/icons-material/DriveFileMove";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 enum Sort {
   NameAsc,
@@ -151,6 +146,7 @@ function RenameFile(props: {
 }
 
 function DeleteFile(props: { item: MEMenuItem; close: () => void }) {
+  const api = new ControlApi();
   const [deleteFolder, setDeleteFolder] = useState<boolean>(
     props.item.type !== "folder"
   );
@@ -168,15 +164,15 @@ function DeleteFile(props: { item: MEMenuItem; close: () => void }) {
         </Typography>
         {props.item.type === "folder" && (
           <FormControl sx={{ pt: 1 }}>
-            <Stack direction="row" alignItems="center" spacing={1}>
-              <Checkbox
-                checked={deleteFolder}
-                onChange={(e) => setDeleteFolder(e.target.checked)}
-              />
-              <Typography>
-                Also delete all files and folders inside this folder.
-              </Typography>
-            </Stack>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={deleteFolder}
+                  onChange={(e) => setDeleteFolder(e.target.checked)}
+                />
+              }
+              label="Also delete all files and folders inside this folder."
+            />
           </FormControl>
         )}
       </DialogContent>
@@ -184,8 +180,16 @@ function DeleteFile(props: { item: MEMenuItem; close: () => void }) {
         <Button onClick={props.close}>Cancel</Button>
         <Button
           onClick={() => {
-            console.log(props.item.parent + "/" + props.item.name);
-            props.close();
+            api
+              .deleteMenuFile({
+                path: props.item.path,
+              })
+              .catch((err) => {
+                console.log(err);
+              })
+              .then(() => {
+                props.close();
+              });
           }}
           variant="contained"
           color="error"
@@ -413,7 +417,7 @@ function SortFiles(props: { sort: Sort; setSort: (sort: Sort) => void }) {
                     Sort by
                   </Typography>
                   <MenuItem
-                    onClick={(e) => {
+                    onClick={() => {
                       props.setSort(Sort.NameAsc);
                       setSortOpen(false);
                     }}
@@ -428,7 +432,7 @@ function SortFiles(props: { sort: Sort; setSort: (sort: Sort) => void }) {
                     <ListItemText>Name (ascending)</ListItemText>
                   </MenuItem>
                   <MenuItem
-                    onClick={(e) => {
+                    onClick={() => {
                       props.setSort(Sort.NameDesc);
                       setSortOpen(false);
                     }}
@@ -443,7 +447,7 @@ function SortFiles(props: { sort: Sort; setSort: (sort: Sort) => void }) {
                     <ListItemText>Name (descending)</ListItemText>
                   </MenuItem>
                   <MenuItem
-                    onClick={(e) => {
+                    onClick={() => {
                       props.setSort(Sort.DateAsc);
                       setSortOpen(false);
                     }}
@@ -458,7 +462,7 @@ function SortFiles(props: { sort: Sort; setSort: (sort: Sort) => void }) {
                     <ListItemText>Modified (ascending)</ListItemText>
                   </MenuItem>
                   <MenuItem
-                    onClick={(e) => {
+                    onClick={() => {
                       props.setSort(Sort.DateDesc);
                       setSortOpen(false);
                     }}
@@ -612,7 +616,9 @@ export function Menu() {
                       setCurrentPath(item.next);
                       resetScroll();
                     } else {
-                      api.launchFile(item.path);
+                      api.launchFile(item.path).catch((err) => {
+                        console.error(err);
+                      });
                     }
                   }}
                 >
