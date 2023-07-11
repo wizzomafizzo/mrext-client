@@ -89,8 +89,15 @@ function RenameFile(props: {
   parentContents: MEMenuItem[];
   close: () => void;
 }) {
+  let editName = props.item.filename;
+  if (props.item.type === "folder" && editName.startsWith("_")) {
+    editName = editName.substring(1);
+  } else {
+    editName = editName.substring(0, editName.lastIndexOf("."));
+  }
+
   const api = new ControlApi();
-  const [name, setName] = useState<string>(props.item.name);
+  const [name, setName] = useState<string>(editName);
 
   return (
     <>
@@ -115,7 +122,7 @@ function RenameFile(props: {
         <Button
           onClick={() => {
             let oldName = props.item.filename;
-            let newName = name + props.item.extension;
+            let newName = name.trim() + props.item.extension;
             if (props.item.type === "folder") {
               newName = "_" + newName;
             }
@@ -330,7 +337,7 @@ function CreateFolder(props: {
                 .createMenuFile({
                   type: "folder",
                   folder: props.path,
-                  name: name,
+                  name: name.trim(),
                 })
                 .catch((e) => {
                   console.log(e);
