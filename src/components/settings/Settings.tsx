@@ -9,10 +9,10 @@ import TvIcon from "@mui/icons-material/Tv";
 import WysiwygIcon from "@mui/icons-material/Wysiwyg";
 import SpeakerIcon from "@mui/icons-material/Speaker";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
-import TerminalIcon from "@mui/icons-material/Terminal";
 import SettingsRemoteIcon from "@mui/icons-material/SettingsRemote";
 import FilterIcon from "@mui/icons-material/Filter";
 import SettingsInputCompositeIcon from "@mui/icons-material/SettingsInputComposite";
+import ComputerIcon from "@mui/icons-material/Computer";
 
 import { SettingsPageId, useUIStateStore } from "../../lib/store";
 
@@ -186,7 +186,7 @@ function MainPage() {
         <SettingsPageLink
           page={SettingsPageId.System}
           text="System"
-          icon={<TerminalIcon />}
+          icon={<ComputerIcon />}
         />
         <SettingsPageLink
           page={SettingsPageId.Remote}
