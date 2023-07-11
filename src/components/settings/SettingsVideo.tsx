@@ -1005,8 +1005,8 @@ function VgaMode() {
         "Sets VGA output to use RGB, YPbPr, S-Video, or CVBS signals.",
         "For use with RGBS, RGsB, and RGBHV displays such as PVM/BVM, Computer CRTs and upscaler devices. For RGBS and RGsB you should enable composite sync, but not RGBHV.",
         "For use with devices that allow YPbPr inputs via VGA to Component cable. Composite sync must be disabled.",
-        "For use with an external Active YC encoder on displays that have S-Video/Composite inputs. Composite sync must be enabled.",
-        "DO NOT USE FOR COMPOSITE. For use only with some external RGB to PAL/NTSC encoders, such as SCART adapters.",
+        "For use with an active YC encoder, such as ones designed by MikeS.  If you're not sure which composite or S-Video adapter you have, it's probably this one. Composite sync must be enabled.",
+        "Do not use with MikeS composite solutions. For use only with custom CVBS cables. Using the S-Video option, with Mike's Luma trap, will result in a much better image.",
       ]}
     />
   );
