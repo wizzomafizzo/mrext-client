@@ -308,7 +308,6 @@ export default function ResponsiveDrawer() {
   const sysInfo = useQuery({
     queryKey: ["sysInfo"],
     queryFn: api.sysInfo,
-    refetchInterval: 60000,
   });
   const peers = useQuery({
     queryKey: ["settings", "remote", "peers"],
@@ -400,35 +399,37 @@ export default function ResponsiveDrawer() {
       </List>
       <Divider />
       {sysInfo.data && sysInfo.data.ips ? (
-        <List dense sx={{ pb: 0.6 }}>
-          <ListItem>
-            <ListItemText
-              primary="Last system update"
-              secondary={
-                sysInfo.data.updated === ""
-                  ? "Never"
-                  : moment(sysInfo.data.updated).fromNow()
-              }
-            />
-          </ListItem>
-          <ListItem>
-            <ListItemText
-              primary={
-                sysInfo.data.ips.length > 1 ? "IP addresses" : "IP address"
-              }
-              secondary={sysInfo.data.ips.join(", ")}
-            />
-          </ListItem>
-          <ListItem>
-            <ListItemText
-              primary="Hostname"
-              secondary={
-                sysInfo.data.hostname +
-                (sysInfo.data.dns !== "" ? " (" + sysInfo.data.dns + ")" : "")
-              }
-            />
-          </ListItem>
-        </List>
+        <div onClick={() => sysInfo.refetch()}>
+          <List dense sx={{ pb: 0.6 }}>
+            <ListItem>
+              <ListItemText
+                primary="Last system update"
+                secondary={
+                  sysInfo.data.updated === ""
+                    ? "Never"
+                    : moment(sysInfo.data.updated).fromNow()
+                }
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemText
+                primary={
+                  sysInfo.data.ips.length > 1 ? "IP addresses" : "IP address"
+                }
+                secondary={sysInfo.data.ips.join(", ")}
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemText
+                primary="Hostname"
+                secondary={
+                  sysInfo.data.hostname +
+                  (sysInfo.data.dns !== "" ? " (" + sysInfo.data.dns + ")" : "")
+                }
+              />
+            </ListItem>
+          </List>
+        </div>
       ) : null}
       {peers.data && peers.data.peers && peers.data.peers.length > 1 ? (
         <Box sx={{ p: 1, pt: 0 }}>
