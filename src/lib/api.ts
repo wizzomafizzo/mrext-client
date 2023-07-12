@@ -13,6 +13,7 @@ import {
   ListInisPayload,
   SysInfoResponse,
   PeersResponse,
+  ScriptsResponse,
 } from "./models";
 
 const API_ENDPOINT_KEY = "apiEndpoint";
@@ -257,5 +258,25 @@ export class ControlApi {
 
   async deleteMenuFile(data: { path: string }) {
     await axios.post(`/menu/files/delete`, data);
+  }
+
+  async getAllScripts(): Promise<ScriptsResponse> {
+    return (await axios.get<ScriptsResponse>(`/scripts/list`)).data;
+  }
+
+  async runScript(filename: string) {
+    await axios.post(`/scripts/launch/${filename}`);
+  }
+
+  async openConsole() {
+    await axios.post(`/scripts/console`);
+  }
+
+  async closeConsole() {
+    return this.sendKeyboard("exit_console");
+  }
+
+  async killScript() {
+    await axios.post(`/scripts/kill`);
   }
 }

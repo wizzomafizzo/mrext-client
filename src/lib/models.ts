@@ -102,6 +102,7 @@ export type KeyboardCodes =
   | "reset"
   | "toggle_core_dates"
   | "console"
+  | "exit_console"
   | "computer_osd";
 
 export interface CreateLauncherRequest {
@@ -135,4 +136,15 @@ export interface PeersResponse {
     version: string;
     ip: string;
   }[];
+}
+
+export interface Script {
+  name: string;
+  path: string;
+  filename: string;
+}
+
+export interface ScriptsResponse {
+  canLaunch: boolean;
+  scripts: Script[];
 }

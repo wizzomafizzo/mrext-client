@@ -27,6 +27,7 @@ import SignalWifiBadIcon from "@mui/icons-material/SignalWifiBad";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import LanIcon from "@mui/icons-material/Lan";
+import TerminalIcon from "@mui/icons-material/Terminal";
 
 import {
   Navigate,
@@ -66,6 +67,7 @@ import { useQuery } from "@tanstack/react-query";
 import ListItem from "@mui/material/ListItem";
 import moment from "moment";
 import { Network } from "./Network";
+import { Scripts } from "./Scripts";
 
 const drawerWidth = 240;
 
@@ -136,6 +138,12 @@ const pages: Page[] = [
     titleText: "Network",
     buttonText: "Network",
     icon: <LanIcon />,
+  },
+  {
+    path: "/scripts",
+    titleText: "Scripts",
+    buttonText: "Scripts",
+    icon: <TerminalIcon />,
   },
 ];
 
@@ -370,11 +378,16 @@ export default function ResponsiveDrawer() {
           icon={<MusicNoteIcon />}
           closeDrawer={handleDrawerToggle}
         />
-
         <RouterLink
           to="/wallpaper"
           text="Wallpaper"
           icon={<FormatPaintIcon />}
+          closeDrawer={handleDrawerToggle}
+        />
+        <RouterLink
+          to="/scripts"
+          text="Scripts"
+          icon={<TerminalIcon />}
           closeDrawer={handleDrawerToggle}
         />
         <RouterLink
@@ -541,6 +554,7 @@ export default function ResponsiveDrawer() {
           <Route path="/settings" element={<Settings />} />
           <Route path="/menu" element={<Menu />} />
           <Route path="/network" element={<Network />} />
+          <Route path="/scripts" element={<Scripts />} />
         </Routes>
       </Box>
     </Box>

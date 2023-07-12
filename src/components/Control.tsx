@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -157,6 +157,12 @@ export default function Control() {
   const [numpadOpen, setNumpadOpen] = React.useState(false);
 
   const ws = useWs();
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+    });
+  }, []);
 
   const sendKey = (key: string) => {
     ws.sendMessage("kbd:" + key);

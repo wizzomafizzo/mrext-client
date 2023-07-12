@@ -22,6 +22,8 @@ export interface UIState {
   setActiveSettingsPage: (page: SettingsPageId) => void;
   lastFavoriteFolder: string;
   setLastFavoriteFolder: (folder: string) => void;
+  favoriteScripts: string[];
+  setFavoriteScripts: (scripts: string[]) => void;
 }
 
 export const useUIStateStore = create<UIState>()(
@@ -35,6 +37,9 @@ export const useUIStateStore = create<UIState>()(
       lastFavoriteFolder: "",
       setLastFavoriteFolder: (folder: string) =>
         set({ lastFavoriteFolder: folder }),
+      favoriteScripts: [],
+      setFavoriteScripts: (scripts: string[]) =>
+        set({ favoriteScripts: scripts }),
     }),
     {
       name: "uiState",
@@ -71,7 +76,6 @@ export const useServerStateStore = create<ServerState>()((set, get) => ({
 // TODO: DVI_MODE is presented as a bool, but defaults to 2, don't know what 0 and 1 actually do
 // TODO: add max length to all string inputs
 // TODO: preset_default
-// TODO: vga_mode (replace ypbr)
 // TODO: ntsc_mode
 // TODO: hdr_max_nits
 // TODO: hdr_avg_nits

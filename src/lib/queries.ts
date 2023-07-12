@@ -29,3 +29,5 @@ export const useListMisterInis = () =>
     queryKey: ["settings", "inis"],
     queryFn: () => api.listMisterInis(),
   });
+
+export const useScriptsList = () => useQuery(["scripts"], api.getAllScripts);

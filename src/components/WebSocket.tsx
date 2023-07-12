@@ -5,7 +5,6 @@ import { getWsEndpoint } from "../lib/api";
 
 function handleMessage(event: MessageEvent, serverState: ServerState) {
   const msg = event.data;
-
   const idx = msg.indexOf(":");
   const cmd = msg.substring(0, idx);
   const data = msg.substring(idx + 1);
