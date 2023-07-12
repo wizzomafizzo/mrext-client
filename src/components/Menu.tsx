@@ -202,6 +202,22 @@ function DeleteFile(props: { item: MEMenuItem; close: () => void }) {
   );
 }
 
+function humanFileSize(bytes: number) {
+  if (bytes === 0) {
+    return "0 B";
+  }
+
+  const thresh = 1024;
+  let unit = 0;
+
+  while (bytes >= thresh || -bytes >= thresh) {
+    bytes /= thresh;
+    unit++;
+  }
+
+  return (unit ? bytes.toFixed(1) + " " : bytes) + " KMGTPEZY"[unit] + "B";
+}
+
 function EditFile(props: {
   item: MEMenuItem;
   parentContents: MEMenuItem[];
@@ -256,9 +272,35 @@ function EditFile(props: {
         return <DeleteFile item={props.item} close={handleClose} />;
       default:
         return (
-          <>
-            <DialogTitle>{props.item.name}</DialogTitle>
-            <DialogContent>
+          <Box sx={{ minWidth: "250px" }}>
+            <DialogTitle sx={{ p: 2, pb: 0 }}>
+              {props.item.namesTxt ? props.item.namesTxt : props.item.name}
+            </DialogTitle>
+            <DialogContent sx={{ p: 2 }}>
+              <List dense sx={{ pt: 0 }}>
+                <ListItem disableGutters disablePadding>
+                  <ListItemText
+                    primary="Filename"
+                    secondary={props.item.filename}
+                  />
+                </ListItem>
+                <ListItem disableGutters disablePadding>
+                  <ListItemText
+                    primary="Type"
+                    secondary={
+                      props.item.type === "folder"
+                        ? "Folder"
+                        : props.item.type.toUpperCase()
+                    }
+                  />
+                </ListItem>
+                <ListItem disableGutters disablePadding>
+                  <ListItemText
+                    primary="Modified"
+                    secondary={new Date(props.item.modified).toLocaleString()}
+                  />
+                </ListItem>
+              </List>
               <Stack spacing={1}>
                 <Button
                   variant="outlined"
@@ -284,7 +326,7 @@ function EditFile(props: {
                 </Button>
               </Stack>
             </DialogContent>
-          </>
+          </Box>
         );
     }
   };

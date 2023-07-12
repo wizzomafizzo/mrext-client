@@ -73,6 +73,7 @@ export interface MenuItem {
   type: "folder" | "rbf" | "mra" | "mgl";
   modified: string;
   version?: string;
+  size: number;
 }
 
 export interface ViewMenu {
