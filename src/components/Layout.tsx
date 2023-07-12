@@ -313,7 +313,7 @@ function humanFileSize(bytes: number) {
     unit++;
   }
 
-  return (unit ? bytes.toFixed(1) + " " : bytes) + " KMGTPEZY"[unit] + "B";
+  return (unit ? bytes.toFixed(1) + "" : bytes) + " KMGTPEZY"[unit] + "B";
 }
 
 export default function ResponsiveDrawer() {

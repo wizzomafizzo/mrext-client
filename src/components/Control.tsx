@@ -179,6 +179,14 @@ export default function Control() {
     ws.sendMessage("kbdRaw:" + code);
   };
 
+  const sendRawKeyDown = (code: number) => {
+    ws.sendMessage("kbdRawDown:" + code);
+  };
+
+  const sendRawKeyUp = (code: number) => {
+    ws.sendMessage("kbdRawUp:" + code);
+  };
+
   return (
     <Box margin={2}>
       <Grid container spacing={2}>
@@ -199,8 +207,11 @@ export default function Control() {
             variant="contained"
             size="large"
             sx={{ width: "100%", height: 75 }}
-            onClick={() => {
-              sendKey("up");
+            onTouchStart={() => {
+              sendRawKeyDown(103);
+            }}
+            onTouchEnd={() => {
+              sendRawKeyUp(103);
             }}
           >
             <KeyboardArrowUpIcon />
@@ -223,8 +234,11 @@ export default function Control() {
             variant="contained"
             size="large"
             sx={{ width: "100%", height: 75 }}
-            onClick={() => {
-              sendKey("left");
+            onTouchStart={() => {
+              sendRawKeyDown(105);
+            }}
+            onTouchEnd={() => {
+              sendRawKeyUp(105);
             }}
           >
             <KeyboardArrowLeftIcon />
@@ -247,8 +261,11 @@ export default function Control() {
             variant="contained"
             size="large"
             sx={{ width: "100%", height: 75 }}
-            onClick={() => {
-              sendKey("right");
+            onTouchStart={() => {
+              sendRawKeyDown(106);
+            }}
+            onTouchEnd={() => {
+              sendRawKeyUp(106);
             }}
           >
             <KeyboardArrowRightIcon />
@@ -271,8 +288,11 @@ export default function Control() {
             variant="contained"
             size="large"
             sx={{ width: "100%", height: 75 }}
-            onClick={() => {
-              sendKey("down");
+            onTouchStart={() => {
+              sendRawKeyDown(108);
+            }}
+            onTouchEnd={() => {
+              sendRawKeyUp(108);
             }}
           >
             <KeyboardArrowDownIcon />
