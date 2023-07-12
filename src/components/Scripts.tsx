@@ -73,6 +73,7 @@ export function Scripts() {
                   navigate("/control");
                 });
             }}
+            disabled={serverState.activeCore !== ""}
           >
             Launch console
           </Button>
@@ -87,6 +88,7 @@ export function Scripts() {
                 console.log(err);
               });
             }}
+            disabled={serverState.activeCore !== ""}
           >
             Exit console
           </Button>
