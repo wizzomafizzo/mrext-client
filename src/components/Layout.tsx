@@ -68,6 +68,7 @@ import ListItem from "@mui/material/ListItem";
 import moment from "moment";
 import { Network } from "./Network";
 import { Scripts } from "./Scripts";
+import { useMusicStatus } from "../lib/queries";
 
 const drawerWidth = 240;
 
@@ -313,6 +314,7 @@ export default function ResponsiveDrawer() {
     queryKey: ["settings", "remote", "peers"],
     queryFn: api.getPeers,
   });
+  const musicStatus = useMusicStatus(true);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -371,12 +373,14 @@ export default function ResponsiveDrawer() {
       </List>
       <Divider />
       <List>
-        <RouterLink
-          to="/music"
-          text="Music"
-          icon={<MusicNoteIcon />}
-          closeDrawer={handleDrawerToggle}
-        />
+        {musicStatus.data?.running && (
+          <RouterLink
+            to="/music"
+            text="Music"
+            icon={<MusicNoteIcon />}
+            closeDrawer={handleDrawerToggle}
+          />
+        )}
         <RouterLink
           to="/wallpaper"
           text="Wallpaper"

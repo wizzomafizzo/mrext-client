@@ -4,11 +4,11 @@ import { ControlApi } from "./api";
 
 const api = new ControlApi();
 
-export const useMusicStatus = () =>
+export const useMusicStatus = (noRefetch?: boolean) =>
   useQuery({
     queryKey: ["music", "status"],
     queryFn: api.musicStatus,
-    refetchInterval: 1000,
+    refetchInterval: noRefetch ? false : 1000,
     refetchIntervalInBackground: false,
   });
 
