@@ -180,8 +180,8 @@ export default function Control() {
   };
 
   return (
-    <Box margin={3}>
-      <Grid container spacing={3}>
+    <Box margin={2}>
+      <Grid container spacing={2}>
         <Grid item xs={4}>
           <Button
             variant="outlined"
