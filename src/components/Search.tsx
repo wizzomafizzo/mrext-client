@@ -19,22 +19,20 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { Game, SearchResults } from "../lib/models";
 import IconButton from "@mui/material/IconButton";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ScrollToTopFab from "./ScrollToTop";
 import { useServerStateStore } from "../lib/store";
 import useWs from "./WebSocket";
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import CircularProgress from "@mui/material/CircularProgress";
-import Popper from "@mui/material/Popper";
-import Grow from "@mui/material/Grow";
-import Paper from "@mui/material/Paper";
-import ClickAwayListener from "@mui/material/ClickAwayListener";
-import MenuList from "@mui/material/MenuList";
 import Dialog from "@mui/material/Dialog";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import ShortcutIcon from "@mui/icons-material/Shortcut";
 import { SingleShortcut } from "./Shortcuts";
+import SyncIcon from "@mui/icons-material/Sync";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogActions from "@mui/material/DialogActions";
 
 function SearchResultsList(props: {
   results?: SearchResults;
@@ -151,30 +149,14 @@ export default function Search() {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [searchSystem, setSearchSystem] = React.useState("all");
 
-  const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef<HTMLDivElement>(null);
-
   const [openShortcut, setOpenShortcut] = React.useState(false);
   const [selectedGame, setSelectedGame] = React.useState<Game | null>(null);
+
+  const [regenOpen, setRegenOpen] = React.useState(false);
 
   useEffect(() => {
     ws.sendMessage("getIndexStatus");
   }, []);
-
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
-
-  const handleClose = (event: Event) => {
-    if (
-      anchorRef.current &&
-      anchorRef.current.contains(event.target as HTMLElement)
-    ) {
-      return;
-    }
-
-    setOpen(false);
-  };
 
   const searchGames = useMutation({
     mutationFn: () =>
@@ -287,9 +269,9 @@ export default function Search() {
                     </MenuItem>
                   ))}
               </Select>
-              <Box ref={anchorRef}>
-                <IconButton onClick={() => handleToggle()}>
-                  <MoreVertIcon />
+              <Box>
+                <IconButton onClick={() => setRegenOpen(true)}>
+                  <SyncIcon />
                 </IconButton>
               </Box>
             </Stack>
@@ -318,41 +300,24 @@ export default function Search() {
         )}
         <ScrollToTopFab />
       </Stack>
-      <Popper
-        sx={{
-          zIndex: 1,
-        }}
-        open={open}
-        anchorEl={anchorRef.current}
-        role={undefined}
-        transition
-        disablePortal
-      >
-        {({ TransitionProps, placement }) => (
-          <Grow
-            {...TransitionProps}
-            style={{
-              transformOrigin:
-                placement === "bottom" ? "center top" : "center bottom",
+
+      <Dialog open={regenOpen} onClose={() => setRegenOpen(false)}>
+        <DialogContent>
+          <DialogContentText>Regenerate the search index?</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setRegenOpen(false)}>Cancel</Button>
+          <Button
+            onClick={() => {
+              setRegenOpen(false);
+              startIndex.mutate();
             }}
+            variant="contained"
           >
-            <Paper sx={{ m: 1 }}>
-              <ClickAwayListener onClickAway={handleClose}>
-                <MenuList>
-                  <MenuItem
-                    onClick={() => {
-                      setOpen(false);
-                      startIndex.mutate();
-                    }}
-                  >
-                    Regenerate index
-                  </MenuItem>
-                </MenuList>
-              </ClickAwayListener>
-            </Paper>
-          </Grow>
-        )}
-      </Popper>
+            Regenerate
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
