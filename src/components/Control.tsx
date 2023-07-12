@@ -16,11 +16,14 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { ControlApi } from "../lib/api";
+import KeyboardDoubleArrowDownIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
+import KeyboardDoubleArrowUpIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
 
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
 import { Dialog } from "@mui/material";
 import useWs from "./WebSocket";
+import Stack from "@mui/material/Stack";
 
 const keyMap: { [key: string]: number } = {
   ESC: 1,
@@ -271,7 +274,30 @@ export default function Control() {
             <KeyboardArrowDownIcon />
           </Button>
         </Grid>
-        <Grid item xs={4}></Grid>
+        <Grid item xs={4}>
+          <Stack direction="row" spacing={0.5}>
+            <Button
+              variant="outlined"
+              size="large"
+              sx={{ height: 75, flexGrow: 1, minWidth: 0 }}
+              onClick={() => {
+                sendRawKey(104);
+              }}
+            >
+              <KeyboardDoubleArrowUpIcon />
+            </Button>
+            <Button
+              variant="outlined"
+              size="large"
+              sx={{ height: 75, flexGrow: 1, minWidth: 0 }}
+              onClick={() => {
+                sendRawKey(109);
+              }}
+            >
+              <KeyboardDoubleArrowDownIcon />
+            </Button>
+          </Stack>
+        </Grid>
       </Grid>
 
       <Grid container spacing={2} sx={{ mt: 3 }}>
