@@ -69,6 +69,7 @@ import moment from "moment";
 import { Network } from "./Network";
 import { Scripts } from "./Scripts";
 import { useMusicStatus } from "../lib/queries";
+import LinearProgress from "@mui/material/LinearProgress";
 
 const drawerWidth = 240;
 
@@ -299,6 +300,22 @@ function PlayingButton() {
   );
 }
 
+function humanFileSize(bytes: number) {
+  if (bytes === 0) {
+    return "0 B";
+  }
+
+  const thresh = 1024;
+  let unit = 0;
+
+  while (bytes >= thresh || -bytes >= thresh) {
+    bytes /= thresh;
+    unit++;
+  }
+
+  return (unit ? bytes.toFixed(1) + " " : bytes) + " KMGTPEZY"[unit] + "B";
+}
+
 export default function ResponsiveDrawer() {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -402,9 +419,29 @@ export default function ResponsiveDrawer() {
         />
       </List>
       <Divider />
-      {sysInfo.data && sysInfo.data.ips ? (
+      {sysInfo.data && sysInfo.data.ips && sysInfo.data.disks ? (
         <div onClick={() => sysInfo.refetch()}>
           <List dense sx={{ pb: 0.6 }}>
+            {sysInfo.data.disks.map((disk) => (
+              <>
+                <ListItem key={disk.path}>
+                  <ListItemText
+                    primary={disk.displayName}
+                    secondary={
+                      humanFileSize(disk.free) +
+                      " / " +
+                      humanFileSize(disk.total) +
+                      " available"
+                    }
+                  />
+                </ListItem>
+                <LinearProgress
+                  variant="determinate"
+                  value={Math.round((disk.used / disk.total) * 100)}
+                  sx={{ ml: 2, mr: 2, mt: -1, mb: 1.5 }}
+                />
+              </>
+            ))}
             <ListItem>
               <ListItemText
                 primary="Last system update"

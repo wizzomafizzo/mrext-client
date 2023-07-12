@@ -202,22 +202,6 @@ function DeleteFile(props: { item: MEMenuItem; close: () => void }) {
   );
 }
 
-function humanFileSize(bytes: number) {
-  if (bytes === 0) {
-    return "0 B";
-  }
-
-  const thresh = 1024;
-  let unit = 0;
-
-  while (bytes >= thresh || -bytes >= thresh) {
-    bytes /= thresh;
-    unit++;
-  }
-
-  return (unit ? bytes.toFixed(1) + " " : bytes) + " KMGTPEZY"[unit] + "B";
-}
-
 function EditFile(props: {
   item: MEMenuItem;
   parentContents: MEMenuItem[];

@@ -129,6 +129,13 @@ export interface SysInfoResponse {
   dns: string;
   version: string;
   updated: string;
+  disks: {
+    path: string;
+    total: number;
+    used: number;
+    free: number;
+    displayName: string;
+  }[];
 }
 
 export interface PeersResponse {
