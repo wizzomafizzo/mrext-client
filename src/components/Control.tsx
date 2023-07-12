@@ -21,9 +21,12 @@ import KeyboardDoubleArrowUpIcon from "@mui/icons-material/KeyboardDoubleArrowUp
 
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
-import { Dialog } from "@mui/material";
+import { Dialog, DialogTitle } from "@mui/material";
 import useWs from "./WebSocket";
 import Stack from "@mui/material/Stack";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
 
 const keyMap: { [key: string]: number } = {
   ESC: 1,
@@ -158,6 +161,7 @@ export default function Control() {
   const [keyboardLayout, setKeyboardLayout] = React.useState("default");
   const [keyboardOpen, setKeyboardOpen] = React.useState(false);
   const [numpadOpen, setNumpadOpen] = React.useState(false);
+  const [resetOpen, setResetOpen] = React.useState(false);
 
   const ws = useWs();
 
@@ -464,7 +468,7 @@ export default function Control() {
             variant="outlined"
             sx={{ width: "100%" }}
             onClick={() => {
-              sendKey("reset");
+              setResetOpen(true);
             }}
             startIcon={<RestartAltIcon />}
           >
@@ -472,6 +476,28 @@ export default function Control() {
           </Button>
         </Grid>
       </Grid>
+
+      <Dialog open={resetOpen} onClose={() => setResetOpen(false)}>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to reset the system?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setResetOpen(false)}>Cancel</Button>
+          <Button
+            onClick={() => {
+              sendKey("reset");
+              setResetOpen(false);
+            }}
+            autoFocus
+            variant="contained"
+            color="error"
+          >
+            Reset
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Dialog
         onClose={() => setKeyboardOpen(false)}
