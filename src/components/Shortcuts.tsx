@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -48,6 +48,12 @@ export function MenuFolderPicker(props: {
     props.defaultPath ? props.defaultPath : props.path
   );
   const listMenuFolder = useListMenuFolder(currentPath);
+
+  useEffect(() => {
+    if (listMenuFolder.error?.response?.status === 404) {
+      setCurrentPath("");
+    }
+  }, [listMenuFolder.error]);
 
   const setCurrent = (path: string) => {
     setCurrentPath(path);

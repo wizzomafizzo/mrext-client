@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { ControlApi } from "./api";
+import { ListInisPayload, ViewMenu } from "./models";
+import { AxiosError } from "axios";
 
 const api = new ControlApi();
 
@@ -19,15 +21,15 @@ export const useIndexedSystems = () =>
   });
 
 export const useListMenuFolder = (path: string) =>
-  useQuery({
+  useQuery<ViewMenu, AxiosError>({
     queryKey: ["listMenu", path],
     queryFn: () => api.listMenuFolder(path),
   });
 
 export const useListMisterInis = () =>
-  useQuery({
+  useQuery<ListInisPayload, AxiosError>({
     queryKey: ["settings", "inis"],
-    queryFn: () => api.listMisterInis(),
+    queryFn: api.listMisterInis,
   });
 
 export const useScriptsList = () => useQuery(["scripts"], api.getAllScripts);
