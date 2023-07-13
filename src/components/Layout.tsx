@@ -62,7 +62,7 @@ import {
 } from "../lib/store";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import { ControlApi } from "../lib/api";
+import { ControlApi, getApiEndpoint } from "../lib/api";
 import { useQuery } from "@tanstack/react-query";
 import ListItem from "@mui/material/ListItem";
 import moment from "moment";
@@ -343,7 +343,11 @@ export default function ResponsiveDrawer() {
         <Stack>
           <Stack direction="row">
             <img alt="MiSTer Kun Logo" src="/misterkun.svg" height={43} />
-            <img alt="MiSTer FPGA Logo" src="/misterlogo.svg" height={43} />
+            <img
+              alt="MiSTer FPGA Logo"
+              src={getApiEndpoint() + "/settings/remote/logo"}
+              height={43}
+            />
           </Stack>
           {sysInfo.data ? (
             <Typography fontSize="x-small" textAlign="center">
@@ -423,8 +427,8 @@ export default function ResponsiveDrawer() {
         <div onClick={() => sysInfo.refetch()}>
           <List dense sx={{ pb: 0.6 }}>
             {sysInfo.data.disks.map((disk) => (
-              <>
-                <ListItem key={disk.path}>
+              <Box key={disk.path}>
+                <ListItem>
                   <ListItemText
                     primary={disk.displayName}
                     secondary={
@@ -440,7 +444,7 @@ export default function ResponsiveDrawer() {
                   value={Math.round((disk.used / disk.total) * 100)}
                   sx={{ ml: 2, mr: 2, mt: -1, mb: 1.5 }}
                 />
-              </>
+              </Box>
             ))}
             <ListItem>
               <ListItemText
