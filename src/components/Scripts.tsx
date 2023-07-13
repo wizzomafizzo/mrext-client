@@ -102,7 +102,7 @@ export function Scripts() {
               key={script.filename}
               secondaryAction={
                 <IconButton
-                  sx={{ p: 0.5, mr: -2.5 }}
+                  sx={{ p: 0.5, pt: 1, mr: -2.5 }}
                   onClick={() => {
                     removeFavorite(script.filename);
                   }}
@@ -110,6 +110,7 @@ export function Scripts() {
                   <StarIcon />
                 </IconButton>
               }
+              sx={{ pt: 0.5 }}
             >
               <ListItemButton
                 disableGutters
@@ -137,7 +138,7 @@ export function Scripts() {
               key={script.filename}
               secondaryAction={
                 <IconButton
-                  sx={{ p: 0.5, mr: -2.5 }}
+                  sx={{ p: 0.5, pt: 1, mr: -2.5 }}
                   onClick={() => {
                     addFavorite(script.filename);
                   }}
@@ -145,6 +146,7 @@ export function Scripts() {
                   <StarBorderIcon />
                 </IconButton>
               }
+              sx={{ pt: 0.5 }}
             >
               <ListItemButton
                 disableGutters
