@@ -13,6 +13,7 @@ import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import { useMediaQuery } from "react-responsive";
 
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import SearchIcon from "@mui/icons-material/Search";
@@ -332,6 +333,7 @@ export default function ResponsiveDrawer() {
     queryFn: api.getPeers,
   });
   const musicStatus = useMusicStatus(true);
+  const isMobile = useMediaQuery({ query: "(max-width: 600px)" });
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -500,8 +502,8 @@ export default function ResponsiveDrawer() {
       <AppBar
         position="fixed"
         sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
+          width: isMobile ? "100%" : `calc(100% - ${drawerWidth}px)`,
+          ml: isMobile ? "0" : `${drawerWidth}px`,
         }}
       >
         <Toolbar
@@ -517,7 +519,7 @@ export default function ResponsiveDrawer() {
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
+            sx={{ mr: 2, display: isMobile ? "block" : "none" }}
           >
             <MenuIcon />
           </IconButton>
@@ -544,48 +546,51 @@ export default function ResponsiveDrawer() {
       </AppBar>
       <Box
         component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+        sx={!isMobile ? { width: drawerWidth, flexShrink: 0 } : null}
         aria-label="mailbox folders"
       >
-        <SwipeableDrawer
-          container={window.document.body}
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          onOpen={handleDrawerToggle}
-          disableBackdropTransition
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-          sx={{
-            display: { xs: "block", sm: "none" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth,
-            },
-          }}
-        >
-          {drawer}
-        </SwipeableDrawer>
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: "none", sm: "block" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth,
-            },
-          }}
-          open
-        >
-          {drawer}
-        </Drawer>
+        {isMobile ? (
+          <SwipeableDrawer
+            container={window.document.body}
+            variant="temporary"
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            onOpen={handleDrawerToggle}
+            disableBackdropTransition
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
+            sx={{
+              display: "block",
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: drawerWidth,
+              },
+            }}
+          >
+            {drawer}
+          </SwipeableDrawer>
+        ) : (
+          <Drawer
+            variant="permanent"
+            sx={{
+              display: "block",
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: drawerWidth,
+              },
+            }}
+            open
+          >
+            {drawer}
+          </Drawer>
+        )}
       </Box>
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          width: isMobile ? "100%" : `calc(100% - ${drawerWidth}px)`,
         }}
       >
         <Toolbar />
