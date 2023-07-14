@@ -54,7 +54,7 @@ export function PageHeader(props: { title: string; noRevert?: boolean }) {
         sx={{
           boxShadow: 2,
           position: "fixed",
-          width: 1,
+          width: { xs: 1, sm: "calc(100% - 240px)" },
           height: "45px",
           zIndex: 2,
           borderRadius: 0,
@@ -102,7 +102,7 @@ export function SaveButton() {
           boxShadow: 2,
           position: "fixed",
           bottom: 0,
-          width: 1,
+          width: { xs: 1, sm: "calc(100% - 240px)" },
           height: "50px",
           zIndex: 2,
           borderRadius: 0,
