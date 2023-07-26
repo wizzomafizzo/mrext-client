@@ -519,7 +519,11 @@ export default function ResponsiveDrawer() {
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: isMobile ? "block" : "none" }}
+            sx={{
+              mr: 2,
+              mt: 1,
+              display: isMobile ? "block" : "none",
+            }}
           >
             <MenuIcon />
           </IconButton>
