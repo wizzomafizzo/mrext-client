@@ -156,8 +156,14 @@ const keyMap: { [key: string]: number } = {
   "?": -53,
 };
 
+function isTouchSupported() {
+  // @ts-ignore
+  const msTouchEnabled = window.navigator.msMaxTouchPoints;
+  const generalTouchEnabled = "ontouchstart" in document.createElement("div");
+  return !!(msTouchEnabled || generalTouchEnabled);
+}
+
 export default function Control() {
-  const api = new ControlApi();
   const [keyboardLayout, setKeyboardLayout] = React.useState("default");
   const [keyboardOpen, setKeyboardOpen] = React.useState(false);
   const [numpadOpen, setNumpadOpen] = React.useState(false);
@@ -179,12 +185,24 @@ export default function Control() {
     ws.sendMessage("kbdRaw:" + code);
   };
 
+  const hasTouch = isTouchSupported();
+
   const sendRawKeyDown = (code: number) => {
-    ws.sendMessage("kbdRawDown:" + code);
+    if (hasTouch) {
+      ws.sendMessage("kbdRawDown:" + code);
+    }
   };
 
   const sendRawKeyUp = (code: number) => {
-    ws.sendMessage("kbdRawUp:" + code);
+    if (hasTouch) {
+      ws.sendMessage("kbdRawUp:" + code);
+    }
+  };
+
+  const sendRawKeyNoTouch = (code: number) => {
+    if (!hasTouch) {
+      ws.sendMessage("kbdRaw:" + code);
+    }
   };
 
   return (
@@ -213,6 +231,9 @@ export default function Control() {
             onTouchEnd={() => {
               sendRawKeyUp(103);
             }}
+            onClick={() => {
+              sendRawKeyNoTouch(103);
+            }}
           >
             <KeyboardArrowUpIcon />
           </Button>
@@ -239,6 +260,9 @@ export default function Control() {
             }}
             onTouchEnd={() => {
               sendRawKeyUp(105);
+            }}
+            onClick={() => {
+              sendRawKeyNoTouch(105);
             }}
           >
             <KeyboardArrowLeftIcon />
@@ -267,6 +291,9 @@ export default function Control() {
             onTouchEnd={() => {
               sendRawKeyUp(106);
             }}
+            onClick={() => {
+              sendRawKeyNoTouch(106);
+            }}
           >
             <KeyboardArrowRightIcon />
           </Button>
@@ -293,6 +320,9 @@ export default function Control() {
             }}
             onTouchEnd={() => {
               sendRawKeyUp(108);
+            }}
+            onClick={() => {
+              sendRawKeyNoTouch(108);
             }}
           >
             <KeyboardArrowDownIcon />
