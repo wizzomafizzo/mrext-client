@@ -18,6 +18,8 @@ export enum SettingsPageId {
 export interface UIState {
   activeTheme: string;
   setActiveTheme: (theme: string) => void;
+  fontSize: number;
+  setFontSize: (size: number) => void;
   activeSettingsPage: SettingsPageId;
   setActiveSettingsPage: (page: SettingsPageId) => void;
   lastFavoriteFolder: string;
@@ -33,6 +35,8 @@ export const useUIStateStore = create<UIState>()(
     (set, get) => ({
       activeTheme: "mister",
       setActiveTheme: (id: string) => set({ activeTheme: id }),
+      fontSize: 14,
+      setFontSize: (size: number) => set({ fontSize: size }),
       activeSettingsPage: SettingsPageId.Main,
       setActiveSettingsPage: (page: SettingsPageId) =>
         set({ activeSettingsPage: page }),

@@ -7,13 +7,23 @@ import Layout from "./components/Layout";
 import { useUIStateStore } from "./lib/store";
 
 function App() {
-    const activeTheme = useUIStateStore((state) => state.activeTheme);
+  const activeThemeState = useUIStateStore((state) => state.activeTheme);
+  const activeTheme = getTheme(activeThemeState);
+  const fontSize = useUIStateStore((state) => state.fontSize);
 
-    return (
-        <ThemeProvider theme={createTheme(getTheme(activeTheme).options)}>
-            <Layout />
-        </ThemeProvider>
-    );
+  const theme = createTheme({
+    ...activeTheme.options,
+    typography: {
+      ...activeTheme.options.typography,
+      fontSize: fontSize,
+    },
+  });
+
+  return (
+    <ThemeProvider theme={theme}>
+      <Layout />
+    </ThemeProvider>
+  );
 }
 
 export default App;

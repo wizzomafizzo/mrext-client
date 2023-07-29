@@ -534,7 +534,7 @@ export default function ResponsiveDrawer() {
           >
             <MenuIcon />
           </IconButton>
-          {!isMobile && <Box sx={{ mr: 6 }}></Box>}
+          {!isMobile && <Box sx={{ width: "54px" }}></Box>}
           <Stack
             direction="row"
             sx={{

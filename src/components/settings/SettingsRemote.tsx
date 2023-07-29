@@ -19,10 +19,18 @@ import {
   setWsEndpoint,
 } from "../../lib/api";
 import { Card } from "@mui/material";
+import FormLabel from "@mui/material/FormLabel";
+import RemoveIcon from "@mui/icons-material/Remove";
+import AddIcon from "@mui/icons-material/Add";
+import { Add } from "@mui/icons-material";
+import Typography from "@mui/material/Typography";
 
 export default function Remote() {
   const activeTheme = useUIStateStore((state) => state.activeTheme);
   const setActiveTheme = useUIStateStore((state) => state.setActiveTheme);
+  const fontSize = useUIStateStore((state) => state.fontSize);
+  const setFontSize = useUIStateStore((state) => state.setFontSize);
+
   const api = new ControlApi();
 
   const storedApiEndpoint = getStoredApiEndpoint();
@@ -52,6 +60,43 @@ export default function Remote() {
               </MenuItem>
             ))}
           </Select>
+        </FormControl>
+
+        <FormControl>
+          <FormLabel>Font size</FormLabel>
+          <Stack direction="row" spacing={1}>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                if (fontSize > 5) {
+                  setFontSize(fontSize - 1);
+                }
+              }}
+            >
+              <RemoveIcon />
+            </Button>
+            <Typography sx={{ pl: 2, pr: 2, fontSize: "150%" }}>
+              {fontSize}
+            </Typography>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                if (fontSize < 50) {
+                  setFontSize(fontSize + 1);
+                }
+              }}
+            >
+              <AddIcon />
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                setFontSize(14);
+              }}
+            >
+              Reset
+            </Button>
+          </Stack>
         </FormControl>
 
         <SectionHeader text={"Advanced"} />
