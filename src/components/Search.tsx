@@ -192,8 +192,12 @@ export default function Search() {
         <LinearProgress
           variant="determinate"
           value={
-            (serverState.search.currentStep / serverState.search.totalSteps) *
-            100
+            serverState.search.currentStep === 0 ||
+            serverState.search.totalSteps === 0
+              ? 0
+              : (serverState.search.currentStep /
+                  serverState.search.totalSteps) *
+                100
           }
         />
         <Typography>{serverState.search.currentDesc}</Typography>
