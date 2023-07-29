@@ -569,14 +569,14 @@ export default function Control() {
               default: [
                 "q w e r t y u i o p",
                 "a s d f g h j k l",
-                "{shiftup} z x c v b n m {backspace}",
-                "{numbers} , {space} . {enter}",
+                "{symbols} z x c v b n m {backspace}",
+                "{numbers} , {space} . {shiftup} {enter}",
               ],
               shift: [
                 "Q W E R T Y U I O P",
                 "A S D F G H J K L",
-                "{shiftdown} Z X C V B N M {backspace}",
-                "{numbers} , {space} . {enter}",
+                "{symbols} Z X C V B N M {backspace}",
+                "{numbers} , {space} . {shiftdown} {enter}",
               ],
               numbers: [
                 "1 2 3 4 5 6 7 8 9 0",
@@ -591,8 +591,8 @@ export default function Control() {
                 "DEL PGUP PGDN HOME",
                 "{left} {up} {down} {right} END",
                 "^ < > = { } ~ | \\",
-                "{numbers} % [ ] ` {backspace}",
-                "{abc} , {space} . {enter}",
+                "{abc} % [ ] ` {backspace}",
+                "{numbers} , {space} . {enter}",
               ],
             }}
             display={{
@@ -604,7 +604,7 @@ export default function Control() {
               "{shiftdown}": "⬆",
               "{abc}": "ABC",
               "{space}": "_________",
-              "{symbols}": "FN~",
+              "{symbols}": "FUNC",
               "{left}": "←",
               "{right}": "→",
               "{up}": "↑",
