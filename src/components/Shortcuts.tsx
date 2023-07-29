@@ -19,6 +19,33 @@ import Paper from "@mui/material/Paper";
 import { useMutation } from "@tanstack/react-query";
 import { ControlApi } from "../lib/api";
 import { useUIStateStore } from "../lib/store";
+import { MenuItem as MEMenuItem } from "../lib/models";
+import IconButton from "@mui/material/IconButton";
+import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
+import { DialogTitle } from "@mui/material";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+
+const BadFileChars = ["/", "\\", ":", "*", "?", '"', "<", ">", "|"];
+
+export const isValidFilename = (
+  name: string,
+  parentContents: MEMenuItem[] | undefined
+): boolean => {
+  if (name === "") {
+    return false;
+  }
+
+  for (let i = 0; i < BadFileChars.length; i++) {
+    if (name.includes(BadFileChars[i])) {
+      return false;
+    }
+  }
+
+  return !parentContents?.find(
+    (item: MEMenuItem) => item.name.toLowerCase() === name.toLowerCase()
+  );
+};
 
 export const formatCurrentPath = (path: string) => {
   if (path === "" || path === ".") {
@@ -118,18 +145,26 @@ export function MenuFolderPicker(props: {
           </Typography>
           <Button onClick={props.close}>Cancel</Button>
         </Stack>
-        <Button
-          variant="contained"
-          fullWidth
-          sx={{ mt: 1, mb: 1 }}
-          onClick={() => {
-            props.setPath(currentPath);
-            props.close();
-          }}
-          disabled={listMenuFolder.isLoading || props.path === currentPath}
-        >
-          {props.verb ? props.verb : "Select"} {formatCurrentPath(currentPath)}
-        </Button>
+        <Stack direction="row">
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{ mt: 1, mb: 1 }}
+            onClick={() => {
+              props.setPath(currentPath);
+              props.close();
+            }}
+            disabled={listMenuFolder.isLoading || props.path === currentPath}
+          >
+            {props.verb ? props.verb : "Select"}{" "}
+            {formatCurrentPath(currentPath)}
+          </Button>
+          <CreateFolder
+            path={currentPath}
+            contents={listMenuFolder.data?.items}
+            refresh={listMenuFolder.refetch}
+          />
+        </Stack>
       </Paper>
       {listMenuFolder.isLoading ? <LinearProgress /> : null}
       {results}
@@ -236,5 +271,66 @@ export function SingleShortcut(props: { path: string; back: () => void }) {
         defaultPath={uiState.lastFavoriteFolder}
       />
     </Stack>
+  );
+}
+
+export function CreateFolder(props: {
+  path: string;
+  contents: MEMenuItem[] | undefined;
+  refresh: () => void;
+}) {
+  const api = new ControlApi();
+  const [open, setOpen] = useState<boolean>(false);
+  const [name, setName] = useState<string>("");
+
+  const handleClose = () => {
+    setOpen(false);
+    setName("");
+  };
+
+  return (
+    <>
+      <IconButton onClick={() => setOpen(true)}>
+        <CreateNewFolderIcon />
+      </IconButton>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Create new folder</DialogTitle>
+        <DialogContent>
+          <FormControl sx={{ pt: 1 }}>
+            <TextField
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              label="Folder name"
+              inputProps={{ maxLength: 255 }}
+              autoFocus
+            />
+          </FormControl>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button
+            onClick={() => {
+              api
+                .createMenuFile({
+                  type: "folder",
+                  folder: props.path,
+                  name: name.trim(),
+                })
+                .catch((e) => {
+                  console.log(e);
+                })
+                .then(() => {
+                  handleClose();
+                  props.refresh();
+                });
+            }}
+            variant="contained"
+            disabled={!isValidFilename(name, props.contents)}
+          >
+            Create
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }

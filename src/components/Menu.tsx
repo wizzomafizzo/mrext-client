@@ -21,7 +21,12 @@ import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
-import { formatCurrentPath, MenuFolderPicker } from "./Shortcuts";
+import {
+  CreateFolder,
+  formatCurrentPath,
+  isValidFilename,
+  MenuFolderPicker,
+} from "./Shortcuts";
 import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import Popper from "@mui/material/Popper";
@@ -29,7 +34,6 @@ import Grow from "@mui/material/Grow";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import MenuList from "@mui/material/MenuList";
 import SortIcon from "@mui/icons-material/Sort";
-import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import ListItem from "@mui/material/ListItem";
 import Dialog from "@mui/material/Dialog";
 import { DialogTitle } from "@mui/material";
@@ -57,27 +61,6 @@ enum EditMode {
   Move,
   Delete,
 }
-
-const BadFileChars = ["/", "\\", ":", "*", "?", '"', "<", ">", "|"];
-
-const isValidFilename = (
-  name: string,
-  parentContents: MEMenuItem[] | undefined
-): boolean => {
-  if (name === "") {
-    return false;
-  }
-
-  for (let i = 0; i < BadFileChars.length; i++) {
-    if (name.includes(BadFileChars[i])) {
-      return false;
-    }
-  }
-
-  return !parentContents?.find(
-    (item: MEMenuItem) => item.name.toLowerCase() === name.toLowerCase()
-  );
-};
 
 function RenameFile(props: {
   item: MEMenuItem;
@@ -322,67 +305,6 @@ function EditFile(props: {
       </IconButton>
       <Dialog open={open} onClose={handleClose}>
         {editSection()}
-      </Dialog>
-    </>
-  );
-}
-
-function CreateFolder(props: {
-  path: string;
-  contents: MEMenuItem[] | undefined;
-  refresh: () => void;
-}) {
-  const api = new ControlApi();
-  const [open, setOpen] = useState<boolean>(false);
-  const [name, setName] = useState<string>("");
-
-  const handleClose = () => {
-    setOpen(false);
-    setName("");
-  };
-
-  return (
-    <>
-      <IconButton onClick={() => setOpen(true)}>
-        <CreateNewFolderIcon />
-      </IconButton>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Create new folder</DialogTitle>
-        <DialogContent>
-          <FormControl sx={{ pt: 1 }}>
-            <TextField
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              label="Folder name"
-              inputProps={{ maxLength: 255 }}
-              autoFocus
-            />
-          </FormControl>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button
-            onClick={() => {
-              api
-                .createMenuFile({
-                  type: "folder",
-                  folder: props.path,
-                  name: name.trim(),
-                })
-                .catch((e) => {
-                  console.log(e);
-                })
-                .then(() => {
-                  handleClose();
-                  props.refresh();
-                });
-            }}
-            variant="contained"
-            disabled={!isValidFilename(name, props.contents)}
-          >
-            Create
-          </Button>
-        </DialogActions>
       </Dialog>
     </>
   );
