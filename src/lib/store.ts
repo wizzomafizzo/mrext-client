@@ -24,6 +24,8 @@ export interface UIState {
   setLastFavoriteFolder: (folder: string) => void;
   favoriteScripts: string[];
   setFavoriteScripts: (scripts: string[]) => void;
+  autoControlKeys: number[];
+  setAutoControlKeys: (keys: number[]) => void;
 }
 
 export const useUIStateStore = create<UIState>()(
@@ -40,6 +42,34 @@ export const useUIStateStore = create<UIState>()(
       favoriteScripts: [],
       setFavoriteScripts: (scripts: string[]) =>
         set({ favoriteScripts: scripts }),
+      autoControlKeys: [
+        24, // l2
+        25, // l1
+        37, // r1
+        38, // r2
+        103, // up
+        108, // down
+        105, // left
+        106, // right
+        23, // osd
+        36, // select
+        22, // start
+        21, // x
+        20, // y
+        19, // b
+        18, // a
+        2, // 1
+        3, // 2
+        4, // 3
+        5, // 4
+        6, // 5
+        7, // 6
+        8, // 7
+        9, // 8
+        10, // 9
+        11, // 10
+      ],
+      setAutoControlKeys: (keys: number[]) => set({ autoControlKeys: keys }),
     }),
     {
       name: "uiState",

@@ -71,6 +71,7 @@ import { Network } from "./Network";
 import { Scripts } from "./Scripts";
 import { useMusicStatus } from "../lib/queries";
 import LinearProgress from "@mui/material/LinearProgress";
+import { ControlAuto } from "./ControlAuto";
 
 const drawerWidth = 240;
 
@@ -110,6 +111,12 @@ const pages: Page[] = [
     path: "/control",
     titleText: "Control",
     buttonText: "Control",
+    icon: <GamepadIcon />,
+  },
+  {
+    path: "/control/auto",
+    titleText: "Gamepad",
+    buttonText: "Gamepad",
     icon: <GamepadIcon />,
   },
   {
@@ -527,6 +534,7 @@ export default function ResponsiveDrawer() {
           >
             <MenuIcon />
           </IconButton>
+          {!isMobile && <Box sx={{ mr: 6 }}></Box>}
           <Stack
             direction="row"
             sx={{
@@ -610,6 +618,7 @@ export default function ResponsiveDrawer() {
           <Route path="/menu" element={<Menu />} />
           <Route path="/network" element={<Network />} />
           <Route path="/scripts" element={<Scripts />} />
+          <Route path="/control/auto" element={<ControlAuto />} />
         </Routes>
       </Box>
     </Box>

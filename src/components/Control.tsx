@@ -15,20 +15,19 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import { ControlApi } from "../lib/api";
 import KeyboardDoubleArrowDownIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
 import KeyboardDoubleArrowUpIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
 
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
-import { Dialog, DialogTitle } from "@mui/material";
+import { Dialog } from "@mui/material";
 import useWs from "./WebSocket";
 import Stack from "@mui/material/Stack";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 
-const keyMap: { [key: string]: number } = {
+export const keyMap: { [key: string]: number } = {
   ESC: 1,
   "1": 2,
   "2": 3,
