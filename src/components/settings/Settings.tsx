@@ -69,7 +69,7 @@ function IniSwitcher() {
     id: 1,
   };
 
-  if (inis.data && inis.data.inis.length > 0) {
+  if (inis.data && inis.data.inis && inis.data.inis.length > 0) {
     let id: number;
 
     if (inis.data.active === 0) {
@@ -134,7 +134,7 @@ function IniSwitcher() {
           variant="contained"
           endIcon={<SwapHorizIcon />}
           onClick={() => setIniDialogOpen(true)}
-          disabled={!inis.data || inis.data.inis.length < 2}
+          disabled={!inis.data || !inis.data.inis || inis.data.inis.length < 2}
         >
           Active INI: {activeIni.name}
         </Button>
