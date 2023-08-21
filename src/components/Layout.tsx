@@ -72,6 +72,7 @@ import { Scripts } from "./Scripts";
 import { useMusicStatus } from "../lib/queries";
 import LinearProgress from "@mui/material/LinearProgress";
 import { ControlAuto } from "./ControlAuto";
+import Grid from "@mui/material/Grid";
 
 const drawerWidth = 240;
 
@@ -254,13 +255,26 @@ function PlayingButton() {
 
   return (
     <>
-      <IconButton
+      <Button
         ref={anchorRef}
-        sx={{ ml: 3, color: "primary.contrastText" }}
+        sx={{
+          color: "primary.contrastText",
+          minWidth: "40px",
+          pl: "5px",
+          pr: "5px",
+          mr: 0,
+        }}
         onClick={() => setOpen(!open)}
+        variant="outlined"
+        size="small"
       >
+        {ws.readyState !== WebSocket.OPEN && (
+          <span style={{ paddingRight: "5px", paddingTop: "2px" }}>
+            Connect
+          </span>
+        )}{" "}
         {icon}
-      </IconButton>
+      </Button>
       <Popper
         sx={{
           zIndex: 1,
@@ -279,7 +293,7 @@ function PlayingButton() {
                 placement === "bottom" ? "center top" : "center bottom",
             }}
           >
-            <Paper sx={{ mr: 1 }}>
+            <Paper sx={{ mr: 0 }}>
               <ClickAwayListener onClickAway={handleClose}>
                 <Stack sx={{ p: 1 }}>
                   <Typography>
@@ -517,43 +531,40 @@ export default function ResponsiveDrawer() {
           sx={{
             backgroundColor: "secondary.main",
             color: "primary.contrastText",
+            pl: 1,
             pr: 1,
-            pl: 2.2,
           }}
         >
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{
-              mr: 2,
-              mt: 1,
-              display: isMobile ? "block" : "none",
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-          {!isMobile && <Box sx={{ width: "54px" }}></Box>}
-          <Stack
+          <Grid
+            container
             direction="row"
-            sx={{
-              flexGrow: 1,
-              alignItems: "center",
-              textAlign: "center",
-              justifyContent: "center",
-            }}
+            justifyContent="flex-end"
+            alignItems="center"
           >
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ marginLeft: 1 }}
-            >
-              {getPage(location.pathname)?.titleText}
-            </Typography>
-          </Stack>
-          <PlayingButton />
+            <Grid item xs={4}>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={handleDrawerToggle}
+                sx={{
+                  pt: "12px",
+                  pl: 2,
+                  display: isMobile ? "block" : "none",
+                }}
+              >
+                <MenuIcon />
+              </IconButton>
+            </Grid>
+            <Grid item xs={4} textAlign="center">
+              <Typography variant="h6" noWrap component="div">
+                {getPage(location.pathname)?.titleText}
+              </Typography>
+            </Grid>
+            <Grid item xs={4} textAlign="right">
+              <PlayingButton />
+            </Grid>
+          </Grid>
         </Toolbar>
       </AppBar>
       <Box
