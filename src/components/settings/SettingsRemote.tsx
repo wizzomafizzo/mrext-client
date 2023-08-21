@@ -8,7 +8,7 @@ import { themes } from "../../lib/themes";
 import { PageHeader, SectionHeader } from "./SettingsCommon";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   ControlApi,
   getApiEndpoint,
@@ -24,6 +24,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import { Add } from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
+import FormHelperText from "@mui/material/FormHelperText";
 
 export default function Remote() {
   const activeTheme = useUIStateStore((state) => state.activeTheme);
@@ -42,6 +43,19 @@ export default function Remote() {
   const [settingWsEndpoint, setSettingWsEndpoint] = useState(
     storedWsEndpoint ? storedWsEndpoint : ""
   );
+
+  let storedAddress = "";
+  if (storedApiEndpoint && storedApiEndpoint !== "") {
+    const url = new URL(storedApiEndpoint);
+    storedAddress = url.hostname;
+  }
+
+  const [address, setAddress] = useState(storedAddress);
+  const saveAddress = (address: string) => {
+    const url = "http://" + address + ":8182/api";
+    setApiEndpoint(url);
+    location.reload();
+  };
 
   return (
     <>
@@ -95,6 +109,28 @@ export default function Remote() {
               }}
             >
               Reset
+            </Button>
+          </Stack>
+        </FormControl>
+
+        <FormControl sx={{ pt: 1.5 }}>
+          <Stack spacing={1}>
+            <TextField
+              label="MiSTer address"
+              value={address}
+              onChange={(event) => setAddress(event.target.value)}
+              fullWidth
+            />
+            <FormHelperText>
+              The IP address or hostname of the connected MiSTer. Use the API
+              endpoint settings in the advanced section below for finer control.
+            </FormHelperText>
+            <Button
+              fullWidth
+              variant="outlined"
+              onClick={() => saveAddress(address)}
+            >
+              Save address
             </Button>
           </Stack>
         </FormControl>
