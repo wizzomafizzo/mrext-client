@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -63,7 +63,12 @@ import {
 } from "../lib/store";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import { ControlApi, getApiEndpoint } from "../lib/api";
+import {
+  ControlApi,
+  getApiEndpoint,
+  getStoredApiEndpoint,
+  setApiEndpoint,
+} from "../lib/api";
 import { useQuery } from "@tanstack/react-query";
 import ListItem from "@mui/material/ListItem";
 import moment from "moment";
@@ -73,6 +78,8 @@ import { useMusicStatus } from "../lib/queries";
 import LinearProgress from "@mui/material/LinearProgress";
 import { ControlAuto } from "./ControlAuto";
 import Grid from "@mui/material/Grid";
+import Dialog from "@mui/material/Dialog";
+import TextField from "@mui/material/TextField";
 
 const drawerWidth = 240;
 
@@ -221,7 +228,10 @@ function RouterLink(props: RouterLinkProps) {
   );
 }
 
-function PlayingButton() {
+function PlayingButton(props: {
+  connectOpen: boolean;
+  setConnectOpen: (open: boolean) => void;
+}) {
   const ws = useWs();
   const serverState = useServerStateStore();
   let icon = <PauseIcon />;
@@ -264,7 +274,13 @@ function PlayingButton() {
           pr: "5px",
           mr: 0,
         }}
-        onClick={() => setOpen(!open)}
+        onClick={() => {
+          if (ws.readyState !== WebSocket.OPEN) {
+            props.setConnectOpen(true);
+          } else {
+            setOpen(!open);
+          }
+        }}
         variant="outlined"
         size="small"
       >
@@ -338,6 +354,80 @@ function humanFileSize(bytes: number) {
   return (unit ? bytes.toFixed(1) + "" : bytes) + " KMGTPEZY"[unit] + "B";
 }
 
+function ConnectDialog(props: {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}) {
+  const apiUrl = getStoredApiEndpoint();
+  let storedAddress = "";
+  if (apiUrl && apiUrl !== "") {
+    const url = new URL(apiUrl);
+    storedAddress = url.hostname;
+  }
+
+  const [address, setAddress] = useState(storedAddress);
+  const [canConnect, setCanConnect] = useState(false);
+
+  const tryConnect = (address: string) => {
+    const url = "http://" + address + ":8182/api";
+    const statusUrl = url + "/sysinfo";
+    fetch(statusUrl).then((response) => {
+      if (response.status === 200) {
+        setCanConnect(true);
+      }
+    });
+  };
+
+  const saveAddress = (address: string) => {
+    const url = "http://" + address + ":8182/api";
+    setApiEndpoint(url);
+    props.setOpen(false);
+    location.reload();
+  };
+
+  useEffect(() => {
+    setCanConnect(false);
+    tryConnect(address);
+  }, [address]);
+
+  return (
+    <Dialog open={props.open} onClose={() => props.setOpen(false)}>
+      <Stack sx={{ p: 1 }} spacing={2}>
+        <Typography variant="body2">
+          Enter your MiSTer's IP address or hostname. The{" "}
+          <a
+            style={{ color: "white" }}
+            target="_blank"
+            href="https://github.com/wizzomafizzo/mrext/blob/main/docs/remote.md"
+          >
+            Remote script
+          </a>{" "}
+          must already be installed and running on the MiSTer.
+        </Typography>
+        <TextField
+          label="MiSTer address"
+          value={address}
+          onChange={(event) => setAddress(event.target.value)}
+          fullWidth
+        />
+        <Typography variant="body2">
+          This can be changed in the <i>Remote</i> section of the{" "}
+          <i>Settings</i> page.
+        </Typography>
+        <Button
+          disabled={!canConnect}
+          fullWidth
+          variant="outlined"
+          color="success"
+          onClick={() => saveAddress(address)}
+        >
+          Save
+        </Button>
+      </Stack>
+    </Dialog>
+  );
+}
+
 export default function ResponsiveDrawer() {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -355,6 +445,7 @@ export default function ResponsiveDrawer() {
   });
   const musicStatus = useMusicStatus(true);
   const isMobile = useMediaQuery({ query: "(max-width: 600px)" });
+  const [connectOpen, setConnectOpen] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -562,9 +653,13 @@ export default function ResponsiveDrawer() {
               </Typography>
             </Grid>
             <Grid item xs={4} textAlign="right">
-              <PlayingButton />
+              <PlayingButton
+                connectOpen={connectOpen}
+                setConnectOpen={setConnectOpen}
+              />
             </Grid>
           </Grid>
+          <ConnectDialog open={connectOpen} setOpen={setConnectOpen} />
         </Toolbar>
       </AppBar>
       <Box
