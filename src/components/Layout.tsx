@@ -463,7 +463,12 @@ export default function ResponsiveDrawer() {
 
   const drawer = (
     <div>
-      <Toolbar sx={{ justifyContent: "center" }}>
+      <Toolbar
+        sx={{
+          justifyContent: "center",
+          paddingTop: "env(safe-area-inset-top)",
+        }}
+      >
         <Stack>
           <Stack direction="row">
             <img alt="MiSTer Kun Logo" src="/misterkun.svg" height={43} />
@@ -634,6 +639,7 @@ export default function ResponsiveDrawer() {
             color: "primary.contrastText",
             pl: 1,
             pr: 1,
+            paddingTop: "env(safe-area-inset-top)",
           }}
         >
           <Grid
@@ -719,6 +725,7 @@ export default function ResponsiveDrawer() {
         sx={{
           flexGrow: 1,
           width: isMobile ? "100%" : `calc(100% - ${drawerWidth}px)`,
+          paddingTop: "env(safe-area-inset-top)",
         }}
       >
         <Toolbar />
