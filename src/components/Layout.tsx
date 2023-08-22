@@ -80,6 +80,7 @@ import { ControlAuto } from "./ControlAuto";
 import Grid from "@mui/material/Grid";
 import Dialog from "@mui/material/Dialog";
 import TextField from "@mui/material/TextField";
+import { Capacitor } from "@capacitor/core";
 
 const drawerWidth = 240;
 
@@ -446,6 +447,15 @@ export default function ResponsiveDrawer() {
   const musicStatus = useMusicStatus(true);
   const isMobile = useMediaQuery({ query: "(max-width: 600px)" });
   const [connectOpen, setConnectOpen] = useState(false);
+
+  useEffect(() => {
+    if (Capacitor.isNativePlatform()) {
+      const storedApiUrl = getStoredApiEndpoint();
+      if (!storedApiUrl || storedApiUrl === "") {
+        setConnectOpen(true);
+      }
+    }
+  }, []);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
