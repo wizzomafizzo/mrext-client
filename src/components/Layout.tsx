@@ -725,7 +725,9 @@ export default function ResponsiveDrawer() {
         sx={{
           flexGrow: 1,
           width: isMobile ? "100%" : `calc(100% - ${drawerWidth}px)`,
-          paddingTop: "env(safe-area-inset-top)",
+          // i don't know why i have to do this calc for the iphone notch but
+          // it works and makes the top padding same on all devices
+          paddingTop: "calc(env(safe-area-inset-top, 60px) - 5px)",
         }}
       >
         <Toolbar />
