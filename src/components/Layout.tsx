@@ -462,7 +462,12 @@ export default function ResponsiveDrawer() {
   };
 
   const drawer = (
-    <div>
+    <div
+      style={{
+        padding:
+          "env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)",
+      }}
+    >
       <Toolbar sx={{ justifyContent: "center" }}>
         <Stack>
           <Stack direction="row">
