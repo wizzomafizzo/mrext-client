@@ -51,11 +51,13 @@ function SearchResultsList(props: {
 
   if (props.results && props.results.data) {
     for (const game of props.results.data) {
-      if (displayed.has(game.name)) {
+      const gameId = game.system.id + "/" + game.name;
+
+      if (displayed.has(gameId)) {
         continue;
       }
 
-      displayed.add(game.name);
+      displayed.add(gameId);
       displayResults.push(game);
     }
   }
