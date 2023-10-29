@@ -40,3 +40,8 @@ These libraries are installed automatically but are notable:
 1. Run `vite build` to build the app
 2. Copy the entire `build` directory to `cmd/remote/_client` in the Remote
    repository
+
+### Publishing a release
+
+1. Create a tag `git tag vx.x` with your chosen version number
+2. Push the tag: `git push origin --tags`
