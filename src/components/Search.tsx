@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo } from "react";
-import { useMutation } from "@tanstack/react-query";
+import React, {useEffect, useMemo} from "react";
+import {useMutation} from "@tanstack/react-query";
 
 import Button from "@mui/material/Button";
 
@@ -13,14 +13,14 @@ import LinearProgress from "@mui/material/LinearProgress";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import SearchIcon from "@mui/icons-material/Search";
-import { ControlApi } from "../lib/api";
-import { useIndexedSystems } from "../lib/queries";
+import {ControlApi} from "../lib/api";
+import {useIndexedSystems} from "../lib/queries";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import { Game, SearchResults } from "../lib/models";
+import {Game, SearchResults} from "../lib/models";
 import IconButton from "@mui/material/IconButton";
 import ScrollToTopFab from "./ScrollToTop";
-import { useServerStateStore } from "../lib/store";
+import {useServerStateStore} from "../lib/store";
 import useWs from "./WebSocket";
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
@@ -28,11 +28,12 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import ShortcutIcon from "@mui/icons-material/Shortcut";
-import { SingleShortcut } from "./Shortcuts";
+import {SingleShortcut} from "./Shortcuts";
 import SyncIcon from "@mui/icons-material/Sync";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
+import TapAndPlayIcon from '@mui/icons-material/TapAndPlay';
 
 function SearchResultsList(props: {
   results?: SearchResults;
@@ -48,6 +49,8 @@ function SearchResultsList(props: {
   const displayed = new Set<string>();
   const displayResults: Game[] = [];
   const [gameInfoOpen, setGameInfoOpen] = React.useState(false);
+
+  const [waitingNfc, setWaitingNfc] = React.useState(false);
 
   if (props.results && props.results.data) {
     for (const game of props.results.data) {
@@ -67,12 +70,12 @@ function SearchResultsList(props: {
       {props.results ? (
         <Typography
           variant="body2"
-          sx={{ marginTop: "0.5em", textAlign: "center" }}
+          sx={{marginTop: "0.5em", textAlign: "center"}}
         >
           Found {displayed.size} {displayed.size === 1 ? "game" : "games"}
         </Typography>
       ) : null}
-      <List sx={{ marginTop: 2 }} disablePadding>
+      <List sx={{marginTop: 2}} disablePadding>
         {displayResults
           ?.sort((a, b) => a.system.id.localeCompare(b.system.id))
           .map((game) => (
@@ -100,8 +103,8 @@ function SearchResultsList(props: {
         }}
       >
         {props.selectedGame ? (
-          <Stack sx={{ m: 1, minWidth: "250px" }}>
-            <Box sx={{ mb: 2 }}>
+          <Stack sx={{m: 1, minWidth: "250px"}}>
+            <Box sx={{mb: 2}}>
               <Typography>{props.selectedGame.name}</Typography>
               <Typography variant="body2">
                 {props.selectedGame.system.name}
@@ -115,19 +118,39 @@ function SearchResultsList(props: {
                   setGameInfoOpen(false);
                 }
               }}
-              startIcon={<PlayArrowIcon />}
+              startIcon={<PlayArrowIcon/>}
             >
               Launch
             </Button>
             <Button
-              sx={{ mt: 1 }}
-              startIcon={<ShortcutIcon />}
+              variant="outlined"
+              sx={{mt: 1}}
+              startIcon={<ShortcutIcon/>}
               onClick={() => props.setOpenShortcut(true)}
             >
               Create shortcut
             </Button>
             <Button
-              sx={{ mt: 1 }}
+              variant="outlined"
+              sx={{mt: 1}}
+              startIcon={<TapAndPlayIcon/>}
+              onClick={() => {
+                if (props.selectedGame) {
+                  setWaitingNfc(true);
+                  api.nfcWrite({
+                    path: props.selectedGame.path
+                  }).then(() => {
+                    setGameInfoOpen(false);
+                  }).finally(() => {
+                    setWaitingNfc(false);
+                  });
+                }
+              }}
+            >
+              {waitingNfc ? "Waiting for tag..." : "Write to NFC tag" }
+            </Button>
+            <Button
+              sx={{mt: 1}}
               onClick={() => {
                 setGameInfoOpen(false);
                 props.setSelectedGame(null);
@@ -198,8 +221,8 @@ export default function Search() {
             serverState.search.totalSteps === 0
               ? 0
               : (serverState.search.currentStep /
-                  serverState.search.totalSteps) *
-                100
+                serverState.search.totalSteps) *
+              100
           }
         />
         <Typography>{serverState.search.currentDesc}</Typography>
@@ -209,8 +232,8 @@ export default function Search() {
 
   if (!serverState.search.ready) {
     return (
-      <Box m={2} sx={{ textAlign: "center" }}>
-        <Typography sx={{ marginBottom: 2 }}>
+      <Box m={2} sx={{textAlign: "center"}}>
+        <Typography sx={{marginBottom: 2}}>
           Searching needs an index of game files to be created. This is only
           required on first setup, or if the games on disk have changed.
         </Typography>
@@ -239,16 +262,16 @@ export default function Search() {
     <Box m={2}>
       <Grid
         container
-        sx={{ alignItems: "center" }}
-        spacing={{ xs: 2, sm: 2, md: 3 }}
-        columns={{ xs: 4, sm: 12, md: 12 }}
+        sx={{alignItems: "center"}}
+        spacing={{xs: 2, sm: 2, md: 3}}
+        columns={{xs: 4, sm: 12, md: 12}}
       >
         <Grid item xs={8}>
           <FormControl fullWidth>
             <TextField
               variant="outlined"
               autoComplete="off"
-              sx={{ width: "100%" }}
+              sx={{width: "100%"}}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
@@ -258,13 +281,13 @@ export default function Search() {
               placeholder="Search"
             />
           </FormControl>
-          <FormControl fullWidth sx={{ marginTop: 2 }}>
+          <FormControl fullWidth sx={{marginTop: 2}}>
             <Stack width={1} direction="row">
               <Select
                 value={searchSystem}
                 onChange={(e) => setSearchSystem(e.target.value)}
                 size="small"
-                sx={{ flexGrow: 1 }}
+                sx={{flexGrow: 1}}
               >
                 <MenuItem value="all">All systems</MenuItem>
                 {systems.data?.systems
@@ -277,7 +300,7 @@ export default function Search() {
               </Select>
               <Box>
                 <IconButton onClick={() => setRegenOpen(true)}>
-                  <SyncIcon />
+                  <SyncIcon/>
                 </IconButton>
               </Box>
             </Stack>
@@ -286,25 +309,25 @@ export default function Search() {
         <Grid item xs={4}>
           <Button
             variant="contained"
-            sx={{ width: "100%" }}
+            sx={{width: "100%"}}
             onClick={() => {
               searchGames.mutate();
             }}
-            startIcon={<SearchIcon />}
+            startIcon={<SearchIcon/>}
           >
             Search
           </Button>
         </Grid>
       </Grid>
-      <Stack sx={{ alignItems: "center" }}>
+      <Stack sx={{alignItems: "center"}}>
         {searchGames.isLoading ? (
-          <div style={{ textAlign: "center", marginTop: "2em" }}>
-            <CircularProgress />
+          <div style={{textAlign: "center", marginTop: "2em"}}>
+            <CircularProgress/>
           </div>
         ) : (
           resultsList
         )}
-        <ScrollToTopFab />
+        <ScrollToTopFab/>
       </Stack>
 
       <Dialog open={regenOpen} onClose={() => setRegenOpen(false)}>

@@ -279,4 +279,21 @@ export class ControlApi {
   async killScript() {
     await axios.post(`/scripts/kill`);
   }
+
+  async nfcStatus(): Promise<{
+    available: boolean;
+    running: boolean;
+  }> {
+    return (await axios.get(`/nfc/status`)).data;
+  }
+
+  async nfcWrite(data: {
+    path: string;
+  }) {
+    await axios.post(`/nfc/write`, data);
+  }
+
+  async nfcCancel() {
+    await axios.post(`/nfc/cancel`);
+  }
 }
