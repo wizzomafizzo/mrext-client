@@ -130,25 +130,25 @@ function SearchResultsList(props: {
             >
               Create shortcut
             </Button>
-            <Button
-              variant="outlined"
-              sx={{mt: 1}}
-              startIcon={<TapAndPlayIcon/>}
-              onClick={() => {
-                if (props.selectedGame) {
-                  setWaitingNfc(true);
-                  api.nfcWrite({
-                    path: props.selectedGame.path
-                  }).then(() => {
-                    setGameInfoOpen(false);
-                  }).finally(() => {
-                    setWaitingNfc(false);
-                  });
-                }
-              }}
-            >
-              {waitingNfc ? "Waiting for tag..." : "Write to NFC tag" }
-            </Button>
+            {/*<Button*/}
+            {/*  variant="outlined"*/}
+            {/*  sx={{mt: 1}}*/}
+            {/*  startIcon={<TapAndPlayIcon/>}*/}
+            {/*  onClick={() => {*/}
+            {/*    if (props.selectedGame) {*/}
+            {/*      setWaitingNfc(true);*/}
+            {/*      api.nfcWrite({*/}
+            {/*        path: props.selectedGame.path*/}
+            {/*      }).then(() => {*/}
+            {/*        setGameInfoOpen(false);*/}
+            {/*      }).finally(() => {*/}
+            {/*        setWaitingNfc(false);*/}
+            {/*      });*/}
+            {/*    }*/}
+            {/*  }}*/}
+            {/*>*/}
+            {/*  {waitingNfc ? "Waiting for tag..." : "Write to NFC tag" }*/}
+            {/*</Button>*/}
             <Button
               sx={{mt: 1}}
               onClick={() => {
