@@ -75,6 +75,7 @@ export interface MenuItem {
   version?: string;
   size: number;
   inZip: boolean;
+  system?: System;
 }
 
 export interface ViewMenu {

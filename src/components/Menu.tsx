@@ -8,7 +8,7 @@ import DeveloperBoardIcon from "@mui/icons-material/DeveloperBoard";
 import VideogameAssetIcon from "@mui/icons-material/VideogameAsset";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ListItemText from "@mui/material/ListItemText";
-import {MenuItem as MEMenuItem} from "../lib/models";
+import {Game, MenuItem as MEMenuItem} from "../lib/models";
 import moment from "moment";
 import ListItemButton from "@mui/material/ListItemButton";
 import ScrollToTopFab from "./ScrollToTop";
@@ -26,7 +26,7 @@ import {
   CreateFolder,
   formatCurrentPath,
   isValidFilename,
-  MenuFolderPicker,
+  MenuFolderPicker, SingleShortcut,
 } from "./Shortcuts";
 import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
@@ -50,6 +50,7 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FolderZipIcon from '@mui/icons-material/FolderZip';
 import TapAndPlayIcon from "@mui/icons-material/TapAndPlay";
+import ShortcutIcon from "@mui/icons-material/Shortcut";
 
 enum Sort {
   NameAsc,
@@ -192,6 +193,8 @@ function EditFile(props: {
   item: MEMenuItem;
   parentContents: MEMenuItem[];
   refresh: () => void;
+  setOpenShortcut?: (open: boolean) => void;
+  setSelectedPath?: (path: string) => void;
 }) {
   const api = new ControlApi();
   const [open, setOpen] = useState<boolean>(false);
@@ -281,6 +284,14 @@ function EditFile(props: {
                     />
                   </ListItem>
                 ) : null}
+                {props.item.system ? (
+                  <ListItem disableGutters disablePadding>
+                    <ListItemText
+                      primary="System"
+                      secondary={props.item.system.name}
+                    />
+                  </ListItem>
+                ) : null}
               </List>
               <Stack spacing={1}>
                 {props.item.type !== "folder" && props.item.type !== "zip" ? (
@@ -296,6 +307,22 @@ function EditFile(props: {
                     }}
                   >
                     Launch
+                  </Button>
+                ) : null}
+                {props.setOpenShortcut && props.item.system ? (
+                  <Button
+                    variant="outlined"
+                    sx={{mt: 1}}
+                    startIcon={<ShortcutIcon/>}
+                    onClick={() => {
+                      if (props.setOpenShortcut) {
+                        props.setSelectedPath && props.setSelectedPath(props.item.path)
+                        props.setOpenShortcut(true)
+                        setOpen(false)
+                      }
+                    }}
+                  >
+                    Create shortcut
                   </Button>
                 ) : null}
                 {nfcRunning && props.item.type !== "folder" && props.item.type !== "zip" ? (
@@ -650,6 +677,9 @@ export function GamesMenu() {
   const [currentPath, setCurrentPath] = useState<string>("");
   const [sort, setSort] = useState<Sort>(Sort.NameAsc);
 
+  const [openShortcut, setOpenShortcut] = React.useState(false);
+  const [selectedPath, setSelectedPath] = React.useState("");
+
   const listGamesMenu = useListGamesFolder(currentPath);
 
   const icon = (item: MEMenuItem) => {
@@ -704,6 +734,15 @@ export function GamesMenu() {
       top: 0,
     });
   };
+
+  if (openShortcut && selectedPath !== "") {
+    return (
+      <SingleShortcut
+        path={selectedPath}
+        back={() => setOpenShortcut(false)}
+      />
+    );
+  }
 
   return (
     <>
@@ -778,6 +817,8 @@ export function GamesMenu() {
                     parentContents={
                       listGamesMenu.data ? listGamesMenu.data.items : []
                     }
+                    setOpenShortcut={setOpenShortcut}
+                    setSelectedPath={setSelectedPath}
                   />
                 ) : null}
               >
