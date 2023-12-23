@@ -29,6 +29,7 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import LanIcon from "@mui/icons-material/Lan";
 import TerminalIcon from "@mui/icons-material/Terminal";
+import DeveloperBoardIcon from "@mui/icons-material/DeveloperBoard";
 
 import {
   Navigate,
@@ -54,7 +55,7 @@ import {
   Popper,
   SwipeableDrawer,
 } from "@mui/material";
-import { Menu } from "./Menu";
+import {GamesMenu, Menu} from "./Menu";
 import useWs from "./WebSocket";
 import {
   SettingsPageId,
@@ -105,10 +106,16 @@ const pages: Page[] = [
     icon: <SearchIcon />,
   },
   {
+    path: "/games",
+    titleText: "Games",
+    buttonText: "Games",
+    icon: <VideogameAssetIcon />,
+  },
+  {
     path: "/systems",
     titleText: "Systems",
     buttonText: "Systems",
-    icon: <VideogameAssetIcon />,
+    icon: <DeveloperBoardIcon />,
   },
   {
     path: "/screenshots",
@@ -503,10 +510,11 @@ export default function ResponsiveDrawer() {
           icon={<SearchIcon />}
           closeDrawer={handleDrawerToggle}
         />
+        <RouterLink to="/games" text="Games" icon={<VideogameAssetIcon />} closeDrawer={handleDrawerToggle} />
         <RouterLink
           to="/systems"
           text="Systems"
-          icon={<VideogameAssetIcon />}
+          icon={<DeveloperBoardIcon />}
           closeDrawer={handleDrawerToggle}
         />
         <RouterLink
@@ -735,6 +743,7 @@ export default function ResponsiveDrawer() {
           <Route path="/network" element={<Network />} />
           <Route path="/scripts" element={<Scripts />} />
           <Route path="/control/auto" element={<ControlAuto />} />
+          <Route path="/games" element={<GamesMenu />} />
         </Routes>
       </Box>
     </Box>

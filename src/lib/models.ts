@@ -70,10 +70,11 @@ export interface MenuItem {
   filename: string;
   extension: string;
   next?: string;
-  type: "folder" | "rbf" | "mra" | "mgl";
+  type: "folder" | "rbf" | "mra" | "mgl" | "zip";
   modified: string;
   version?: string;
   size: number;
+  inZip: boolean;
 }
 
 export interface ViewMenu {

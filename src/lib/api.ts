@@ -13,7 +13,7 @@ import {
   ListInisPayload,
   SysInfoResponse,
   PeersResponse,
-  ScriptsResponse,
+  ScriptsResponse, MenuItem,
 } from "./models";
 
 const API_ENDPOINT_KEY = "apiEndpoint";
@@ -295,5 +295,13 @@ export class ControlApi {
 
   async nfcCancel() {
     await axios.post(`/nfc/cancel`);
+  }
+
+  async listGamesFolder(path: string): Promise<ViewMenu> {
+    return (
+      await axios.post<ViewMenu>(`/games/view`, {
+        path,
+      })
+    ).data;
   }
 }

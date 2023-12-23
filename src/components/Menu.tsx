@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useListMenuFolder } from "../lib/queries";
+import {useListGamesFolder, useListMenuFolder} from "../lib/queries";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -47,6 +47,7 @@ import DriveFileMoveIcon from "@mui/icons-material/DriveFileMove";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import FolderZipIcon from '@mui/icons-material/FolderZip';
 
 enum Sort {
   NameAsc,
@@ -557,6 +558,173 @@ export function Menu() {
                     }
                   />
                 }
+              >
+                <ListItemButton
+                  onClick={() => {
+                    if (item.next) {
+                      setCurrentPath(item.next);
+                      resetScroll();
+                    } else {
+                      api.launchFile(item.path).catch((err) => {
+                        console.error(err);
+                      });
+                    }
+                  }}
+                >
+                  <ListItemIcon>{icon(item)}</ListItemIcon>
+                  <ListItemText
+                    primary={item.namesTxt ? item.namesTxt : item.name}
+                    secondary={
+                      item.version
+                        ? moment(item.version).format("YYYY-MM-DD")
+                        : null
+                    }
+                  />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        ) : null}
+        <ScrollToTopFab />
+      </Box>
+    </>
+  );
+}
+
+export function GamesMenu() {
+  const api = new ControlApi();
+
+  const [currentPath, setCurrentPath] = useState<string>("");
+  const [sort, setSort] = useState<Sort>(Sort.NameAsc);
+
+  const listGamesMenu = useListGamesFolder(currentPath);
+
+  const icon = (item: MEMenuItem) => {
+    switch (item.type) {
+      case "folder":
+        return <FolderOpenIcon />;
+      case "rbf":
+        return <DeveloperBoardIcon />;
+      case "zip":
+        return <FolderZipIcon />;
+      default:
+        return <VideogameAssetIcon />;
+    }
+  };
+
+  const sortItems = (items: MEMenuItem[] | undefined) => {
+    if (!items) {
+      return [];
+    }
+
+    const sorted = [...items];
+
+    if (currentPath === "" || currentPath === ".") {
+      sorted.sort((a, b) => a.name.localeCompare(b.name));
+    } else {
+      switch (sort) {
+        case Sort.NameAsc:
+          sorted.sort((a, b) => a.name.localeCompare(b.name));
+          break;
+        case Sort.NameDesc:
+          sorted.sort((a, b) => b.name.localeCompare(a.name));
+          break;
+        case Sort.DateAsc:
+          sorted.sort((a, b) => moment(a.modified).diff(moment(b.modified)));
+          break;
+        case Sort.DateDesc:
+          sorted.sort((a, b) => moment(b.modified).diff(moment(a.modified)));
+          break;
+      }
+    }
+
+    const folders = sorted.filter((item) => item.type === "folder");
+    const files = sorted.filter((item) => item.type !== "folder");
+
+    return [...folders, ...files];
+  };
+
+  const resetScroll = () => {
+    window.scrollTo({
+      top: 0,
+    });
+  };
+
+  return (
+    <>
+      <Paper
+        sx={{
+          boxShadow: 2,
+          position: "fixed",
+          width: 1,
+          height: "55px",
+          zIndex: 1,
+          borderRadius: 0,
+        }}
+      >
+        <Stack
+          direction="row"
+          sx={{ p: 1, pl: 2, alignItems: "center", height: "55px" }}
+        >
+          <IconButton
+            sx={{ ml: -1, mr: 3 }}
+            disabled={currentPath === "" || currentPath === "."}
+            onClick={() => {
+              setCurrentPath("");
+              resetScroll();
+            }}
+          >
+            <HomeIcon />
+          </IconButton>
+          <Typography variant="h6" sx={{ fontSize: "1rem", flexGrow: 1 }}>
+            {formatCurrentPath(currentPath)}
+          </Typography>
+          {currentPath !== "" && currentPath !== "." ? (
+          <SortFiles sort={sort} setSort={setSort} />
+          )  : null}
+          {currentPath !== "" && currentPath !== "." ? (
+          <CreateFolder
+            path={currentPath}
+            contents={listGamesMenu.data?.items}
+            refresh={() => listGamesMenu.refetch()}
+          />
+          ) : null}
+
+        </Stack>
+      </Paper>
+      <Box sx={{ height: "55px" }}></Box>
+      {listGamesMenu.isLoading ? <LinearProgress /> : null}
+      <Box>
+        {!listGamesMenu.isLoading ? (
+          <List>
+            {listGamesMenu.data?.up || listGamesMenu.data?.up === "" ? (
+              <ListItemButton
+                onClick={() => {
+                  setCurrentPath(
+                    listGamesMenu.data?.up ? listGamesMenu.data.up : ""
+                  );
+                  resetScroll();
+                }}
+              >
+                <ListItemIcon>
+                  <ArrowBackIcon />
+                </ListItemIcon>
+                <ListItemText primary="Go back" />
+              </ListItemButton>
+            ) : null}
+            {sortItems(listGamesMenu.data?.items).map((item) => (
+              <ListItem
+                disablePadding
+                key={item.path}
+                secondaryAction={listGamesMenu.data?.up || listGamesMenu.data?.up === "" ? (
+                  <EditFile
+                    item={item}
+                    refresh={listGamesMenu.refetch}
+                    parentContents={
+                      listGamesMenu.data ? listGamesMenu.data.items : []
+                    }
+                  />
+                ) : null}
               >
                 <ListItemButton
                   onClick={() => {

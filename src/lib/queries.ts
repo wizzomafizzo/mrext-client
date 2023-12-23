@@ -26,6 +26,12 @@ export const useListMenuFolder = (path: string) =>
     queryFn: () => api.listMenuFolder(path),
   });
 
+export const useListGamesFolder = (path: string) =>
+  useQuery<ViewMenu, AxiosError>({
+    queryKey: ["listGames", path],
+    queryFn: () => api.listGamesFolder(path),
+  });
+
 export const useListMisterInis = () =>
   useQuery<ListInisPayload, AxiosError>({
     queryKey: ["settings", "inis"],
