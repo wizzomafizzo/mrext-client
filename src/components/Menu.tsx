@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import {useListGamesFolder, useListMenuFolder} from "../lib/queries";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
@@ -8,19 +8,20 @@ import DeveloperBoardIcon from "@mui/icons-material/DeveloperBoard";
 import VideogameAssetIcon from "@mui/icons-material/VideogameAsset";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ListItemText from "@mui/material/ListItemText";
-import { MenuItem as MEMenuItem } from "../lib/models";
+import {MenuItem as MEMenuItem} from "../lib/models";
 import moment from "moment";
 import ListItemButton from "@mui/material/ListItemButton";
 import ScrollToTopFab from "./ScrollToTop";
 import Typography from "@mui/material/Typography";
 import LinearProgress from "@mui/material/LinearProgress";
-import { ControlApi } from "../lib/api";
+import {ControlApi} from "../lib/api";
 import Stack from "@mui/material/Stack";
 import HomeIcon from "@mui/icons-material/Home";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import {
   CreateFolder,
   formatCurrentPath,
@@ -36,7 +37,7 @@ import MenuList from "@mui/material/MenuList";
 import SortIcon from "@mui/icons-material/Sort";
 import ListItem from "@mui/material/ListItem";
 import Dialog from "@mui/material/Dialog";
-import { DialogTitle } from "@mui/material";
+import {DialogTitle} from "@mui/material";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
@@ -81,12 +82,12 @@ function RenameFile(props: {
   return (
     <>
       <DialogContent>
-        <FormControl sx={{ pt: 1 }}>
+        <FormControl sx={{pt: 1}}>
           <TextField
             value={name}
             onChange={(e) => setName(e.target.value)}
             label="Name"
-            inputProps={{ maxLength: 255 }}
+            inputProps={{maxLength: 255}}
             autoFocus
             helperText={
               props.item.namesTxt
@@ -147,7 +148,7 @@ function DeleteFile(props: { item: MEMenuItem; close: () => void }) {
           ? This cannot be undone.
         </Typography>
         {props.item.type === "folder" && (
-          <FormControl sx={{ pt: 1 }}>
+          <FormControl sx={{pt: 1}}>
             <FormControlLabel
               control={
                 <Checkbox
@@ -237,15 +238,15 @@ function EditFile(props: {
           />
         );
       case EditMode.Delete:
-        return <DeleteFile item={props.item} close={handleClose} />;
+        return <DeleteFile item={props.item} close={handleClose}/>;
       default:
         return (
-          <Box sx={{ minWidth: "250px" }}>
-            <DialogTitle sx={{ p: 2, pb: 0 }}>
+          <Box sx={{minWidth: "250px"}}>
+            <DialogTitle sx={{p: 2, pb: 0}}>
               {props.item.namesTxt ? props.item.namesTxt : props.item.name}
             </DialogTitle>
-            <DialogContent sx={{ p: 2 }}>
-              <List dense sx={{ pt: 0 }}>
+            <DialogContent sx={{p: 2}}>
+              <List dense sx={{pt: 0}}>
                 <ListItem disableGutters disablePadding>
                   <ListItemText
                     primary="Filename"
@@ -262,36 +263,57 @@ function EditFile(props: {
                     }
                   />
                 </ListItem>
-                <ListItem disableGutters disablePadding>
-                  <ListItemText
-                    primary="Modified"
-                    secondary={new Date(props.item.modified).toLocaleString()}
-                  />
-                </ListItem>
+                {!props.item.inZip ? (
+                  <ListItem disableGutters disablePadding>
+                    <ListItemText
+                      primary="Modified"
+                      secondary={new Date(props.item.modified).toLocaleString()}
+                    />
+                  </ListItem>
+                ) : null}
               </List>
               <Stack spacing={1}>
-                <Button
-                  variant="outlined"
-                  startIcon={<DriveFileRenameOutlineIcon />}
-                  onClick={() => setEditMode(EditMode.Rename)}
-                >
-                  Rename
-                </Button>
-                <Button
-                  variant="outlined"
-                  startIcon={<DriveFileMoveIcon />}
-                  onClick={() => setEditMode(EditMode.Move)}
-                >
-                  Move
-                </Button>
-                <Button
-                  variant="outlined"
-                  startIcon={<DeleteForeverIcon />}
-                  onClick={() => setEditMode(EditMode.Delete)}
-                  color="error"
-                >
-                  Delete
-                </Button>
+                {props.item.type !== "folder" && props.item.type !== "zip" ? (
+                  <Button
+                    variant="contained"
+                    startIcon={<PlayArrowIcon/>}
+                    onClick={() => {
+                      api.launchFile(props.item.path).catch((err) => {
+                        console.error(err);
+                      }).then(() => {
+                        setOpen(false);
+                      });
+                    }}
+                  >
+                    Launch
+                  </Button>
+                ) : null}
+                {!props.item.inZip ? (
+                  <>
+                    <Button
+                      variant="outlined"
+                      startIcon={<DriveFileRenameOutlineIcon/>}
+                      onClick={() => setEditMode(EditMode.Rename)}
+                    >
+                      Rename
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      startIcon={<DriveFileMoveIcon/>}
+                      onClick={() => setEditMode(EditMode.Move)}
+                    >
+                      Move
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      startIcon={<DeleteForeverIcon/>}
+                      onClick={() => setEditMode(EditMode.Delete)}
+                      color="error"
+                    >
+                      Delete
+                    </Button>
+                  </>
+                ) : null}
               </Stack>
             </DialogContent>
           </Box>
@@ -301,8 +323,8 @@ function EditFile(props: {
 
   return (
     <>
-      <IconButton sx={{ mr: -1 }} onClick={() => setOpen(true)}>
-        <MoreVertIcon />
+      <IconButton sx={{mr: -1}} onClick={() => setOpen(true)}>
+        <MoreVertIcon/>
       </IconButton>
       <Dialog open={open} onClose={handleClose}>
         {editSection()}
@@ -329,7 +351,7 @@ function SortFiles(props: { sort: Sort; setSort: (sort: Sort) => void }) {
   return (
     <>
       <IconButton ref={sortAnchorRef} onClick={() => setSortOpen(!sortOpen)}>
-        <SortIcon />
+        <SortIcon/>
       </IconButton>
       <Popper
         sx={{
@@ -341,7 +363,7 @@ function SortFiles(props: { sort: Sort; setSort: (sort: Sort) => void }) {
         transition
         disablePortal
       >
-        {({ TransitionProps, placement }) => (
+        {({TransitionProps, placement}) => (
           <Grow
             {...TransitionProps}
             style={{
@@ -349,7 +371,7 @@ function SortFiles(props: { sort: Sort; setSort: (sort: Sort) => void }) {
                 placement === "bottom" ? "center top" : "center bottom",
             }}
           >
-            <Paper sx={{ m: 1, mt: 0 }}>
+            <Paper sx={{m: 1, mt: 0}}>
               <ClickAwayListener onClickAway={handleSortClose}>
                 <MenuList dense>
                   {/*<MenuItem*/}
@@ -362,7 +384,7 @@ function SortFiles(props: { sort: Sort; setSort: (sort: Sort) => void }) {
                   {/*  </ListItemIcon>*/}
                   {/*  <ListItemText>Show hidden files</ListItemText>*/}
                   {/*</MenuItem>*/}
-                  <Typography sx={{ pl: 1, fontWeight: 500 }}>
+                  <Typography sx={{pl: 1, fontWeight: 500}}>
                     Sort by
                   </Typography>
                   <MenuItem
@@ -373,9 +395,9 @@ function SortFiles(props: { sort: Sort; setSort: (sort: Sort) => void }) {
                   >
                     <ListItemIcon>
                       {props.sort === Sort.NameAsc ? (
-                        <RadioButtonCheckedIcon />
+                        <RadioButtonCheckedIcon/>
                       ) : (
-                        <RadioButtonUncheckedIcon />
+                        <RadioButtonUncheckedIcon/>
                       )}
                     </ListItemIcon>
                     <ListItemText>Name (ascending)</ListItemText>
@@ -388,9 +410,9 @@ function SortFiles(props: { sort: Sort; setSort: (sort: Sort) => void }) {
                   >
                     <ListItemIcon>
                       {props.sort === Sort.NameDesc ? (
-                        <RadioButtonCheckedIcon />
+                        <RadioButtonCheckedIcon/>
                       ) : (
-                        <RadioButtonUncheckedIcon />
+                        <RadioButtonUncheckedIcon/>
                       )}
                     </ListItemIcon>
                     <ListItemText>Name (descending)</ListItemText>
@@ -403,9 +425,9 @@ function SortFiles(props: { sort: Sort; setSort: (sort: Sort) => void }) {
                   >
                     <ListItemIcon>
                       {props.sort === Sort.DateAsc ? (
-                        <RadioButtonCheckedIcon />
+                        <RadioButtonCheckedIcon/>
                       ) : (
-                        <RadioButtonUncheckedIcon />
+                        <RadioButtonUncheckedIcon/>
                       )}
                     </ListItemIcon>
                     <ListItemText>Modified (ascending)</ListItemText>
@@ -418,9 +440,9 @@ function SortFiles(props: { sort: Sort; setSort: (sort: Sort) => void }) {
                   >
                     <ListItemIcon>
                       {props.sort === Sort.DateDesc ? (
-                        <RadioButtonCheckedIcon />
+                        <RadioButtonCheckedIcon/>
                       ) : (
-                        <RadioButtonUncheckedIcon />
+                        <RadioButtonUncheckedIcon/>
                       )}
                     </ListItemIcon>
                     <ListItemText>Modified (descending)</ListItemText>
@@ -446,11 +468,11 @@ export function Menu() {
   const icon = (item: MEMenuItem) => {
     switch (item.type) {
       case "folder":
-        return <FolderOpenIcon />;
+        return <FolderOpenIcon/>;
       case "rbf":
-        return <DeveloperBoardIcon />;
+        return <DeveloperBoardIcon/>;
       default:
-        return <VideogameAssetIcon />;
+        return <VideogameAssetIcon/>;
     }
   };
 
@@ -502,22 +524,22 @@ export function Menu() {
       >
         <Stack
           direction="row"
-          sx={{ p: 1, pl: 2, alignItems: "center", height: "55px" }}
+          sx={{p: 1, pl: 2, alignItems: "center", height: "55px"}}
         >
           <IconButton
-            sx={{ pl: 0, pr: 4 }}
+            sx={{pl: 0, pr: 4}}
             disabled={currentPath === "" || currentPath === "."}
             onClick={() => {
               setCurrentPath("");
               resetScroll();
             }}
           >
-            <HomeIcon />
+            <HomeIcon/>
           </IconButton>
-          <Typography variant="h6" sx={{ fontSize: "1rem", flexGrow: 1 }}>
+          <Typography variant="h6" sx={{fontSize: "1rem", flexGrow: 1}}>
             {formatCurrentPath(currentPath)}
           </Typography>
-          <SortFiles sort={sort} setSort={setSort} />
+          <SortFiles sort={sort} setSort={setSort}/>
           <CreateFolder
             path={currentPath}
             contents={listMenuFolder.data?.items}
@@ -525,8 +547,8 @@ export function Menu() {
           />
         </Stack>
       </Paper>
-      <Box sx={{ height: "55px" }}></Box>
-      {listMenuFolder.isLoading ? <LinearProgress /> : null}
+      <Box sx={{height: "55px"}}></Box>
+      {listMenuFolder.isLoading ? <LinearProgress/> : null}
       <Box>
         {!listMenuFolder.isLoading ? (
           <List>
@@ -540,9 +562,9 @@ export function Menu() {
                 }}
               >
                 <ListItemIcon>
-                  <ArrowBackIcon />
+                  <ArrowBackIcon/>
                 </ListItemIcon>
-                <ListItemText primary="Go back" />
+                <ListItemText primary="Go back"/>
               </ListItemButton>
             ) : null}
             {sortItems(listMenuFolder.data?.items).map((item) => (
@@ -585,7 +607,7 @@ export function Menu() {
             ))}
           </List>
         ) : null}
-        <ScrollToTopFab />
+        <ScrollToTopFab/>
       </Box>
     </>
   );
@@ -602,15 +624,17 @@ export function GamesMenu() {
   const icon = (item: MEMenuItem) => {
     switch (item.type) {
       case "folder":
-        return <FolderOpenIcon />;
+        return <FolderOpenIcon/>;
       case "rbf":
-        return <DeveloperBoardIcon />;
+        return <DeveloperBoardIcon/>;
       case "zip":
-        return <FolderZipIcon />;
+        return <FolderZipIcon/>;
       default:
-        return <VideogameAssetIcon />;
+        return <VideogameAssetIcon/>;
     }
   };
+
+  const noEdit = currentPath === "" || currentPath === "." || listGamesMenu.data?.items.length === 0 || listGamesMenu.data?.items[0].inZip;
 
   const sortItems = (items: MEMenuItem[] | undefined) => {
     if (!items) {
@@ -664,36 +688,36 @@ export function GamesMenu() {
       >
         <Stack
           direction="row"
-          sx={{ p: 1, pl: 2, alignItems: "center", height: "55px" }}
+          sx={{p: 1, pl: 2, alignItems: "center", height: "55px"}}
         >
           <IconButton
-            sx={{ ml: -1, mr: 3 }}
+            sx={{ml: -1, mr: 3}}
             disabled={currentPath === "" || currentPath === "."}
             onClick={() => {
               setCurrentPath("");
               resetScroll();
             }}
           >
-            <HomeIcon />
+            <HomeIcon/>
           </IconButton>
-          <Typography variant="h6" sx={{ fontSize: "1rem", flexGrow: 1 }}>
+          <Typography variant="h6" sx={{fontSize: "1rem", flexGrow: 1}}>
             {formatCurrentPath(currentPath)}
           </Typography>
-          {currentPath !== "" && currentPath !== "." ? (
-          <SortFiles sort={sort} setSort={setSort} />
-          )  : null}
-          {currentPath !== "" && currentPath !== "." ? (
-          <CreateFolder
-            path={currentPath}
-            contents={listGamesMenu.data?.items}
-            refresh={() => listGamesMenu.refetch()}
-          />
+          {!noEdit ? (
+            <SortFiles sort={sort} setSort={setSort}/>
+          ) : null}
+          {!noEdit ? (
+            <CreateFolder
+              path={currentPath}
+              contents={listGamesMenu.data?.items}
+              refresh={() => listGamesMenu.refetch()}
+            />
           ) : null}
 
         </Stack>
       </Paper>
-      <Box sx={{ height: "55px" }}></Box>
-      {listGamesMenu.isLoading ? <LinearProgress /> : null}
+      <Box sx={{height: "55px"}}></Box>
+      {listGamesMenu.isLoading ? <LinearProgress/> : null}
       <Box>
         {!listGamesMenu.isLoading ? (
           <List>
@@ -707,9 +731,9 @@ export function GamesMenu() {
                 }}
               >
                 <ListItemIcon>
-                  <ArrowBackIcon />
+                  <ArrowBackIcon/>
                 </ListItemIcon>
-                <ListItemText primary="Go back" />
+                <ListItemText primary="Go back"/>
               </ListItemButton>
             ) : null}
             {sortItems(listGamesMenu.data?.items).map((item) => (
@@ -752,7 +776,7 @@ export function GamesMenu() {
             ))}
           </List>
         ) : null}
-        <ScrollToTopFab />
+        <ScrollToTopFab/>
       </Box>
     </>
   );
