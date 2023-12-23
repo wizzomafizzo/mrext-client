@@ -50,7 +50,14 @@ function SearchResultsList(props: {
   const displayResults: Game[] = [];
   const [gameInfoOpen, setGameInfoOpen] = React.useState(false);
 
+  const [nfcRunning, setNfcRunning] = React.useState(false);
   const [waitingNfc, setWaitingNfc] = React.useState(false);
+
+  useEffect(() => {
+    api.nfcStatus().then((status) => {
+      setNfcRunning(status.running);
+    });
+  }, []);
 
   if (props.results && props.results.data) {
     for (const game of props.results.data) {
@@ -130,25 +137,27 @@ function SearchResultsList(props: {
             >
               Create shortcut
             </Button>
-            {/*<Button*/}
-            {/*  variant="outlined"*/}
-            {/*  sx={{mt: 1}}*/}
-            {/*  startIcon={<TapAndPlayIcon/>}*/}
-            {/*  onClick={() => {*/}
-            {/*    if (props.selectedGame) {*/}
-            {/*      setWaitingNfc(true);*/}
-            {/*      api.nfcWrite({*/}
-            {/*        path: props.selectedGame.path*/}
-            {/*      }).then(() => {*/}
-            {/*        setGameInfoOpen(false);*/}
-            {/*      }).finally(() => {*/}
-            {/*        setWaitingNfc(false);*/}
-            {/*      });*/}
-            {/*    }*/}
-            {/*  }}*/}
-            {/*>*/}
-            {/*  {waitingNfc ? "Waiting for tag..." : "Write to NFC tag" }*/}
-            {/*</Button>*/}
+            {nfcRunning ? (
+              <Button
+                variant="outlined"
+                sx={{mt: 1}}
+                startIcon={<TapAndPlayIcon/>}
+                onClick={() => {
+                  if (props.selectedGame) {
+                    setWaitingNfc(true);
+                    api.nfcWrite({
+                      path: props.selectedGame.path
+                    }).then(() => {
+                      setGameInfoOpen(false);
+                    }).finally(() => {
+                      setWaitingNfc(false);
+                    });
+                  }
+                }}
+              >
+                {waitingNfc ? "Waiting for tag..." : "Write to NFC tag"}
+              </Button>
+            ) : null}
             <Button
               sx={{mt: 1}}
               onClick={() => {
