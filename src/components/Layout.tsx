@@ -470,7 +470,7 @@ export default function ResponsiveDrawer() {
 
   const drawer = (
     <div>
-      <Toolbar sx={{ justifyContent: "center" }}>
+      <Toolbar sx={{ justifyContent: "center", paddingTop: "env(safe-area-inset-top)" }}>
         <Stack>
           <Stack direction="row">
             <img alt="MiSTer Kun Logo" src="/misterkun.svg" height={43} />
@@ -626,6 +626,19 @@ export default function ResponsiveDrawer() {
     </div>
   );
 
+  // for some reason the min-height of a Toolbar component is not right on iOS and
+  // is different between mobile and desktop (assuming it's actually between the hidden
+  // and always visible sidebar layouts). this may also have something to to with safe
+  // area insets on these devices. this is a hack to fix it. it causes the second floating
+  // toolbar on menu and games pages to be offset slightly. it's probably best in the future
+  // to come up with an alternative layout that doesn't use double fixed toolbars
+  const toolbarStyle: {minHeight?: string} = {}
+  if (Capacitor.getPlatform() === "ios" && isMobile) {
+    toolbarStyle["minHeight"] = "50px";
+  } else if (Capacitor.getPlatform() === "ios" && !isMobile) {
+    toolbarStyle["minHeight"] = "40px";
+  }
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -634,6 +647,7 @@ export default function ResponsiveDrawer() {
         sx={{
           width: isMobile ? "100%" : `calc(100% - ${drawerWidth}px)`,
           ml: isMobile ? "0" : `${drawerWidth}px`,
+          // paddingTop: "env(safe-area-inset-top)",
         }}
       >
         <Toolbar
@@ -642,6 +656,7 @@ export default function ResponsiveDrawer() {
             color: "primary.contrastText",
             pl: 1,
             pr: 1,
+            paddingTop: "env(safe-area-inset-top)",
           }}
         >
           <Grid
@@ -729,7 +744,7 @@ export default function ResponsiveDrawer() {
           width: isMobile ? "100%" : `calc(100% - ${drawerWidth}px)`,
         }}
       >
-        <Toolbar />
+        <Toolbar style={toolbarStyle} />
         <Routes>
           <Route path="/systems" element={<Systems />} />
           <Route path="/" element={<Navigate to="/control" />} />
