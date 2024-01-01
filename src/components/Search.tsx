@@ -49,6 +49,10 @@ function downloadQrCode(options: {
     type: 'canvas',
     width: 1024,
     height: 1024,
+    qrOptions: {
+      errorCorrectionLevel: 'L',
+      mode: 'Byte',
+    },
   });
   return qr._canvasDrawingPromise.then(() => {
     qr._canvas?.toBlob((blob) => {
