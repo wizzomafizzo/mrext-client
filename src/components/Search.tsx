@@ -194,7 +194,7 @@ function SearchResultsList(props: {
                 name: props.selectedGame.name,
               })}
             >
-              Create QRCode
+              Create QR-Code
             </Button>
             <Button
               sx={{mt: 1}}
