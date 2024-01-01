@@ -214,7 +214,6 @@ function SearchResultsList(props: {
 
 export default function Search() {
   const api = new ControlApi();
-  
   const systems = useIndexedSystems();
   const serverState = useServerStateStore();
   const ws = useWs();
