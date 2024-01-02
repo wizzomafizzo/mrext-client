@@ -35,15 +35,15 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import TapAndPlayIcon from '@mui/icons-material/TapAndPlay';
-import { getApiEndpoint } from '../lib/api';
+import {getApiEndpoint} from '../lib/api';
 import QRCodeStyling from 'qr-code-styling';
 
 function downloadQrCode(options: {
   path: string;
   name: string;
 }) {
-  const { path, name } = options;
-  const data = `${getApiEndpoint()}/l/${btoa(path).replace(/[=]+$/, '')}`;
+  const {path, name} = options;
+  const data = `${getApiEndpoint()}/l/${btoa(path).replace(/=+$/, '')}`;
   const qr = new QRCodeStyling({
     data,
     type: 'canvas',
@@ -54,7 +54,7 @@ function downloadQrCode(options: {
       mode: 'Byte',
     },
   });
-  return qr._canvasDrawingPromise.then(() => {
+  return qr._canvasDrawingPromise?.then(() => {
     qr._canvas?.toBlob((blob) => {
       if (!blob) return;
       const url = URL.createObjectURL(blob);
