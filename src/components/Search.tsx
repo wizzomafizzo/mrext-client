@@ -28,12 +28,43 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import ShortcutIcon from "@mui/icons-material/Shortcut";
+import QrCode2Icon from "@mui/icons-material/QrCode2"
 import {SingleShortcut} from "./Shortcuts";
 import SyncIcon from "@mui/icons-material/Sync";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import TapAndPlayIcon from '@mui/icons-material/TapAndPlay';
+import { getApiEndpoint } from '../lib/api';
+import QRCodeStyling from 'qr-code-styling';
+
+function downloadQrCode(options: {
+  path: string;
+  name: string;
+}) {
+  const { path, name } = options;
+  const data = `${getApiEndpoint()}/l/${btoa(path).replace(/[=]+$/, '')}`;
+  const qr = new QRCodeStyling({
+    data,
+    type: 'canvas',
+    width: 1024,
+    height: 1024,
+    qrOptions: {
+      errorCorrectionLevel: 'L',
+      mode: 'Byte',
+    },
+  });
+  return qr._canvasDrawingPromise.then(() => {
+    qr._canvas?.toBlob((blob) => {
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${name}.png`;
+      a.click();
+    });
+  });
+}
 
 function SearchResultsList(props: {
   results?: SearchResults;
@@ -158,6 +189,17 @@ function SearchResultsList(props: {
                 {waitingNfc ? "Waiting for tag..." : "Write to NFC tag"}
               </Button>
             ) : null}
+            <Button
+              variant="outlined"
+              sx={{mt: 1}}
+              startIcon={<QrCode2Icon/>}
+              onClick={() => props.selectedGame && downloadQrCode({
+                path: props.selectedGame.path,
+                name: props.selectedGame.name,
+              })}
+            >
+              Create QR-Code
+            </Button>
             <Button
               sx={{mt: 1}}
               onClick={() => {
