@@ -8,6 +8,8 @@ All communication between the
 client and server is done through a combination of a REST API and WebSockets.
 It can be hosted anywhere, as long as the API address is set correctly.
 
+[Download Android APK](https://github.com/wizzomafizzo/mrext-client/releases/latest/download/mrext-client.apk)
+
 ## Setup
 
 ### Prerequisites
