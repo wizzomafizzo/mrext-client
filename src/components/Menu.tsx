@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useLayoutEffect, useState} from "react";
 import {useListGamesFolder, useListMenuFolder} from "../lib/queries";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
@@ -189,19 +189,22 @@ function DeleteFile(props: { item: MEMenuItem; close: () => void }) {
   );
 }
 
-function EditFile(props: {
+function EditSection(props: {
   item: MEMenuItem;
   parentContents: MEMenuItem[];
   refresh: () => void;
   setOpenShortcut?: (open: boolean) => void;
   setSelectedPath?: (path: string) => void;
+  setOpen: (open: boolean) => void;
+  handleClose: () => void;
 }) {
   const api = new ControlApi();
-  const [open, setOpen] = useState<boolean>(false);
+
   const [editMode, setEditMode] = useState<EditMode>(EditMode.None);
 
   const [nfcRunning, setNfcRunning] = React.useState(false);
   const [waitingNfc, setWaitingNfc] = React.useState(false);
+
 
   useEffect(() => {
     api.nfcStatus().then((status) => {
@@ -210,173 +213,182 @@ function EditFile(props: {
   }, []);
 
   useEffect(() => {
-    open && setEditMode(EditMode.None);
-  }, [open]);
+    setEditMode(EditMode.None);
+  }, []);
+
+
+  switch (editMode) {
+    case EditMode.Rename:
+      return (
+        <RenameFile
+          item={props.item}
+          parentContents={props.parentContents}
+          close={props.handleClose}
+        />
+      );
+    case EditMode.Move:
+      return (
+        <MenuFolderPicker
+          path={props.item.parent}
+          setPath={(path) => {
+            api
+              .renameMenuFile({
+                fromPath: props.item.path,
+                toPath: path + "/" + props.item.filename,
+              })
+              .catch((err) => {
+                console.log(err);
+              })
+              .then(() => {
+                props.refresh();
+              });
+          }}
+          close={() => props.setOpen(false)}
+          defaultPath={props.item.parent}
+          verb={"Move to"}
+        />
+      );
+    case EditMode.Delete:
+      return <DeleteFile item={props.item} close={props.handleClose}/>;
+    default:
+      return (
+        <Box sx={{minWidth: "250px"}}>
+          <DialogTitle sx={{p: 2, pb: 0}}>
+            {props.item.namesTxt ? props.item.namesTxt : props.item.name}
+          </DialogTitle>
+          <DialogContent sx={{p: 2}}>
+            <List dense sx={{pt: 0}}>
+              <ListItem disableGutters disablePadding>
+                <ListItemText
+                  primary="Filename"
+                  secondary={props.item.filename}
+                />
+              </ListItem>
+              <ListItem disableGutters disablePadding>
+                <ListItemText
+                  primary="Type"
+                  secondary={
+                    props.item.type === "folder"
+                      ? "Folder"
+                      : props.item.type.toUpperCase()
+                  }
+                />
+              </ListItem>
+              {!props.item.inZip ? (
+                <ListItem disableGutters disablePadding>
+                  <ListItemText
+                    primary="Modified"
+                    secondary={new Date(props.item.modified).toLocaleString()}
+                  />
+                </ListItem>
+              ) : null}
+              {props.item.system ? (
+                <ListItem disableGutters disablePadding>
+                  <ListItemText
+                    primary="System"
+                    secondary={props.item.system.name}
+                  />
+                </ListItem>
+              ) : null}
+            </List>
+            <Stack spacing={1}>
+              {props.item.type !== "folder" && props.item.type !== "zip" ? (
+                <Button
+                  variant="contained"
+                  startIcon={<PlayArrowIcon/>}
+                  onClick={() => {
+                    api.launchFile(props.item.path).catch((err) => {
+                      console.error(err);
+                    }).then(() => {
+                      props.setOpen(false);
+                    });
+                  }}
+                >
+                  Launch
+                </Button>
+              ) : null}
+              {props.setOpenShortcut && props.item.system ? (
+                <Button
+                  variant="outlined"
+                  sx={{mt: 1}}
+                  startIcon={<ShortcutIcon/>}
+                  onClick={() => {
+                    if (props.setOpenShortcut) {
+                      props.setSelectedPath && props.setSelectedPath(props.item.path)
+                      props.setOpenShortcut(true)
+                      props.setOpen(false)
+                    }
+                  }}
+                >
+                  Create shortcut
+                </Button>
+              ) : null}
+              {nfcRunning && props.item.type !== "folder" && props.item.type !== "zip" ? (
+                <Button
+                  variant="outlined"
+                  sx={{mt: 1}}
+                  startIcon={<TapAndPlayIcon/>}
+                  onClick={() => {
+                    if (props.item.path) {
+                      setWaitingNfc(true);
+                      api.nfcWrite({
+                        path: props.item.path
+                      }).then(() => {
+                        props.setOpen(false);
+                      }).finally(() => {
+                        setWaitingNfc(false);
+                      });
+                    }
+                  }}
+                >
+                  {waitingNfc ? "Waiting for tag..." : "Write to NFC tag"}
+                </Button>
+              ) : null}
+              {!props.item.inZip ? (
+                <>
+                  <Button
+                    variant="outlined"
+                    startIcon={<DriveFileRenameOutlineIcon/>}
+                    onClick={() => setEditMode(EditMode.Rename)}
+                  >
+                    Rename
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    startIcon={<DriveFileMoveIcon/>}
+                    onClick={() => setEditMode(EditMode.Move)}
+                  >
+                    Move
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    startIcon={<DeleteForeverIcon/>}
+                    onClick={() => setEditMode(EditMode.Delete)}
+                    color="error"
+                  >
+                    Delete
+                  </Button>
+                </>
+              ) : null}
+            </Stack>
+          </DialogContent>
+        </Box>
+      );
+    }
+}
+
+function EditFile(props: {
+  item: MEMenuItem;
+  parentContents: MEMenuItem[];
+  refresh: () => void;
+  setOpenShortcut?: (open: boolean) => void;
+  setSelectedPath?: (path: string) => void;
+}) {
+  const [open, setOpen] = useState<boolean>(false);
 
   const handleClose = () => {
     setOpen(false);
     props.refresh();
-  };
-
-  const editSection = () => {
-    switch (editMode) {
-      case EditMode.Rename:
-        return (
-          <RenameFile
-            item={props.item}
-            parentContents={props.parentContents}
-            close={handleClose}
-          />
-        );
-      case EditMode.Move:
-        return (
-          <MenuFolderPicker
-            path={props.item.parent}
-            setPath={(path) => {
-              api
-                .renameMenuFile({
-                  fromPath: props.item.path,
-                  toPath: path + "/" + props.item.filename,
-                })
-                .catch((err) => {
-                  console.log(err);
-                })
-                .then(() => {
-                  props.refresh();
-                });
-            }}
-            close={() => setOpen(false)}
-            defaultPath={props.item.parent}
-            verb={"Move to"}
-          />
-        );
-      case EditMode.Delete:
-        return <DeleteFile item={props.item} close={handleClose}/>;
-      default:
-        return (
-          <Box sx={{minWidth: "250px"}}>
-            <DialogTitle sx={{p: 2, pb: 0}}>
-              {props.item.namesTxt ? props.item.namesTxt : props.item.name}
-            </DialogTitle>
-            <DialogContent sx={{p: 2}}>
-              <List dense sx={{pt: 0}}>
-                <ListItem disableGutters disablePadding>
-                  <ListItemText
-                    primary="Filename"
-                    secondary={props.item.filename}
-                  />
-                </ListItem>
-                <ListItem disableGutters disablePadding>
-                  <ListItemText
-                    primary="Type"
-                    secondary={
-                      props.item.type === "folder"
-                        ? "Folder"
-                        : props.item.type.toUpperCase()
-                    }
-                  />
-                </ListItem>
-                {!props.item.inZip ? (
-                  <ListItem disableGutters disablePadding>
-                    <ListItemText
-                      primary="Modified"
-                      secondary={new Date(props.item.modified).toLocaleString()}
-                    />
-                  </ListItem>
-                ) : null}
-                {props.item.system ? (
-                  <ListItem disableGutters disablePadding>
-                    <ListItemText
-                      primary="System"
-                      secondary={props.item.system.name}
-                    />
-                  </ListItem>
-                ) : null}
-              </List>
-              <Stack spacing={1}>
-                {props.item.type !== "folder" && props.item.type !== "zip" ? (
-                  <Button
-                    variant="contained"
-                    startIcon={<PlayArrowIcon/>}
-                    onClick={() => {
-                      api.launchFile(props.item.path).catch((err) => {
-                        console.error(err);
-                      }).then(() => {
-                        setOpen(false);
-                      });
-                    }}
-                  >
-                    Launch
-                  </Button>
-                ) : null}
-                {props.setOpenShortcut && props.item.system ? (
-                  <Button
-                    variant="outlined"
-                    sx={{mt: 1}}
-                    startIcon={<ShortcutIcon/>}
-                    onClick={() => {
-                      if (props.setOpenShortcut) {
-                        props.setSelectedPath && props.setSelectedPath(props.item.path)
-                        props.setOpenShortcut(true)
-                        setOpen(false)
-                      }
-                    }}
-                  >
-                    Create shortcut
-                  </Button>
-                ) : null}
-                {nfcRunning && props.item.type !== "folder" && props.item.type !== "zip" ? (
-                  <Button
-                    variant="outlined"
-                    sx={{mt: 1}}
-                    startIcon={<TapAndPlayIcon/>}
-                    onClick={() => {
-                      if (props.item.path) {
-                        setWaitingNfc(true);
-                        api.nfcWrite({
-                          path: props.item.path
-                        }).then(() => {
-                          setOpen(false);
-                        }).finally(() => {
-                          setWaitingNfc(false);
-                        });
-                      }
-                    }}
-                  >
-                    {waitingNfc ? "Waiting for tag..." : "Write to NFC tag"}
-                  </Button>
-                ) : null}
-                {!props.item.inZip ? (
-                  <>
-                    <Button
-                      variant="outlined"
-                      startIcon={<DriveFileRenameOutlineIcon/>}
-                      onClick={() => setEditMode(EditMode.Rename)}
-                    >
-                      Rename
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      startIcon={<DriveFileMoveIcon/>}
-                      onClick={() => setEditMode(EditMode.Move)}
-                    >
-                      Move
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      startIcon={<DeleteForeverIcon/>}
-                      onClick={() => setEditMode(EditMode.Delete)}
-                      color="error"
-                    >
-                      Delete
-                    </Button>
-                  </>
-                ) : null}
-              </Stack>
-            </DialogContent>
-          </Box>
-        );
-    }
   };
 
   return (
@@ -384,9 +396,13 @@ function EditFile(props: {
       <IconButton sx={{mr: -1}} onClick={() => setOpen(true)}>
         <MoreVertIcon/>
       </IconButton>
-      <Dialog open={open} onClose={handleClose}>
-        {editSection()}
-      </Dialog>
+      {open && (<Dialog open={open} onClose={handleClose}>
+        <EditSection
+          {...props}
+          setOpen={setOpen}
+          handleClose={handleClose}
+        />
+      </Dialog>)}
     </>
   );
 }
@@ -514,6 +530,38 @@ function SortFiles(props: { sort: Sort; setSort: (sort: Sort) => void }) {
     </>
   );
 }
+
+const sortItems = (items: MEMenuItem[] | undefined, sort: Sort, currentPath: string) => {
+  if (!items) {
+    return [];
+  }
+
+  const sorted = [...items];
+
+  if (currentPath === "" || currentPath === ".") {
+    sorted.sort((a, b) => a.name.localeCompare(b.name));
+  } else {
+    switch (sort) {
+      case Sort.NameAsc:
+        sorted.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case Sort.NameDesc:
+        sorted.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      case Sort.DateAsc:
+        sorted.sort((a, b) => moment(a.modified).diff(moment(b.modified)));
+        break;
+      case Sort.DateDesc:
+        sorted.sort((a, b) => moment(b.modified).diff(moment(a.modified)));
+        break;
+    }
+  }
+
+  const folders = sorted.filter((item) => item.type === "folder");
+  const files = sorted.filter((item) => item.type !== "folder");
+
+  return [...folders, ...files];
+};
 
 export function Menu() {
   const api = new ControlApi();
@@ -676,11 +724,16 @@ export function GamesMenu() {
 
   const [currentPath, setCurrentPath] = useState<string>("");
   const [sort, setSort] = useState<Sort>(Sort.NameAsc);
-
   const [openShortcut, setOpenShortcut] = React.useState(false);
   const [selectedPath, setSelectedPath] = React.useState("");
 
   const listGamesMenu = useListGamesFolder(currentPath);
+
+  const [sortedItems, setSortedItems] = useState<MEMenuItem[]>(listGamesMenu.data?.items || [])
+
+  useLayoutEffect(() => {
+    setSortedItems(sortItems(listGamesMenu.data?.items, sort, currentPath));
+  }, [sort, currentPath, listGamesMenu.data?.items])
 
   const icon = (item: MEMenuItem) => {
     switch (item.type) {
@@ -696,38 +749,6 @@ export function GamesMenu() {
   };
 
   const noEdit = currentPath === "" || currentPath === "." || listGamesMenu.data?.items.length === 0 || listGamesMenu.data?.items[0].inZip;
-
-  const sortItems = (items: MEMenuItem[] | undefined) => {
-    if (!items) {
-      return [];
-    }
-
-    const sorted = [...items];
-
-    if (currentPath === "" || currentPath === ".") {
-      sorted.sort((a, b) => a.name.localeCompare(b.name));
-    } else {
-      switch (sort) {
-        case Sort.NameAsc:
-          sorted.sort((a, b) => a.name.localeCompare(b.name));
-          break;
-        case Sort.NameDesc:
-          sorted.sort((a, b) => b.name.localeCompare(a.name));
-          break;
-        case Sort.DateAsc:
-          sorted.sort((a, b) => moment(a.modified).diff(moment(b.modified)));
-          break;
-        case Sort.DateDesc:
-          sorted.sort((a, b) => moment(b.modified).diff(moment(a.modified)));
-          break;
-      }
-    }
-
-    const folders = sorted.filter((item) => item.type === "folder");
-    const files = sorted.filter((item) => item.type !== "folder");
-
-    return [...folders, ...files];
-  };
 
   const resetScroll = () => {
     window.scrollTo({
@@ -806,7 +827,7 @@ export function GamesMenu() {
                 <ListItemText primary="Go back"/>
               </ListItemButton>
             ) : null}
-            {sortItems(listGamesMenu.data?.items).map((item) => (
+            {sortedItems.map((item) => (
               <ListItem
                 disablePadding
                 key={item.path}
