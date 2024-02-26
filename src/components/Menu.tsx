@@ -570,6 +570,11 @@ export function Menu() {
   const [sort, setSort] = useState<Sort>(Sort.NameAsc);
 
   const listMenuFolder = useListMenuFolder(currentPath);
+  const [sortedItems, setSortedItems] = useState<MEMenuItem[]>(listMenuFolder.data?.items || []);
+
+  useLayoutEffect(() => {
+    setSortedItems(sortItems(listMenuFolder.data?.items, sort, currentPath));
+  }, [sort, currentPath, listMenuFolder.data?.items]);
 
   const icon = (item: MEMenuItem) => {
     switch (item.type) {
@@ -580,34 +585,6 @@ export function Menu() {
       default:
         return <VideogameAssetIcon/>;
     }
-  };
-
-  const sortItems = (items: MEMenuItem[] | undefined) => {
-    if (!items) {
-      return [];
-    }
-
-    const sorted = [...items];
-
-    switch (sort) {
-      case Sort.NameAsc:
-        sorted.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case Sort.NameDesc:
-        sorted.sort((a, b) => b.name.localeCompare(a.name));
-        break;
-      case Sort.DateAsc:
-        sorted.sort((a, b) => moment(a.modified).diff(moment(b.modified)));
-        break;
-      case Sort.DateDesc:
-        sorted.sort((a, b) => moment(b.modified).diff(moment(a.modified)));
-        break;
-    }
-
-    const folders = sorted.filter((item) => item.type === "folder");
-    const files = sorted.filter((item) => item.type !== "folder");
-
-    return [...folders, ...files];
   };
 
   const resetScroll = () => {
@@ -673,7 +650,7 @@ export function Menu() {
                 <ListItemText primary="Go back"/>
               </ListItemButton>
             ) : null}
-            {sortItems(listMenuFolder.data?.items).map((item) => (
+            {sortedItems.map((item) => (
               <ListItem
                 disablePadding
                 key={item.path}
@@ -722,13 +699,13 @@ export function Menu() {
 export function GamesMenu() {
   const api = new ControlApi();
 
-  const [currentPath, setCurrentPath] = useState<string>("");
-  const [sort, setSort] = useState<Sort>(Sort.NameAsc);
+
   const [openShortcut, setOpenShortcut] = React.useState(false);
   const [selectedPath, setSelectedPath] = React.useState("");
 
+  const [currentPath, setCurrentPath] = useState<string>("");
+  const [sort, setSort] = useState<Sort>(Sort.NameAsc);
   const listGamesMenu = useListGamesFolder(currentPath);
-
   const [sortedItems, setSortedItems] = useState<MEMenuItem[]>(listGamesMenu.data?.items || [])
 
   useLayoutEffect(() => {
