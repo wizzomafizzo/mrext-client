@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useState} from "react";
+import React, {useCallback, useEffect, useLayoutEffect, useState} from "react";
 import {useListGamesFolder, useListMenuFolder} from "../lib/queries";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
@@ -8,7 +8,7 @@ import DeveloperBoardIcon from "@mui/icons-material/DeveloperBoard";
 import VideogameAssetIcon from "@mui/icons-material/VideogameAsset";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ListItemText from "@mui/material/ListItemText";
-import {Game, MenuItem as MEMenuItem} from "../lib/models";
+import { Game, MenuItem as MEMenuItem } from "../lib/models";
 import moment from "moment";
 import ListItemButton from "@mui/material/ListItemButton";
 import ScrollToTopFab from "./ScrollToTop";
@@ -17,6 +17,8 @@ import LinearProgress from "@mui/material/LinearProgress";
 import {ControlApi} from "../lib/api";
 import Stack from "@mui/material/Stack";
 import HomeIcon from "@mui/icons-material/Home";
+import ViewList from "@mui/icons-material/ViewList";
+import ViewModule from "@mui/icons-material/ViewModule";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
@@ -51,12 +53,18 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FolderZipIcon from '@mui/icons-material/FolderZip';
 import TapAndPlayIcon from "@mui/icons-material/TapAndPlay";
 import ShortcutIcon from "@mui/icons-material/Shortcut";
+import { useNavigate } from "react-router-dom";
 
 enum Sort {
   NameAsc,
   NameDesc,
   DateAsc,
   DateDesc,
+}
+
+enum View {
+  List,
+  Grid,
 }
 
 enum EditMode {
@@ -407,6 +415,12 @@ function EditFile(props: {
   );
 }
 
+const SwitchView = ({ view = View.Grid, onClick }) => (
+  <IconButton onClick={onClick}>
+    {view === View.Grid ? <ViewList/> : <ViewModule/>}
+  </IconButton>
+)
+
 function SortFiles(props: { sort: Sort; setSort: (sort: Sort) => void }) {
   const [sortOpen, setSortOpen] = useState<boolean>(false);
   const sortAnchorRef = React.useRef<HTMLButtonElement>(null);
@@ -599,7 +613,6 @@ export function Menu() {
         sx={{
           boxShadow: 2,
           position: "fixed",
-          width: 1,
           height: "55px",
           zIndex: 1,
           borderRadius: 0,
@@ -607,7 +620,7 @@ export function Menu() {
       >
         <Stack
           direction="row"
-          sx={{p: 1, pl: 2, alignItems: "center", height: "55px"}}
+          sx={{p: 1, pl: 2, alignItems: "center", height: "55px", width: "calc(100% - 240px)" }}
         >
           <IconButton
             sx={{pl: 0, pr: 4}}
@@ -702,11 +715,18 @@ export function GamesMenu() {
 
   const [openShortcut, setOpenShortcut] = React.useState(false);
   const [selectedPath, setSelectedPath] = React.useState("");
-
   const [currentPath, setCurrentPath] = useState<string>("");
   const [sort, setSort] = useState<Sort>(Sort.NameAsc);
+  const [view, setView] = useState<View>(View.Grid);
+  const navigate = useNavigate()
   const listGamesMenu = useListGamesFolder(currentPath);
   const [sortedItems, setSortedItems] = useState<MEMenuItem[]>(listGamesMenu.data?.items || [])
+console.log({ currentPath, selectedPath })
+  // const setCurrentPath = useCallback((path: string) => {
+  //   _setCurrentPath(path);
+  //   path = path.replace('/media/fat', '/games');
+  //   navigate(path, { replace: true });
+  // }, [])
 
   useLayoutEffect(() => {
     setSortedItems(sortItems(listGamesMenu.data?.items, sort, currentPath));
@@ -742,6 +762,14 @@ export function GamesMenu() {
     );
   }
 
+  const setViewMode = useCallback(() => {
+    if (view === View.List) {
+      setView(View.Grid);
+    } else {
+      setView(View.List);
+    }
+  }, [view, setView])
+
   return (
     <>
       <Paper
@@ -756,7 +784,7 @@ export function GamesMenu() {
       >
         <Stack
           direction="row"
-          sx={{p: 1, pl: 2, alignItems: "center", height: "55px"}}
+          sx={{p: 1, pl: 2, alignItems: "center", height: "55px", width: { sx: "1" , md: "calc(100% - 240px)" }}}
         >
           <IconButton
             sx={{ml: -1, mr: 3}}
@@ -771,6 +799,9 @@ export function GamesMenu() {
           <Typography variant="h6" sx={{fontSize: "1rem", flexGrow: 1}}>
             {formatCurrentPath(currentPath)}
           </Typography>
+          {!noEdit ? (
+            <SwitchView view={view} onClick={setViewMode}/>
+          ) : null}
           {!noEdit ? (
             <SortFiles sort={sort} setSort={setSort}/>
           ) : null}
