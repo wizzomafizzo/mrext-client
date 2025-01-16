@@ -39,7 +39,7 @@ import MenuList from "@mui/material/MenuList";
 import SortIcon from "@mui/icons-material/Sort";
 import ListItem from "@mui/material/ListItem";
 import Dialog from "@mui/material/Dialog";
-import {DialogTitle} from "@mui/material";
+import { DialogTitle } from "@mui/material";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
@@ -54,6 +54,8 @@ import FolderZipIcon from '@mui/icons-material/FolderZip';
 import TapAndPlayIcon from "@mui/icons-material/TapAndPlay";
 import ShortcutIcon from "@mui/icons-material/Shortcut";
 import { useNavigate } from "react-router-dom";
+import { parseMameXml, type GameData } from "../lib/metadata";
+import { GridItem } from "./GridItem";
 
 enum Sort {
   NameAsc,
@@ -712,7 +714,6 @@ export function Menu() {
 export function GamesMenu() {
   const api = new ControlApi();
 
-
   const [openShortcut, setOpenShortcut] = React.useState(false);
   const [selectedPath, setSelectedPath] = React.useState("");
   const [currentPath, setCurrentPath] = useState<string>("");
@@ -720,6 +721,7 @@ export function GamesMenu() {
   const [view, setView] = useState<View>(View.Grid);
   const navigate = useNavigate()
   const listGamesMenu = useListGamesFolder(currentPath);
+  const [gameMap, setGameMap] = useState<Record<string, GameData>>({});
   const [sortedItems, setSortedItems] = useState<MEMenuItem[]>(listGamesMenu.data?.items || [])
 console.log({ currentPath, selectedPath })
   // const setCurrentPath = useCallback((path: string) => {
@@ -731,6 +733,17 @@ console.log({ currentPath, selectedPath })
   useLayoutEffect(() => {
     setSortedItems(sortItems(listGamesMenu.data?.items, sort, currentPath));
   }, [sort, currentPath, listGamesMenu.data?.items])
+
+
+  useEffect(() => {
+    // fetch media and parse it.
+    const fetcher = async () => {
+      const data = await ((await fetch("/media/Mame.dat")).text());
+      const gameData = parseMameXml(data);
+      setGameMap(gameData);
+    }
+    fetcher();
+  }, []);
 
   const icon = (item: MEMenuItem) => {
     switch (item.type) {
@@ -836,7 +849,8 @@ console.log({ currentPath, selectedPath })
               </ListItemButton>
             ) : null}
             {sortedItems.map((item) => (
-              <ListItem
+              view === View.List ?
+              (<ListItem
                 disablePadding
                 key={item.path}
                 secondaryAction={listGamesMenu.data?.up || listGamesMenu.data?.up === "" ? (
@@ -874,6 +888,22 @@ console.log({ currentPath, selectedPath })
                   />
                 </ListItemButton>
               </ListItem>
+              ) : (
+                console.log(item.name, gameMap) || <GridItem
+                  onClick={() => {
+                    if (item.next) {
+                      setCurrentPath(item.next);
+                      resetScroll();
+                    } else {
+                      api.launchFile(item.path).catch((err) => {
+                        console.error(err);
+                      });
+                    }
+                  }}
+                  name={item.name}
+                  url={gameMap[item.name]?.screenshot}
+                />
+              )
             ))}
           </List>
         ) : null}
