@@ -48,6 +48,28 @@ export const themes: { [id: string]: ThemeDefinition } = {
       },
     },
   },
+  misterLight: {
+    id: "misterLight",
+    displayName: "MiSTer Light",
+    options: {
+      palette: {
+        mode: "light",
+        background: {
+          default: "#ffffff",
+        },
+        primary: {
+          main: "#9c5cf7",
+          contrastText: "#000000",
+        },
+        secondary: {
+          main: "#c1bcdc",
+        },
+        text: {
+          primary: "#000000",
+        },
+      },
+    },
+  },
   misterConsoles: {
     id: "misterConsoles",
     displayName: "MiSTer Consoles",
