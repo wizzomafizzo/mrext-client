@@ -510,7 +510,12 @@ export default function ResponsiveDrawer() {
           icon={<SearchIcon />}
           closeDrawer={handleDrawerToggle}
         />
-        <RouterLink to="/games" text="Games" icon={<VideogameAssetIcon />} closeDrawer={handleDrawerToggle} />
+        <RouterLink
+          to="/games"
+          text="Games"
+          icon={<VideogameAssetIcon />}
+          closeDrawer={handleDrawerToggle}
+        />
         <RouterLink
           to="/systems"
           text="Systems"
@@ -758,7 +763,7 @@ export default function ResponsiveDrawer() {
           <Route path="/network" element={<Network />} />
           <Route path="/scripts" element={<Scripts />} />
           <Route path="/control/auto" element={<ControlAuto />} />
-          <Route path="/games" element={<GamesMenu />} />
+          <Route path="/games/*" element={<GamesMenu />} />
         </Routes>
       </Box>
     </Box>
